@@ -1,0 +1,21 @@
+.DS_Store
+
+# Local instructions and documents
+CLAUDE.local.md
+private
+.claude/settings.local.json
+.claude/worktrees/
+
+# Secrets
+.env*
+.dev.vars*
+!.env.example
+!.dev.vars.example
+
+# Dependencies and build output
+node_modules/
+dist/
+.astro/
+.wrangler/
+
+tmp/
