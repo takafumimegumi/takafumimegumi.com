@@ -1,0 +1,19 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "takafumimegumi-com",
+  "main": "@astrojs/cloudflare/entrypoints/server",
+  "compatibility_date": "2026-11-10",
+
+  // Astro adapter default: fetch() to this site's own domain is routed like a public request.
+  "compatibility_flags": ["global_fetch_strictly_public"],
+
+  // A request that matches a file here is served without running the Worker.
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+  },
+
+  "observability": {
+    "enabled": true,
+  },
+}
