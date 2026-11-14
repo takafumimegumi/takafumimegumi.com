@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -27,11 +27,11 @@ Deploy with GitHub Actions to a single environment.
 - **Deploy on push.** A push to `main` runs the checks. If they pass, the same workflow deploys to production.
 - **Verify locally first.** For the few things a local run cannot reproduce (the real bot check, real email, in-app browsers), upload a version and open its Version URL before pushing.
 - **Before launch**, the site is served only on its `workers.dev` URL, behind Cloudflare Access. At launch, the custom domain is attached and the `workers.dev` URL is turned off.
-- **Deploy token.** It lives in GitHub Actions secrets and can deploy only this Worker.
+- **Deploy token.** It lives in GitHub Actions secrets. Its permissions are limited to editing Workers scripts and reading account settings.
 
 ## Rationale
 
-GitHub Actions keeps the pipeline in the repository as code, and "deploy only if the checks pass" is an explicit job dependency.
+GitHub Actions keeps the pipeline in the repository as code, and "deploy only if the checks pass" is the order of steps in one job. A failed check stops the job before the deploy step, and the deploy step ships the build that the checks produced.
 
 A staging environment would double the configuration and secrets to protect data that does not exist. A Version URL runs the exact version that will ship, with the production settings, so what is tested is what goes live.
 
@@ -48,6 +48,8 @@ A staging environment would double the configuration and secrets to protect data
 
 - A test booking made through a Version URL is real. It uses the production secrets.
 - Workflow logs are public. The checks must not call real services or print response bodies.
+- The deploy token is scoped to the account, not to one Worker. If it leaks, it can change every Worker on the account.
+- Access on a Worker covers all of its domains, including a custom domain. It must be narrowed to Version URLs before the custom domain is attached.
 - A bug that only shows on a real device can reach production if the Version URL check is skipped. Workers can roll back to the previous version.
 
 ## Notes
@@ -56,4 +58,8 @@ A staging environment would double the configuration and secrets to protect data
 - `wrangler versions upload` uploads a version without deploying it and returns its Version URL. Version URLs are not created for Workers that use Durable Objects. Checked 2026-11-13: [Version URLs](https://developers.cloudflare.com/workers/versions-and-deployments/version-urls/).
 - Cloudflare Access can protect `workers.dev` and Version URLs, and is free for up to 50 users. Checked 2026-11-13: [Workers docs](https://developers.cloudflare.com/workers/configuration/cloudflare-access/), [Access](https://www.cloudflare.com/sase/products/access/).
 - GitHub Actions standard runners are free for public repositories. Checked 2026-11-13: [billing](https://docs.github.com/en/billing/concepts/product-billing/github-actions).
+- I found no way to limit an API token to a single Worker. Tokens are scoped to accounts and zones. Checked 2026-11-13: [create a token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/).
+- Confirmed 2026-11-13: a push to `main` ran the checks and deployed in one job. Without signing in, the `workers.dev` URL and a Version URL both redirected to the Access login page. `wrangler versions upload` returned a Version URL and left the deployed version unchanged.
+- A type error made the check command fail on my machine. I did not push a failing commit to watch the job stop.
+- Turning on Access required Zero Trust, which asks for a payment method on the Free plan. Seen in the dashboard, 2026-11-13.
 - Revisit if the site starts to store data, if it needs Durable Objects, or if work moves to pull requests. Per-branch Worker Previews would fit a pull request workflow.

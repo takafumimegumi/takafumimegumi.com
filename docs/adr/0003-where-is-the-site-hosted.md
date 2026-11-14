@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -45,6 +45,8 @@ On Cloudflare, rate limiting and email sending are bindings on the same platform
 ## Notes
 
 - Decided: 2026-11-13.
+- Confirmed 2026-11-13: an Astro build with one prerendered page and one server route was deployed to Workers. The page was served as a static asset, and the route ran in the Worker.
+- By default, the Astro adapter adds a KV namespace for sessions and a Cloudflare Images binding. Both are turned off in the Astro configuration, so the only binding is the static assets. Seen in the generated Worker configuration, 2026-11-13.
 - Workers Free plan: 100,000 requests a day, 10 ms CPU per request, static asset requests free and unlimited. Checked 2026-11-13: [pricing](https://developers.cloudflare.com/workers/platform/pricing/), [limits](https://developers.cloudflare.com/workers/platform/limits/).
 - Cloudflare recommends Workers over Pages for new projects. Checked 2026-11-13: [best practices](https://developers.cloudflare.com/workers/best-practices/workers-best-practices/).
 - Vercel Hobby and Netlify Free terms. Checked 2026-11-13: [Vercel](https://vercel.com/docs/limits/fair-use-guidelines), [Netlify](https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-credit-based-plans/credit-based-pricing-plans/).
