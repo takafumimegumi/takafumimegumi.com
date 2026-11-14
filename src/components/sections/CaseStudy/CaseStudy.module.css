@@ -1,0 +1,86 @@
+.root {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  color: #eceeed;
+  background: #0d1512;
+  border: 0;
+  transition: opacity 0.3s ease-out;
+}
+
+/* Set by the script for one frame on open, and while closing. */
+.root[data-fading] {
+  opacity: 0;
+}
+
+:global(html):has(.root[open]) {
+  overflow: hidden;
+}
+
+.page {
+  min-height: 100%;
+  padding-bottom: 96px;
+  background: linear-gradient(180deg, #0b493c 0, #0d1512 720px);
+  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.root[data-fading] .page {
+  transform: translateY(16px);
+}
+
+.top {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 16px;
+  background: rgb(11 73 60 / 92%);
+}
+
+.back {
+  color: #a6f06a;
+}
+
+.close {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border: 1.5px solid #eceeed;
+  border-radius: 50%;
+}
+
+.close::before,
+.close::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 14px;
+  height: 2px;
+  content: "";
+  background: #eceeed;
+}
+
+.close::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.close::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.main {
+  display: grid;
+  gap: 40px;
+  max-width: 880px;
+  padding: 24px 16px 0;
+  margin: 0 auto;
+}

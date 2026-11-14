@@ -1,0 +1,49 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CaseStudy from "./sections/CaseStudy/CaseStudy.astro";
+import { projectPath, projects } from "./sections/Projects/projects";
+
+interface Props {
+  /** The slug of the case study to render open. */
+  openProject?: string;
+}
+
+const HOME_TITLE = "Takafumi Megumi";
+
+const { openProject } = Astro.props;
+const opened = projects.find((project) => project.slug === openProject);
+
+// Placeholder content, tall enough to check that the scroll position survives.
+const filler = Array.from({ length: 12 });
+---
+
+<BaseLayout title={opened?.pageTitle ?? HOME_TITLE}>
+  <main>
+    <h1>Under construction.</h1>
+    {filler.map((_, i) => (
+      <p style="margin-block: 120px">Home, block {i + 1}</p>
+    ))}
+    {projects.map((project) => (
+      <p>
+        <a href={projectPath(project.slug)} data-open-case-study={project.slug}>
+          Read case study: {project.name}
+        </a>
+      </p>
+    ))}
+    {filler.map((_, i) => (
+      <p style="margin-block: 120px">Home, block {i + 13}</p>
+    ))}
+  </main>
+
+  {projects.map((project) => (
+    <CaseStudy
+      project={project}
+      open={project === opened}
+      homeTitle={HOME_TITLE}
+    >
+      {filler.map((_, i) => (
+        <p style="margin-block: 120px">Case study, block {i + 1}</p>
+      ))}
+    </CaseStudy>
+  ))}
+</BaseLayout>

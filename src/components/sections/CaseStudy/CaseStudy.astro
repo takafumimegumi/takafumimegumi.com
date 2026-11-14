@@ -1,0 +1,47 @@
+---
+import type { Project } from "../Projects/projects";
+import styles from "./CaseStudy.module.css";
+
+interface Props {
+  project: Project;
+  /** Rendered open, so the case study URL is readable without JavaScript. */
+  open: boolean;
+  homeTitle: string;
+}
+
+const { project, open, homeTitle } = Astro.props;
+const headingId = `case-study-${project.slug}`;
+---
+
+<dialog
+  class={styles.root}
+  aria-labelledby={headingId}
+  open={open}
+  data-case-study={project.slug}
+  data-page-title={project.pageTitle}
+  data-home-title={homeTitle}
+>
+  <div class={styles.page}>
+    <div class={styles.top}>
+      <!-- Links, so that closing still works as a visit to Home without JavaScript. -->
+      <a class={styles.back} href="/" data-close>
+        ← Back
+      </a>
+      <a
+        class={styles.close}
+        href="/"
+        data-close
+        aria-label="Close case study"
+        autofocus
+      ></a>
+    </div>
+    <article class={styles.main}>
+      <h2 id={headingId}>{project.name}</h2>
+      <slot />
+    </article>
+  </div>
+</dialog>
+
+<script>
+  import "./caseStudy";
+</script>
