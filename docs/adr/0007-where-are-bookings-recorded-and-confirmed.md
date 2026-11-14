@@ -54,6 +54,7 @@ The invitation arrives as a normal calendar invite from my own address. The visi
 - The refresh token is a powerful secret. If it is revoked or expires, booking stops. The form must show the error and point to the message form.
 - Check and insert are not atomic. The race check narrows the window but does not close it.
 - The invitation looks like a standard Google invite. Its design is not mine.
+- Google delivers the invitation, so I cannot control whether it reaches the inbox.
 - The OAuth app must be set to "In production". In "Testing", the token expires after seven days. The app is unverified, so I see a warning once when I grant access.
 - A guest who is not signed in to a Google account has to ask to join the call.
 - Booking depends on the Google API being up.
@@ -65,6 +66,8 @@ The invitation arrives as a normal calendar invite from my own address. The visi
 - A service account cannot invite guests without domain-wide delegation, so this uses my own OAuth token. Checked 2026-11-13: [Events: insert](https://developers.google.com/workspace/calendar/api/v3/reference/events/insert).
 - Google recommends a new Meet link for every event. Checked 2026-11-13: [release notes](https://developers.google.com/calendar/releases).
 - The scopes `calendar.freebusy` and `calendar.events.owned` exist and cover these calls. Checked 2026-11-13: [scopes](https://developers.google.com/workspace/calendar/api/auth). I have not confirmed whether Google classes them as sensitive.
-- A Google help page says guests who are not signed in cannot join from a mobile device. Checked 2026-11-13: [Meet help](https://support.google.com/meet/answer/9303069?hl=en&co=GENIE.Platform%3DDesktop). I have not tested this.
+- A guest without a Google account can join by entering a name and asking to join. For meetings organized by a personal account, the organizer or a participant must let them in. Checked 2026-11-13: [Meet help](https://support.google.com/meet/answer/9303069?hl=en&co=GENIE.Platform%3DDesktop). I have not tested this on a device.
+- Run from a local script against a personal Google account, 2026-11-13: both scopes were granted, an event with a Meet link and one guest was created, and the invitation came from my own address with my address as the reply-to. It was delivered to a Yahoo! JAPAN mailbox, where it landed in the spam folder.
+- Switching the OAuth app to "In production" requires a home page URL and a privacy policy URL. Seen in the Google Cloud console, 2026-11-13.
 - I could not confirm whether hosted scheduling services offer API access on a free plan. Their own pages disagree.
 - Revisit if double bookings happen, if the token proves fragile, or if guests cannot join calls.
