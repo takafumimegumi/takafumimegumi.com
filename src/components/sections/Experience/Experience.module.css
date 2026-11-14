@@ -1,0 +1,343 @@
+.root {
+  position: relative;
+  isolation: isolate;
+  padding-block: var(--section-space);
+  background: #f7f9f8;
+}
+
+/* A faint blueprint grid that fades toward the edges. */
+.root::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+  background-image:
+    linear-gradient(rgb(17 112 78 / 11%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(17 112 78 / 11%) 1px, transparent 1px);
+  background-size: 32px 32px;
+  -webkit-mask-image: radial-gradient(
+    ellipse 75% 65% at 50% 45%,
+    #000 35%,
+    transparent 90%
+  );
+  mask-image: radial-gradient(
+    ellipse 75% 65% at 50% 45%,
+    #000 35%,
+    transparent 90%
+  );
+}
+
+.company {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.company + .company {
+  margin-top: 56px;
+}
+
+/* The gray track of the timeline. */
+.company::before {
+  position: absolute;
+  top: 24px;
+  bottom: 0;
+  left: 7px;
+  width: 1px;
+  margin-left: -0.5px;
+  content: "";
+  background: var(--color-border);
+}
+
+/* No logos (they need each company's permission). A deep green tag marks where a company starts. */
+.companyName {
+  position: relative;
+  z-index: 2;
+  justify-self: start;
+  padding: 8px 16px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 20px;
+  color: var(--white);
+  letter-spacing: 0.01em;
+  background: var(--forest-12);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card);
+}
+
+.role {
+  position: relative;
+  padding-left: 28px;
+}
+
+/* The dot on the timeline. */
+.role::before {
+  position: absolute;
+  top: 24px;
+  left: 0;
+  box-sizing: border-box;
+  width: 14px;
+  height: 14px;
+  content: "";
+  background: var(--sage-2);
+  border: 2px solid var(--forest-9);
+  border-radius: 50%;
+}
+
+.card {
+  padding: 20px 18px;
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.title {
+  font-size: var(--text-title);
+  font-weight: 700;
+  line-height: var(--leading-title);
+}
+
+.type {
+  font-size: var(--text-small);
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
+.product {
+  margin-top: 4px;
+  font-size: var(--text-small);
+  line-height: var(--leading-small);
+  color: var(--color-text-muted);
+}
+
+.period {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--color-text-muted);
+  letter-spacing: 0.06em;
+}
+
+.period::before {
+  width: 8px;
+  height: 8px;
+  content: "";
+  background: var(--lime-10);
+  border-radius: 1px;
+}
+
+.tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0;
+  margin: 12px 0 0;
+  list-style: none;
+}
+
+.techItem {
+  padding: 2px 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.04em;
+  background: var(--sage-3);
+  border-radius: var(--radius-xs);
+}
+
+.results {
+  display: grid;
+  gap: 12px;
+  padding: 0;
+  margin: 16px 0 0;
+  font-size: 15px;
+  line-height: 1.5;
+  list-style: none;
+}
+
+.result {
+  position: relative;
+  padding-left: 18px;
+}
+
+.result::before {
+  position: absolute;
+  top: 0.62em;
+  left: 2px;
+  width: 6px;
+  height: 6px;
+  content: "";
+  background: var(--forest-9);
+  border-radius: 50%;
+}
+
+.lead {
+  color: var(--color-text-accent);
+}
+
+@media (min-width: 768px) {
+  /* A bloom of green at the top left, dropped on phones where it muddies the narrow cards. */
+  .root {
+    background:
+      radial-gradient(
+        40% 24% at 8% 14%,
+        rgb(132 182 165 / 35%),
+        transparent 70%
+      ),
+      #f7f9f8;
+  }
+
+  /* Cards alternate sides of the center line, one row each. */
+  .company {
+    gap: 8px;
+    margin-top: 48px;
+  }
+
+  .company::before {
+    left: 50%;
+  }
+
+  .companyName {
+    justify-self: center;
+  }
+
+  .role {
+    width: calc(50% - 24px);
+    padding-left: 0;
+  }
+
+  .role::before {
+    left: auto;
+  }
+
+  .role[data-side="left"] {
+    justify-self: start;
+  }
+
+  .role[data-side="left"]::before {
+    right: -31px;
+  }
+
+  .role[data-side="right"] {
+    justify-self: end;
+  }
+
+  .role[data-side="right"]::before {
+    left: -31px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .results {
+    font-size: var(--text-small);
+  }
+}
+
+@media (min-width: 1024px) {
+  .companyName {
+    padding: 8px 20px;
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .company {
+    gap: 14px;
+    margin-top: 64px;
+  }
+
+  .role {
+    width: calc(50% - 36px);
+  }
+
+  .role[data-side="left"]::before {
+    right: -43px;
+  }
+
+  .role[data-side="right"]::before {
+    left: -43px;
+  }
+
+  .card {
+    padding: 28px;
+  }
+
+  .results {
+    font-size: var(--text-body);
+  }
+
+  .techItem {
+    font-size: 12px;
+  }
+}
+
+/* With the script: the green line grows over the gray track and lights each dot it reaches. */
+.root[data-timeline-ready] .company::after {
+  position: absolute;
+  top: 24px;
+  bottom: 0;
+  left: 7px;
+  width: 2px;
+  margin-left: -1px;
+  content: "";
+  background: var(--forest-9);
+  transform: scaleY(var(--progress, 0));
+  transform-origin: top;
+}
+
+.root[data-timeline-ready] .role::before {
+  z-index: 1;
+  transition: background-color 0.15s ease-out;
+}
+
+.root[data-timeline-ready] .role[data-lit]::before {
+  background: var(--forest-9);
+}
+
+/* A ring spreads from the dot when the line reaches it. */
+.root[data-timeline-ready] .role[data-pulse]::before {
+  animation: ring 0.7s ease-out;
+}
+
+/* The card slides out from the line side. */
+.root[data-timeline-ready] .role {
+  --slide-from: -24px;
+}
+
+.root[data-timeline-ready] .card {
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.root[data-timeline-ready] .role:not([data-shown]) .card {
+  opacity: 0;
+  transform: translateX(var(--slide-from));
+}
+
+@media (min-width: 768px) {
+  .root[data-timeline-ready] .company::after {
+    left: 50%;
+  }
+
+  .root[data-timeline-ready] .role[data-side="left"] {
+    --slide-from: 24px;
+  }
+}
+
+@keyframes ring {
+  from {
+    box-shadow: 0 0 0 0 rgb(17 112 78 / 45%);
+  }
+
+  to {
+    box-shadow: 0 0 0 14px rgb(17 112 78 / 0%);
+  }
+}

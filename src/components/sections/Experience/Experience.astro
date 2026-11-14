@@ -1,0 +1,202 @@
+---
+import Container from "@/components/common/Container/Container.astro";
+import SectionHeading from "@/components/common/SectionHeading/SectionHeading.astro";
+import Symbol from "@/components/common/Symbol/Symbol.astro";
+import styles from "./Experience.module.css";
+
+interface Role {
+  title: string;
+  /** Shown after the title, for example "Contract". */
+  type?: string;
+  product: string;
+  period: string;
+  tech: string[];
+  /** Each result is a bold lead and the rest of the sentence. */
+  results: [lead: string, rest: string][];
+}
+
+interface Company {
+  name: string;
+  roles: Role[];
+}
+
+// Drawn with the Symbol component, because Noto Sans has no arrow.
+const ARROW = "→";
+
+const CONDO_PLATFORM = "A condo review and search platform";
+
+const COMPANIES: Company[] = [
+  {
+    name: "RENGA, Inc.",
+    roles: [
+      {
+        title: "Full Stack Engineer",
+        type: "Contract",
+        product: CONDO_PLATFORM,
+        period: "2026 – Present",
+        tech: ["React", "TypeScript", "Java", "MySQL", "Claude Code"],
+        results: [
+          [
+            "35% more",
+            " users replying to search suggestions more than once, by turning a card list into a one-at-a-time chat",
+          ],
+          [
+            "22% → 38%",
+            " of users rating listings, by adding three rating prompts to the listing page",
+          ],
+          [
+            "1.5 weeks",
+            " to build, solo, a screen where users pick areas to prefer or avoid, using a spec-first AI workflow",
+          ],
+        ],
+      },
+      {
+        title: "Product Owner",
+        product: CONDO_PLATFORM,
+        period: "2025",
+        tech: ["Figma", "Google Maps API", "React", "TypeScript", "Java"],
+        results: [
+          [
+            "43% higher",
+            " sign-up conversion by leading a search map colored by resident-review scores",
+          ],
+          [
+            "5 of 5",
+            " interviewees said they would sign up, after trying my map-search prototype in Figma",
+          ],
+          [
+            "12-week",
+            " project led as acting product owner, from user stories to the A/B readout",
+          ],
+        ],
+      },
+      {
+        title: "Scrum Master",
+        product: "A gym member app",
+        period: "2025",
+        tech: ["React Native", "Expo", "Hono.js", "PostgreSQL", "AWS Lambda"],
+        results: [
+          [
+            "3 retention features",
+            ", from visit scheduling to a prize lottery, shipped on time in three months",
+          ],
+          [
+            "Less code-review rework",
+            ", by reviewing written, diagrammed designs as a team before coding",
+          ],
+          [
+            "A prize lottery",
+            " that never gives one prize to two winners, built with tests and an audit log",
+          ],
+        ],
+      },
+      {
+        title: "Full Stack Engineer",
+        product: CONDO_PLATFORM,
+        period: "2021 – 2025",
+        tech: ["React", "TypeScript", "Java", "Sass", "MySQL"],
+        results: [
+          [
+            "16.5x",
+            " paid members in two years, by replacing pay-per-view with a review subscription",
+          ],
+          [
+            "58% higher",
+            " sign-up conversion by locking reviews until people post one or subscribe",
+          ],
+          [
+            "24 hours a week",
+            " saved on persona and journey-map work by trimming the template",
+          ],
+        ],
+      },
+    ],
+  },
+  {
+    name: "LITALICO, Inc.",
+    roles: [
+      {
+        title: "Full Stack Engineer",
+        product: "A job-search service for people with disabilities",
+        period: "2020 – 2021",
+        tech: ["Ruby on Rails", "React", "TypeScript", "MySQL"],
+        results: [
+          [
+            "120% of target",
+            " for inquiries from job seekers, a month early, by shipping 30+ UI improvements",
+          ],
+          [
+            "A success-stories section",
+            " launched from designer prototypes to schema and admin pages",
+          ],
+          [
+            "3 new-grad engineers",
+            " onboarded through a three-month program I designed",
+          ],
+        ],
+      },
+    ],
+  },
+];
+
+// Cards alternate sides of the timeline across companies, starting on the left.
+let roleCount = 0;
+const companies = COMPANIES.map((company) => ({
+  ...company,
+  roles: company.roles.map((role) => ({
+    ...role,
+    side: roleCount++ % 2 === 0 ? "left" : "right",
+  })),
+}));
+---
+
+<section class={styles.root} aria-labelledby="experience-heading" data-timeline>
+  <SectionHeading id="experience-heading" width="wide">
+    Experience
+  </SectionHeading>
+  <Container width="wide">
+    {companies.map((company) => (
+      <div class={styles.company} data-timeline-track>
+        <p class={styles.companyName} data-reveal>
+          {company.name}
+        </p>
+        {company.roles.map((role) => (
+          <article class={styles.role} data-side={role.side} data-timeline-role>
+            <div class={styles.card}>
+              <h3 class={styles.title}>
+                {role.title}
+                {role.type && <span class={styles.type}> · {role.type}</span>}
+              </h3>
+              <p class={styles.product}>{role.product}</p>
+              <p class={styles.period}>{role.period}</p>
+              <ul class={styles.tech} aria-label="Tech">
+                {role.tech.map((name) => (
+                  <li class={styles.techItem}>{name}</li>
+                ))}
+              </ul>
+              <ul class={styles.results}>
+                {role.results.map(([lead, rest]) => (
+                  <li class={styles.result}>
+                    <b class={styles.lead}>
+                      {lead.split(ARROW).map((part, index) => (
+                        <>
+                          {index > 0 && <Symbol>{ARROW}</Symbol>}
+                          {part}
+                        </>
+                      ))}
+                    </b>
+                    {rest}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </article>
+        ))}
+      </div>
+    ))}
+  </Container>
+</section>
+
+<script>
+  import "./timeline";
+</script>

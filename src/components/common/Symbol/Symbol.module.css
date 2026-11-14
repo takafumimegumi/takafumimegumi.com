@@ -1,0 +1,5 @@
+/* For arrows and other characters outside the Noto Sans subset.
+   Without this they come from the Arial fallback, which draws them long and thin. */
+.root {
+  font-family: system-ui, sans-serif;
+}

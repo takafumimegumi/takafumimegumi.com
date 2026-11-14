@@ -3,6 +3,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import Footer from "@/components/common/Footer/Footer.astro";
 import Header from "@/components/common/Header/Header.astro";
 import About from "@/components/sections/About/About.astro";
+import Experience from "@/components/sections/Experience/Experience.astro";
 import Hero from "@/components/sections/Hero/Hero.astro";
 import CaseStudy from "@/components/sections/CaseStudy/CaseStudy.astro";
 import { projectPath, projects } from "@/components/sections/Projects/projects";
@@ -26,6 +27,7 @@ const filler = Array.from({ length: 12 });
   <main id="top">
     <Hero />
     <About />
+    <Experience />
     {filler.map((_, i) => (
       <p style="margin-block: 120px">Home, block {i + 1}</p>
     ))}

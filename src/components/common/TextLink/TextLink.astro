@@ -1,5 +1,6 @@
 ---
 import type { HTMLAttributes } from "astro/types";
+import Symbol from "@/components/common/Symbol/Symbol.astro";
 import styles from "./TextLink.module.css";
 
 type Props = HTMLAttributes<"a">;
@@ -9,7 +10,7 @@ const { class: className, ...rest } = Astro.props;
 
 <a class:list={[styles.root, className]} {...rest}>
   <slot />
-  <span class={styles.arrow} aria-hidden="true">
+  <Symbol class={styles.arrow} aria-hidden="true">
     →
-  </span>
+  </Symbol>
 </a>
