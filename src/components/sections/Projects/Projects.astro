@@ -1,0 +1,48 @@
+---
+import { Picture } from "astro:assets";
+import Button from "@/components/common/Button/Button.astro";
+import Container from "@/components/common/Container/Container.astro";
+import SectionHeading from "@/components/common/SectionHeading/SectionHeading.astro";
+import { projectPath, projects } from "./projects";
+import styles from "./Projects.module.css";
+---
+
+<section class={styles.root} aria-labelledby="projects-heading">
+  <SectionHeading id="projects-heading">Projects</SectionHeading>
+  <Container>
+    {projects.map((project) => (
+      <article
+        class={styles.card}
+        aria-labelledby={`project-${project.slug}`}
+        data-ground="deep"
+        data-reveal
+      >
+        <div class={styles.text}>
+          <p class={styles.name}>{project.name}</p>
+          <h3 class={styles.heading} id={`project-${project.slug}`}>
+            {project.heading}
+          </h3>
+          <div class={styles.action}>
+            <Button
+              href={projectPath(project.slug)}
+              data-open-case-study={project.slug}
+            >
+              Read case study
+            </Button>
+          </div>
+        </div>
+        <div class={styles.image}>
+          <Picture
+            class={styles.cover}
+            src={project.cover}
+            alt={project.coverAlt}
+            formats={["avif", "webp"]}
+            widths={[480, 768, 1000, 1280]}
+            sizes="(min-width: 1024px) 500px, (min-width: 768px) 608px, calc(100vw - 64px)"
+            loading="lazy"
+          />
+        </div>
+      </article>
+    ))}
+  </Container>
+</section>

@@ -1,0 +1,145 @@
+.root {
+  padding-block: var(--section-space);
+  background: var(--sage-2);
+}
+
+.card {
+  display: grid;
+  gap: 28px;
+  padding: 32px 16px 16px;
+  margin-top: 28px;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
+}
+
+.text {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+  padding: 0 4px;
+}
+
+.name {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.heading {
+  font-size: var(--text-heading-3);
+  font-weight: 700;
+  line-height: var(--leading-heading-3);
+}
+
+/* The button is the card's last action, so it gets the widest gap. */
+.action {
+  margin-top: 16px;
+}
+
+.image {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--white);
+  border-radius: 12px;
+}
+
+.cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (min-width: 768px) {
+  .card {
+    gap: 36px;
+    padding: 40px;
+    margin-top: 36px;
+    border-radius: var(--radius-xl);
+  }
+
+  .text {
+    padding: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .card {
+    grid-template-columns: minmax(0, 1fr) 500px;
+    gap: 48px;
+    align-items: center;
+    padding: 64px;
+    margin-top: 48px;
+  }
+
+  .name {
+    font-size: 18px;
+  }
+
+  .heading {
+    margin-top: 24px;
+  }
+
+  .action {
+    margin-top: 32px;
+  }
+
+  .image {
+    border-radius: var(--radius-md);
+  }
+}
+
+/* Reveal: the card rises, its text follows line by line, and the cover opens from the left and settles. */
+:global(html[data-reveal-ready]) .card[data-reveal] {
+  transition-duration: 0.6s;
+}
+
+:global(html[data-reveal-ready]) .card:not([data-reveal="shown"]) .text > * {
+  opacity: 0;
+}
+
+/* A keyframe, not a transition, so the delay does not slow the button's own press feedback later. */
+:global(html[data-reveal-ready]) .card[data-reveal="shown"] .text > * {
+  animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) 0.18s both;
+}
+
+:global(html[data-reveal-ready])
+  .card[data-reveal="shown"]
+  .text
+  > :nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+:global(html[data-reveal-ready])
+  .card[data-reveal="shown"]
+  .text
+  > :nth-child(3) {
+  animation-delay: 0.42s;
+}
+
+:global(html[data-reveal-ready]) .image {
+  clip-path: inset(0 0 0 0 round 12px);
+  transition: clip-path 1s cubic-bezier(0.7, 0, 0.2, 1) 0.3s;
+}
+
+:global(html[data-reveal-ready]) .cover {
+  transition: transform 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 0.3s;
+}
+
+:global(html[data-reveal-ready]) .card:not([data-reveal="shown"]) .image {
+  clip-path: inset(0 100% 0 0 round 12px);
+}
+
+:global(html[data-reveal-ready]) .card:not([data-reveal="shown"]) .cover {
+  transform: scale(1.12);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
