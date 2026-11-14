@@ -11,10 +11,18 @@ export default {
       true,
       { ignorePseudoClasses: ["global"] },
     ],
+    // Range syntax, such as (width >= 768px), needs Safari 16.4.
+    "media-feature-range-notation": "prefix",
     // Safari before 15.4 needs the prefixed forms of these properties.
     "property-no-vendor-prefix": [
       true,
-      { ignoreProperties: ["mask-image", "mask-composite", "backdrop-filter"] },
+      {
+        ignoreProperties: [
+          "-webkit-mask-image",
+          "-webkit-mask-composite",
+          "-webkit-backdrop-filter",
+        ],
+      },
     ],
   },
 };

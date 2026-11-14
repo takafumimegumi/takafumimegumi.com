@@ -1,0 +1,29 @@
+/* The colors come from the ground the button sits on. */
+.root {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 12px 24px;
+  font-size: var(--text-body);
+  font-weight: 700;
+  line-height: 24px;
+  color: var(--color-text-on-action);
+  text-decoration: none;
+  cursor: pointer;
+  background: var(--color-bg-action);
+  border: 0;
+  border-radius: var(--radius-sm);
+  transition:
+    background-color var(--ease),
+    transform var(--ease);
+}
+
+.root:hover {
+  background: var(--color-bg-action-hover);
+}
+
+.root:active {
+  transform: translateY(1px);
+}

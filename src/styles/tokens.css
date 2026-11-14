@@ -1,0 +1,137 @@
+/* Design tokens. --font-sans is defined by the fonts option in astro.config.mjs. */
+:root {
+  color-scheme: light;
+
+  /* Palette */
+  --sage-2: #f7f9f8;
+  --sage-3: #eef1f0;
+  --sage-6: #d7dad9;
+  --sage-9: #868e8b;
+  --sage-11: #5f6563;
+  --sage-12: #1a211e;
+  --white: #fff;
+  --forest-8: #84b6a5;
+  --forest-9: #11704e;
+  --forest-12: #0b493c;
+  --lime-9: #a6f06a;
+  --lime-10: #8ad24e;
+  --red-3: #feebec;
+  --red-11: #ce2c31;
+  --jade-3: #e6f7ed;
+  --night-1: #0d1512;
+  --night-2: #121c18;
+  --night-line: #373b39;
+  --night-muted: #adb5b2;
+  --night-text: #eceeed;
+
+  /* Roles on the light ground: what a color is used for. Named element first. */
+  --color-bg: var(--sage-2);
+  --color-bg-action: var(--forest-12);
+  --color-bg-action-hover: var(--forest-9);
+  --color-text: var(--sage-12);
+  --color-text-muted: var(--sage-11);
+  --color-text-accent: var(--forest-9);
+  --color-text-on-action: var(--white);
+  --color-border: var(--sage-6);
+  --color-focus: var(--forest-9);
+
+  /* Type */
+  --font-mono: ui-monospace, "SF Mono", menlo, consolas, monospace;
+  --text-display: 40px;
+  --leading-display: 44px;
+  --text-heading-1: 32px;
+  --leading-heading-1: 36px;
+  --text-heading-2: 28px;
+  --leading-heading-2: 36px;
+  --text-heading-3: 24px;
+  --leading-heading-3: 32px;
+  --text-number: 48px;
+  --text-title: 20px;
+  --leading-title: 28px;
+  --text-lead: 16px;
+  --leading-lead: 24px;
+  --text-body: 16px;
+  --leading-body: 24px;
+  --text-small: 14px;
+  --leading-small: 20px;
+  --text-label: 12px;
+  --leading-label: 16px;
+
+  /* Space and size */
+  --gutter: 16px;
+  --section-space: 64px;
+  --header-height: 56px;
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --shadow-card: 0 1px 2px rgb(11 73 60 / 10%), 0 10px 28px rgb(11 73 60 / 14%);
+  --ease: 0.15s ease-out;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --text-display: 56px;
+    --leading-display: 64px;
+    --text-heading-1: 40px;
+    --leading-heading-1: 44px;
+    --text-heading-2: 32px;
+    --leading-heading-2: 40px;
+    --text-heading-3: 28px;
+    --leading-heading-3: 36px;
+    --text-number: 56px;
+    --text-lead: 20px;
+    --leading-lead: 32px;
+    --gutter: 40px;
+    --section-space: 96px;
+    --header-height: 64px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --text-display: 64px;
+    --leading-display: 72px;
+    --text-heading-1: 56px;
+    --leading-heading-1: 64px;
+    --text-heading-2: 40px;
+    --leading-heading-2: 48px;
+    --text-heading-3: 32px;
+    --leading-heading-3: 40px;
+    --text-number: 72px;
+    --text-title: 24px;
+    --leading-title: 32px;
+    --text-lead: 24px;
+    --leading-lead: 36px;
+    --gutter: clamp(64px, 8vw, 160px);
+    --section-space: 120px;
+    --header-height: 72px;
+  }
+}
+
+/* A ground changes the roles for everything inside it. */
+[data-ground="forest"] {
+  --color-bg: var(--forest-9);
+  --color-bg-action: var(--lime-9);
+  --color-bg-action-hover: #b8f388;
+  --color-text: var(--white);
+  --color-text-accent: var(--lime-9);
+  --color-text-on-action: var(--sage-12);
+  --color-border: rgb(255 255 255 / 22%);
+  --color-focus: var(--lime-9);
+
+  color: var(--color-text);
+}
+
+[data-ground="deep"] {
+  --color-bg: var(--forest-12);
+  --color-bg-action: var(--lime-9);
+  --color-bg-action-hover: #b8f388;
+  --color-text: var(--white);
+  --color-text-accent: var(--lime-9);
+  --color-text-on-action: var(--sage-12);
+  --color-focus: var(--lime-9);
+
+  color: var(--color-text);
+}

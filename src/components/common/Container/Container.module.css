@@ -1,0 +1,23 @@
+.root {
+  width: 100%;
+  max-width: calc(1040px + var(--gutter) * 2);
+  padding-right: max(var(--gutter), env(safe-area-inset-right, 0px));
+  padding-left: max(var(--gutter), env(safe-area-inset-left, 0px));
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .root {
+    max-width: calc(688px + var(--gutter) * 2);
+  }
+}
+
+@media (min-width: 1024px) {
+  .root[data-width="wide"] {
+    max-width: calc(1120px + var(--gutter) * 2);
+  }
+}
+
+.root[data-width="full"] {
+  max-width: none;
+}

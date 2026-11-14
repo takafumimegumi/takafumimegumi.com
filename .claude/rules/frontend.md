@@ -19,6 +19,9 @@ paths:
 - Do not style the inside of another component. Pass a `class` to it.
 - Global CSS is `src/styles/tokens.css` and `src/styles/base.css` only.
 - Tokens are the values in the style guide tables. Write other values, such as spacing, directly.
+- Color tokens have two layers. The palette names a value: `--forest-9`. A role names a use, element first: `--color-text-accent`, `--color-bg-action`, `--color-border`.
+- Use a role for a color that changes with the ground (`data-ground`). Use the palette for a color that stays the same on every ground.
+- Add a role when something uses it, not before.
 - Shared styles live in the module, so a Preact island can import the same file. The `.astro` file is a thin wrapper.
 
 ## State and motion

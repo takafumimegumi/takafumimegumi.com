@@ -1,0 +1,15 @@
+---
+import styles from "./Container.module.css";
+
+interface Props {
+  /** The widest the content gets on a desktop screen. */
+  width?: "default" | "wide" | "full";
+  class?: string;
+}
+
+const { width = "default", class: className } = Astro.props;
+---
+
+<div class:list={[styles.root, className]} data-width={width}>
+  <slot />
+</div>

@@ -1,0 +1,38 @@
+---
+import { LINKEDIN_URL } from "../../../site";
+import Container from "../Container/Container.astro";
+import styles from "./Header.module.css";
+
+interface Props {
+  /** On the home page the links scroll. On other pages they go to the home page. */
+  onHome?: boolean;
+}
+
+const { onHome = false } = Astro.props;
+---
+
+<header class={styles.root} data-ground="forest" data-header>
+  <Container width="full" class={styles.inner}>
+    <a class={styles.mark} href={onHome ? "#top" : "/"}>
+      Tak<span class={styles.dot}>.</span>
+    </a>
+    <nav class={styles.nav} aria-label="Contact and profiles">
+      <a
+        class={styles.linkedin}
+        href={LINKEDIN_URL}
+        target="_blank"
+        rel="noopener"
+        aria-label="LinkedIn"
+      >
+        in
+      </a>
+      <a class={styles.contact} href={onHome ? "#contact" : "/#contact"}>
+        Contact
+      </a>
+    </nav>
+  </Container>
+</header>
+
+<script>
+  import "./header";
+</script>

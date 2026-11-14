@@ -1,0 +1,133 @@
+.root {
+  position: sticky;
+  top: env(safe-area-inset-top, 0);
+  z-index: 20;
+  background: var(--forest-9);
+  border-bottom: 1px solid var(--color-border);
+  transition:
+    background-color 0.25s ease-out,
+    border-color 0.25s ease-out,
+    color 0.25s ease-out;
+}
+
+/* Covers the notch area above the header with the header's own color. */
+.root::before {
+  position: absolute;
+  inset: auto 0 100%;
+  height: env(safe-area-inset-top, 0);
+  content: "";
+  background: var(--forest-9);
+  transition:
+    background-color 0.25s ease-out,
+    border-color 0.25s ease-out,
+    color 0.25s ease-out;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-height);
+}
+
+.mark {
+  font-size: var(--text-title);
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.dot {
+  color: var(--lime-9);
+  transition:
+    background-color 0.25s ease-out,
+    border-color 0.25s ease-out,
+    color 0.25s ease-out;
+}
+
+.nav {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.linkedin {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--white);
+  text-decoration: none;
+  background: var(--forest-12);
+  border-radius: var(--radius-sm);
+  transition: background-color var(--ease);
+}
+
+.linkedin:hover {
+  background: #083a30;
+}
+
+.contact {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 16px;
+  font-size: var(--text-small);
+  font-weight: 500;
+  text-decoration: none;
+  border: 1.5px solid var(--lime-9);
+  border-radius: var(--radius-sm);
+  transition:
+    background-color 0.25s ease-out,
+    border-color 0.25s ease-out,
+    color 0.25s ease-out;
+}
+
+.contact:hover {
+  color: var(--sage-12);
+  background: var(--lime-9);
+}
+
+/* Past the hero, the header turns into frosted light ground so it stops competing with the page. */
+.root[data-scrolled] {
+  --color-text: var(--sage-12);
+  --color-border: var(--sage-6);
+  --color-focus: var(--forest-9);
+
+  color: var(--sage-12);
+  background: rgb(247 249 248 / 82%);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  backdrop-filter: blur(12px) saturate(1.4);
+}
+
+.root[data-scrolled]::before {
+  background: var(--sage-2);
+}
+
+.root[data-scrolled] .dot {
+  color: var(--forest-9);
+}
+
+.root[data-scrolled] .contact {
+  border-color: var(--forest-12);
+}
+
+.root[data-scrolled] .contact:hover {
+  color: var(--white);
+  background: var(--forest-12);
+}
+
+@media (min-width: 1024px) {
+  .contact {
+    height: 40px;
+    padding: 0 20px;
+    font-size: var(--text-body);
+  }
+
+  .linkedin {
+    width: 40px;
+    height: 40px;
+  }
+}

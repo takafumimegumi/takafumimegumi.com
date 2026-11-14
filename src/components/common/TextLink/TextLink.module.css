@@ -1,0 +1,18 @@
+.root {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  padding-bottom: 4px;
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 2px solid var(--color-text-accent);
+}
+
+.arrow {
+  font-weight: 700;
+  transition: transform var(--ease);
+}
+
+.root:hover .arrow {
+  transform: translateX(4px);
+}

@@ -1,0 +1,27 @@
+---
+import { GITHUB_PROFILE_URL, LINKEDIN_URL, SITE_NAME } from "../../../site";
+import Container from "../Container/Container.astro";
+import styles from "./Footer.module.css";
+---
+
+<footer class={styles.root}>
+  <Container class={styles.inner}>
+    <p class={styles.copyright}>© 2026 {SITE_NAME}</p>
+    <nav class={styles.links} aria-label="Footer">
+      <a class={styles.link} href="/privacy/">
+        Privacy Policy
+      </a>
+      <a
+        class={styles.link}
+        href={GITHUB_PROFILE_URL}
+        target="_blank"
+        rel="noopener"
+      >
+        GitHub
+      </a>
+      <a class={styles.link} href={LINKEDIN_URL} target="_blank" rel="noopener">
+        LinkedIn
+      </a>
+    </nav>
+  </Container>
+</footer>
