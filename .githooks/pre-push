@@ -1,0 +1,23 @@
+#!/bin/sh
+# Stops a push that contains a string from the local blocklist or a value from .dev.vars.
+set -eu
+
+cd "$(git rev-parse --show-toplevel)"
+
+remote="$1"
+
+# Git writes one line per ref being pushed. An all-zero hash means "does not exist".
+while read -r _local_ref local_sha _remote_ref remote_sha; do
+  case "$local_sha" in
+    *[!0]*) ;;
+    *) continue ;; # The ref is being deleted, so there is nothing to scan.
+  esac
+
+  case "$remote_sha" in
+    *[!0]*) range="$remote_sha..$local_sha" ;;
+    *) range="$local_sha --not --remotes=$remote" ;; # A new branch.
+  esac
+
+  # shellcheck disable=SC2086 # The range is two arguments for a new branch.
+  node scripts/check-blocklist.mjs $range
+done

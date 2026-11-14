@@ -21,6 +21,8 @@ npm run check
 
 `npm run format` fixes formatting. A push to `main` runs the same checks and then deploys ([ADR-0004](docs/adr/0004-how-does-a-change-reach-production.md)).
 
+Before a push, a git hook checks the commits against a local list of text that must not be published ([ADR-0009](docs/adr/0009-where-are-secrets-and-private-text-stopped.md)).
+
 ## How this is built
 
 I plan the product, make the design and technical decisions, and review the changes. I use Claude Code for implementation. Technical decisions are recorded in [docs/adr](docs/adr/README.md).

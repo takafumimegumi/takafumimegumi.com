@@ -14,6 +14,7 @@ Technical decisions and the reasons behind them.
 | 0006 | [How are the forms protected from abuse?](0006-how-are-the-forms-protected-from-abuse.md) | Proposed |
 | 0007 | [Where are bookings recorded and confirmed?](0007-where-are-bookings-recorded-and-confirmed.md) | Proposed |
 | 0008 | [How are page views measured?](0008-how-are-page-views-measured.md) | Proposed |
+| 0009 | [Where are secrets and private text stopped?](0009-where-are-secrets-and-private-text-stopped.md) | Accepted |
 
 ## Format
 
