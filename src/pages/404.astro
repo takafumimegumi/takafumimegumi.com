@@ -14,18 +14,20 @@ import styles from "./_404.module.css";
   path="/404"
   shareImage={HOME_SHARE_IMAGE}
 >
-  <Header />
-  <main class={styles.root} data-ground="forest">
-    <Container class={styles.content}>
-      <p class={styles.code}>404</p>
-      <h1 class={styles.heading}>Page not found</h1>
-      <p class={styles.text}>
-        The page you're looking for doesn't exist, or it has moved.
-      </p>
-      <div class={styles.action}>
-        <Button href="/">Back to home</Button>
-      </div>
-    </Container>
-  </main>
-  <Footer />
+  <div class={styles.page}>
+    <Header />
+    <main class={styles.root} data-ground="forest">
+      <Container class={styles.content}>
+        <p class={styles.code}>404</p>
+        <h1 class={styles.heading}>Page not found</h1>
+        <p class={styles.text}>
+          The page you're looking for doesn't exist, or it has moved.
+        </p>
+        <div class={styles.action}>
+          <Button href="/">Back to home</Button>
+        </div>
+      </Container>
+    </main>
+    <Footer />
+  </div>
 </BaseLayout>
