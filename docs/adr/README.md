@@ -4,7 +4,16 @@ Technical decisions and the reasons behind them.
 
 ## Decisions
 
-None yet.
+| #    | Question | Status |
+| ---- | -------- | ------ |
+| 0001 | [Which framework builds the site?](0001-which-framework-builds-the-site.md) | Proposed |
+| 0002 | [How is interactive UI written?](0002-how-is-interactive-ui-written.md) | Proposed |
+| 0003 | [Where is the site hosted?](0003-where-is-the-site-hosted.md) | Proposed |
+| 0004 | [How does a change reach production?](0004-how-does-a-change-reach-production.md) | Proposed |
+| 0005 | [How are form submissions delivered?](0005-how-are-form-submissions-delivered.md) | Proposed |
+| 0006 | [How are the forms protected from abuse?](0006-how-are-the-forms-protected-from-abuse.md) | Proposed |
+| 0007 | [Where are bookings recorded and confirmed?](0007-where-are-bookings-recorded-and-confirmed.md) | Proposed |
+| 0008 | [How are page views measured?](0008-how-are-page-views-measured.md) | Proposed |
 
 ## Format
 
