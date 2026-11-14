@@ -7,14 +7,14 @@ import "@/styles/base.css";
 interface Props {
   title: string;
   description: string;
-  /** The path of this page, used for the canonical URL. */
-  path: string;
+  /** The path of this page, used for the canonical URL. Leave it out for a page with no URL of its own. */
+  path?: string;
   /** A 1200 x 630 image in public/, shown when the page is shared. */
   shareImage: { path: string; alt: string };
 }
 
 const { title, description, path, shareImage } = Astro.props;
-const canonical = new URL(path, Astro.site);
+const canonical = path && new URL(path, Astro.site);
 const shareImageUrl = new URL(shareImage.path, Astro.site);
 ---
 
@@ -27,7 +27,7 @@ const shareImageUrl = new URL(shareImage.path, Astro.site);
     <meta name="robots" content="noindex" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {canonical && <link rel="canonical" href={canonical} />}
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
@@ -37,7 +37,7 @@ const shareImageUrl = new URL(shareImage.path, Astro.site);
     <meta property="og:site_name" content={SITE_NAME} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
+    {canonical && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={shareImageUrl} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />

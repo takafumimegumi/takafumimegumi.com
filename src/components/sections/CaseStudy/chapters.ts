@@ -1,3 +1,5 @@
+import { isPlainClick } from "@/scripts/plainClick";
+
 // Tracks the reading position in a case study: the current chapter and the progress bar.
 
 /** A chapter becomes current once its top passes this point of the screen, where the eye reads. */
@@ -44,6 +46,7 @@ for (const dialog of document.querySelectorAll<HTMLDialogElement>(
   // Scroll inside the dialog, and keep the case study URL free of a fragment.
   for (const link of links) {
     link.addEventListener("click", (event) => {
+      if (!isPlainClick(event)) return;
       event.preventDefault();
       const id = link.getAttribute("href")?.slice(1);
       if (id) document.getElementById(id)?.scrollIntoView({ block: "start" });

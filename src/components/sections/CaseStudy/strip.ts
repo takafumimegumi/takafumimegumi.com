@@ -35,7 +35,8 @@ for (const wrap of document.querySelectorAll<HTMLElement>("[data-strip]")) {
   if (reducedMotion) continue;
 
   // A second, hidden copy of the screens makes the loop seamless.
-  for (const screen of [...track.children]) {
+  const screens = [...track.children] as HTMLElement[];
+  for (const screen of screens) {
     const copy = screen.cloneNode(true) as HTMLElement;
     copy.setAttribute("aria-hidden", "true");
     copy.inert = true;
@@ -52,8 +53,12 @@ for (const wrap of document.querySelectorAll<HTMLElement>("[data-strip]")) {
   let frame = 0;
   let touchTimer: ReturnType<typeof setTimeout> | undefined;
 
+  // One loop is the distance from a screen to its copy. Half the scroll width is off by the padding and a gap.
+  const firstCopy = track.children[screens.length] as HTMLElement;
+  const loopWidth = () => firstCopy.offsetLeft - screens[0].offsetLeft;
+
   const tick = (time: number) => {
-    const half = track.scrollWidth / 2;
+    const loop = loopWidth();
     const moving = !paused && !held.hover && !held.touch && !held.focus;
     if (moving && lastTime) {
       position += (time - lastTime) * SPEED_PX_PER_MS;
@@ -61,8 +66,8 @@ for (const wrap of document.querySelectorAll<HTMLElement>("[data-strip]")) {
       // Follow the visitor's own scrolling, so the drift resumes from there.
       position = track.scrollLeft;
     }
-    if (position >= half) position -= half;
-    if (moving || track.scrollLeft >= half) track.scrollLeft = position;
+    if (position >= loop) position -= loop;
+    if (moving || track.scrollLeft >= loop) track.scrollLeft = position;
     lastTime = time;
     frame = requestAnimationFrame(tick);
   };
@@ -79,9 +84,13 @@ for (const wrap of document.querySelectorAll<HTMLElement>("[data-strip]")) {
     },
     { passive: true },
   );
-  track.addEventListener("touchend", () => {
-    touchTimer = setTimeout(() => (held.touch = false), TOUCH_RESUME_MS);
-  });
+  // touchcancel too: the system can take a gesture over, and no touchend follows.
+  for (const type of ["touchend", "touchcancel"]) {
+    track.addEventListener(type, () => {
+      clearTimeout(touchTimer);
+      touchTimer = setTimeout(() => (held.touch = false), TOUCH_RESUME_MS);
+    });
+  }
 
   toggle.addEventListener("click", () => {
     paused = !paused;

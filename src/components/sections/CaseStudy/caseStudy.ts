@@ -1,11 +1,17 @@
 // Opens each case study over the home page and keeps the URL in step with it (ADR-0001).
 
+import { isPlainClick } from "@/scripts/plainClick";
+
 const FADE_MS = 300;
 
 const dialogs = [
   ...document.querySelectorAll<HTMLDialogElement>("dialog[data-case-study]"),
 ];
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+const closeTimers = new WeakMap<
+  HTMLDialogElement,
+  ReturnType<typeof setTimeout>
+>();
 
 function pathOf(dialog: HTMLDialogElement): string {
   return `/projects/${dialog.dataset.caseStudy}/`;
@@ -23,6 +29,12 @@ function openerOf(dialog: HTMLDialogElement): HTMLElement | null {
 }
 
 function show(dialog: HTMLDialogElement, animate: boolean) {
+  // Asked to open again while fading out, for example back and then forward: stay open.
+  if (dialog.open && "fading" in dialog.dataset) {
+    clearTimeout(closeTimers.get(dialog));
+    delete dialog.dataset.fading;
+    return;
+  }
   if (dialog.open) return;
   if (animate) dialog.dataset.fading = "";
   dialog.showModal();
@@ -38,7 +50,10 @@ function show(dialog: HTMLDialogElement, animate: boolean) {
 function hide(dialog: HTMLDialogElement) {
   if (!dialog.open || "fading" in dialog.dataset) return;
   dialog.dataset.fading = "";
-  setTimeout(() => dialog.close(), reducedMotion.matches ? 0 : FADE_MS);
+  closeTimers.set(
+    dialog,
+    setTimeout(() => dialog.close(), reducedMotion.matches ? 0 : FADE_MS),
+  );
 }
 
 /** Makes the open dialog match the URL. Runs after back and forward. */
@@ -78,6 +93,7 @@ for (const dialog of dialogs) {
 
   dialog.addEventListener("click", (event) => {
     if (!(event.target as Element).closest("[data-close]")) return;
+    if (!isPlainClick(event)) return;
     event.preventDefault();
     requestClose(dialog);
   });
@@ -102,8 +118,7 @@ document.addEventListener("click", (event) => {
     "a[data-open-case-study]",
   );
   if (!link) return;
-  // Leave new-tab and new-window clicks to the browser.
-  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  if (!isPlainClick(event)) return;
   const dialog = dialogs.find(
     (d) => d.dataset.caseStudy === link.dataset.openCaseStudy,
   );
