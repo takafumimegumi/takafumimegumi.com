@@ -7,7 +7,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check && astro build"
+    "format": "prettier --write .",
+    "check": "prettier --check . && eslint . && astro check && astro build"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.4.8",
@@ -15,7 +16,13 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.15.0",
+    "eslint-plugin-astro": "^3.2.1",
+    "prettier": "^3.10.1",
+    "prettier-plugin-astro": "^1.1.2",
     "typescript": "^6.0.0",
+    "typescript-eslint": "^8.72.2",
     "wrangler": "^4.162.0"
   },
   "volta": {
