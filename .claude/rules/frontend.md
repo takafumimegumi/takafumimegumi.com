@@ -11,6 +11,7 @@ paths:
 - `src/components/sections/` holds components used in one place. `src/components/common/` holds components used in two or more places.
 - A component is a folder with its markup, its styles, and its scripts.
 - Move code to `common/` or `src/scripts/` when a second place needs it, not before.
+- Import a file in the same folder with `./`. Import anything else from `@/`, which is `src/`.
 
 ## Styles
 
