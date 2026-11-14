@@ -9,7 +9,8 @@ import Hero from "@/components/sections/Hero/Hero.astro";
 import Projects from "@/components/sections/Projects/Projects.astro";
 import Skills from "@/components/sections/Skills/Skills.astro";
 import Atras from "@/components/sections/CaseStudy/Atras.astro";
-import { projects } from "@/components/sections/Projects/projects";
+import { projectPath, projects } from "@/components/sections/Projects/projects";
+import { HOME_DESCRIPTION, HOME_SHARE_IMAGE, HOME_TITLE } from "@/site";
 
 interface Props {
   /** The slug of the case study to render open. */
@@ -19,13 +20,20 @@ interface Props {
 // The content of each case study, by project slug.
 const CASE_STUDIES: Record<string, typeof Atras> = { atras: Atras };
 
-const HOME_TITLE = "Takafumi Megumi";
-
 const { openProject } = Astro.props;
 const opened = projects.find((project) => project.slug === openProject);
 ---
 
-<BaseLayout title={opened?.pageTitle ?? HOME_TITLE}>
+<BaseLayout
+  title={opened?.pageTitle ?? HOME_TITLE}
+  description={opened?.description ?? HOME_DESCRIPTION}
+  path={opened ? projectPath(opened.slug) : "/"}
+  shareImage={
+    opened
+      ? { path: opened.shareImage, alt: opened.coverAlt }
+      : HOME_SHARE_IMAGE
+  }
+>
   <Header onHome />
   <main id="top">
     <Hero />

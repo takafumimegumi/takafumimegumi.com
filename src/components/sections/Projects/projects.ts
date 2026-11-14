@@ -6,6 +6,9 @@ export interface Project {
   slug: string;
   name: string;
   pageTitle: string;
+  description: string;
+  /** A 1200 x 630 image in public/, shown when the case study is shared. */
+  shareImage: string;
   /** The line on the home page card. It names the problem, not the product. */
   heading: string;
   cover: ImageMetadata;
@@ -16,7 +19,10 @@ export const projects: Project[] = [
   {
     slug: "atras",
     name: "ATRAS",
-    pageTitle: "ATRAS | Takafumi Megumi",
+    pageTitle: "ATRAS: a rent map for Vancouver | Takafumi Megumi",
+    description:
+      "Case study: a map that shows which Vancouver neighbourhoods fit your budget. Designed and built solo in two months.",
+    shareImage: "/og-atras.jpg",
     heading:
       "Helping newcomers to Vancouver find neighbourhoods they can afford",
     cover: atrasCover,

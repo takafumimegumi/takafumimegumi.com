@@ -1,0 +1,31 @@
+---
+import Button from "@/components/common/Button/Button.astro";
+import Container from "@/components/common/Container/Container.astro";
+import Footer from "@/components/common/Footer/Footer.astro";
+import Header from "@/components/common/Header/Header.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { HOME_SHARE_IMAGE, SITE_NAME } from "@/site";
+import styles from "./_404.module.css";
+---
+
+<BaseLayout
+  title={`Page not found | ${SITE_NAME}`}
+  description="This page does not exist."
+  path="/404"
+  shareImage={HOME_SHARE_IMAGE}
+>
+  <Header />
+  <main class={styles.root} data-ground="forest">
+    <Container class={styles.content}>
+      <p class={styles.code}>404</p>
+      <h1 class={styles.heading}>Page not found</h1>
+      <p class={styles.text}>
+        The page you're looking for doesn't exist, or it has moved.
+      </p>
+      <div class={styles.action}>
+        <Button href="/">Back to home</Button>
+      </div>
+    </Container>
+  </main>
+  <Footer />
+</BaseLayout>
