@@ -1,0 +1,35 @@
+.root {
+  padding-block: var(--section-space) calc(var(--section-space) + 24px);
+  background: linear-gradient(
+    180deg,
+    #f7f9f8 0%,
+    #d3e4dc 30%,
+    #84b6a5 62%,
+    #11704e 100%
+  );
+}
+
+.head {
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+  text-align: center;
+}
+
+.heading {
+  font-size: var(--text-heading-1);
+  font-weight: 700;
+  line-height: var(--leading-heading-1);
+}
+
+.lead {
+  max-width: 30em;
+  line-height: 1.5;
+  color: var(--sage-11);
+}
+
+@media (min-width: 1024px) {
+  .lead {
+    font-size: 17px;
+  }
+}

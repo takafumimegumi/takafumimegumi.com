@@ -1,0 +1,105 @@
+---
+import Button from "@/components/common/Button/Button.astro";
+import Container from "@/components/common/Container/Container.astro";
+import { GITHUB_REPO_URL } from "@/site";
+import { ICONS, type IconName } from "./icons";
+import styles from "./Skills.module.css";
+
+interface Skill {
+  name: string;
+  icon: IconName;
+}
+
+// Two rows that move in opposite directions.
+const ROWS: { label: string; direction: "left" | "right"; skills: Skill[] }[] =
+  [
+    {
+      label: "Front end and design",
+      direction: "left",
+      skills: [
+        { name: "TypeScript", icon: "typescript" },
+        { name: "JavaScript", icon: "javascript" },
+        { name: "React", icon: "react" },
+        { name: "React Native", icon: "react" },
+        { name: "Expo", icon: "expo" },
+        { name: "Astro", icon: "astro" },
+        { name: "Sass", icon: "sass" },
+        { name: "Jest", icon: "jest" },
+        { name: "Figma", icon: "figma" },
+      ],
+    },
+    {
+      label: "Server, data and AI",
+      direction: "right",
+      skills: [
+        { name: "Java", icon: "openjdk" },
+        { name: "Node.js", icon: "nodedotjs" },
+        { name: "Hono", icon: "hono" },
+        { name: "Ruby on Rails", icon: "rubyonrails" },
+        { name: "MySQL", icon: "mysql" },
+        { name: "PostgreSQL", icon: "postgresql" },
+        { name: "AWS", icon: "amazonwebservices" },
+        { name: "Cloudflare", icon: "cloudflare" },
+        { name: "Python", icon: "python" },
+        { name: "Claude Code", icon: "claude" },
+      ],
+    },
+  ];
+
+// The list repeats once, so a shift of half the track loops without a seam.
+const COPIES = [{ hidden: false }, { hidden: true }];
+---
+
+<section class={styles.root} aria-label="Skills">
+  <!-- Each logo is defined once here and drawn with <use>, because every logo appears at least twice. -->
+  <svg class={styles.sprite} aria-hidden="true">
+    {Object.entries(ICONS).map(([name, icon]) => (
+      <symbol id={`icon-${name}`} viewBox={icon.viewBox}>
+        <path d={icon.path} />
+      </symbol>
+    ))}
+  </svg>
+
+  <div class={styles.rows} data-reveal>
+    {ROWS.map((row) => (
+      <div class={styles.row}>
+        <ul
+          class={styles.track}
+          aria-label={row.label}
+          data-direction={row.direction}
+        >
+          {COPIES.map(({ hidden }) =>
+            row.skills.map((skill) => (
+              <li class={styles.skill} aria-hidden={hidden ? "true" : null}>
+                <svg class={styles.logo} aria-hidden="true">
+                  <use href={`#icon-${skill.icon}`} />
+                </svg>
+                {skill.name}
+              </li>
+            )),
+          )}
+        </ul>
+      </div>
+    ))}
+  </div>
+
+  <Container>
+    <div class={styles.github} data-reveal>
+      <div>
+        <h2 class={styles.githubHeading}>Want to see this site's code?</h2>
+        <p class={styles.githubNote}>It's all on GitHub.</p>
+      </div>
+      <Button
+        class={styles.githubButton}
+        href={GITHUB_REPO_URL}
+        target="_blank"
+        rel="noopener"
+      >
+        <svg class={styles.buttonIcon} aria-hidden="true">
+          <use href="#icon-github"></use>
+        </svg>
+        View on GitHub
+      </Button>
+    </div>
+  </Container>
+</section>

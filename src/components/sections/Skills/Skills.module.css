@@ -1,0 +1,171 @@
+.root {
+  padding-block: var(--section-space);
+  background: var(--sage-2);
+}
+
+.sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.rows {
+  display: grid;
+  gap: 28px;
+}
+
+/* The logo rows only fade in, so they do not fight their own sideways motion. */
+:global(html[data-reveal-ready]) .rows[data-reveal] {
+  transform: none;
+}
+
+/* Both edges fade out. */
+.row {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  animation: marquee 36s linear infinite;
+}
+
+.track[data-direction="right"] {
+  animation-direction: reverse;
+}
+
+.row:hover .track {
+  animation-play-state: paused;
+}
+
+.skill {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  margin-right: 32px;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.logo {
+  width: 26px;
+  height: 26px;
+  fill: var(--sage-12);
+}
+
+.github {
+  display: grid;
+  gap: 24px;
+  padding: 28px 20px;
+  margin-top: 48px;
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.githubHeading {
+  font-size: var(--text-heading-3);
+  font-weight: 700;
+  line-height: var(--leading-heading-3);
+}
+
+.githubNote {
+  margin-top: 8px;
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+}
+
+.githubButton {
+  justify-self: start;
+}
+
+.buttonIcon {
+  width: 20px;
+  height: 20px;
+  fill: currentcolor;
+}
+
+@media (min-width: 768px) {
+  .rows {
+    gap: 36px;
+  }
+
+  .skill {
+    gap: 12px;
+    margin-right: 48px;
+    font-size: 15px;
+  }
+
+  .logo {
+    width: 32px;
+    height: 32px;
+  }
+
+  .github {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 48px;
+    align-items: center;
+    padding: 36px 40px;
+    margin-top: 72px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .rows {
+    gap: 44px;
+  }
+
+  .skill {
+    gap: 14px;
+    margin-right: 64px;
+    font-size: 17px;
+  }
+
+  .logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .github {
+    padding: 48px 56px;
+    margin-top: 96px;
+  }
+
+  .githubNote {
+    font-size: var(--text-body);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}

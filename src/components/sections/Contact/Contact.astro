@@ -1,0 +1,19 @@
+---
+import Container from "@/components/common/Container/Container.astro";
+import styles from "./Contact.module.css";
+---
+
+<!-- Only the heading for now. The booking and message forms come next. -->
+<section class={styles.root} id="contact" aria-labelledby="contact-heading">
+  <Container>
+    <div class={styles.head} data-reveal>
+      <h2 class={styles.heading} id="contact-heading">
+        Let's <em>talk</em>.
+      </h2>
+      <p class={styles.lead}>
+        I'm looking for my next full-time role in Vancouver. Book a short call,
+        or just send a message.
+      </p>
+    </div>
+  </Container>
+</section>
