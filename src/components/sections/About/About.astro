@@ -1,0 +1,92 @@
+---
+import Container from "@/components/common/Container/Container.astro";
+import TextLink from "@/components/common/TextLink/TextLink.astro";
+import styles from "./About.module.css";
+
+const STATS = [
+  { value: 6, label: ["Years building", "products"] },
+  { value: 70, label: ["Features &", "experiments"] },
+];
+
+const BOXES = [
+  {
+    label: "Open to",
+    items: ["Product Engineer", "Full-stack Engineer", "Frontend Engineer"],
+  },
+  {
+    label: "How I work",
+    items: [
+      "User research & A/B testing",
+      "AI-assisted development",
+      "Agile & Scrum",
+    ],
+  },
+  {
+    label: "Hobby",
+    items: ["🥾 Hiking in BC", "⚽️ Playing soccer", "📺 Watching anime"],
+  },
+];
+---
+
+<section class={styles.root} aria-labelledby="about-label">
+  <Container>
+    <div class={styles.grid}>
+      <div>
+        <p class={styles.label} id="about-label" data-reveal>
+          About me
+        </p>
+        <h2 class={styles.heading} data-reveal>
+          A full-stack engineer with a product manager's <em>instincts</em>.
+        </h2>
+        <div class={styles.body} data-reveal>
+          <p>
+            At a small startup in Tokyo, I owned features end to end: finding
+            the user problem, planning the solution, building it, and measuring
+            the result after release.
+          </p>
+          <p>
+            I'm based in Vancouver and authorized to work full-time in Canada,
+            no sponsorship required.
+          </p>
+        </div>
+      </div>
+      <div class={styles.side}>
+        <div class={styles.stats}>
+          {STATS.map(({ value, label }) => (
+            <p class={styles.stat} data-reveal>
+              <span class={styles.number} data-count={value}>
+                {value}+
+              </span>
+              <span class={styles.statLabel}>
+                {label[0]}
+                <br />
+                {label[1]}
+              </span>
+            </p>
+          ))}
+        </div>
+        <div class={styles.resume} data-reveal>
+          <TextLink href="/resume.pdf" download="Takafumi-Megumi-Resume.pdf">
+            Resume (PDF)
+          </TextLink>
+        </div>
+      </div>
+    </div>
+    <div class={styles.boxes}>
+      {BOXES.map(({ label, items }) => (
+        <div class={styles.box} data-reveal>
+          <p class={styles.boxLabel}>{label}</p>
+          <ul class={styles.boxList}>
+            {items.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </Container>
+</section>
+
+<script>
+  import "./countUp";
+</script>

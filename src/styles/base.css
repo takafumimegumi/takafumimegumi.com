@@ -68,3 +68,16 @@ svg {
     transition: none !important;
   }
 }
+
+/* Reveal on scroll (src/scripts/reveal.ts). Blocks are hidden only once the script
+   is ready, so the page reads fine without it. */
+html[data-reveal-ready] [data-reveal] {
+  transition:
+    opacity 0.5s ease-out,
+    transform 0.5s ease-out;
+}
+
+html[data-reveal-ready] [data-reveal]:not([data-reveal="shown"]) {
+  opacity: 0;
+  transform: translateY(24px);
+}

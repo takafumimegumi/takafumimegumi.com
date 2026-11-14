@@ -1,0 +1,172 @@
+.root {
+  padding-block: var(--section-space);
+  background: linear-gradient(180deg, #84b6a5 0, #f1f7f5 240px, #f7f9f8 420px);
+}
+
+.grid {
+  display: grid;
+  gap: 36px;
+}
+
+.label {
+  font-size: var(--text-label);
+  font-weight: 700;
+  line-height: var(--leading-label);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.heading {
+  margin-top: 14px;
+  font-size: var(--text-heading-2);
+  font-weight: 700;
+  line-height: var(--leading-heading-2);
+}
+
+.body {
+  display: grid;
+  gap: 12px;
+  max-width: 34em;
+  margin-top: 20px;
+  line-height: 1.5;
+}
+
+.side {
+  display: grid;
+  gap: 24px;
+}
+
+.stats {
+  display: grid;
+  gap: 20px;
+}
+
+.stat {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.number {
+  display: inline-block;
+  font-size: var(--text-number);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--color-text-accent);
+}
+
+.statLabel {
+  font-size: var(--text-small);
+  font-weight: 700;
+  line-height: var(--leading-small);
+}
+
+.resume {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Each group is a white card, with its label on a pale green tag. */
+.boxes {
+  display: grid;
+  gap: 12px;
+  margin-top: 40px;
+}
+
+.box {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+  justify-items: center;
+  padding: 24px 16px;
+  text-align: center;
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.boxLabel {
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: var(--leading-label);
+  color: var(--forest-12);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: rgb(132 182 165 / 22%);
+  border-radius: var(--radius-xs);
+}
+
+.boxList {
+  display: grid;
+  gap: 4px;
+  padding: 0;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  list-style: none;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: minmax(0, 400px) minmax(0, 1fr);
+    column-gap: 40px;
+  }
+
+  .side {
+    align-content: space-between;
+    justify-items: end;
+    padding-top: 48px;
+  }
+
+  .boxes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 72px;
+  }
+
+  .box {
+    padding: 28px 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: 500px minmax(0, 1fr);
+    column-gap: 120px;
+  }
+
+  .side {
+    padding-top: 56px;
+  }
+
+  .stats {
+    justify-self: end;
+  }
+
+  .resume {
+    width: 100%;
+  }
+
+  .boxes {
+    gap: 24px;
+    margin-top: 96px;
+  }
+
+  .box {
+    padding: 32px 24px;
+  }
+
+  .boxLabel {
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .boxList {
+    font-size: 18px;
+    line-height: 28px;
+  }
+}
