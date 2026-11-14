@@ -6,7 +6,7 @@ Technical decisions and the reasons behind them.
 
 | #    | Question | Status |
 | ---- | -------- | ------ |
-| 0001 | [Which framework builds the site?](0001-which-framework-builds-the-site.md) | Proposed |
+| 0001 | [Which framework builds the site?](0001-which-framework-builds-the-site.md) | Accepted |
 | 0002 | [How is interactive UI written?](0002-how-is-interactive-ui-written.md) | Proposed |
 | 0003 | [Where is the site hosted?](0003-where-is-the-site-hosted.md) | Accepted |
 | 0004 | [How does a change reach production?](0004-how-does-a-change-reach-production.md) | Accepted |
