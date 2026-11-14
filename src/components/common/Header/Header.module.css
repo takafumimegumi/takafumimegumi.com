@@ -131,3 +131,16 @@
     height: 40px;
   }
 }
+
+/* On the home page, the header content appears after the first lines of the hero. */
+@media (prefers-reduced-motion: no-preference) {
+  .root[data-intro] .inner {
+    animation: appear 0.4s ease-out 0.45s both;
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+}

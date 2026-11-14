@@ -11,7 +11,12 @@ interface Props {
 const { onHome = false } = Astro.props;
 ---
 
-<header class={styles.root} data-ground="forest" data-header>
+<header
+  class={styles.root}
+  data-ground="forest"
+  data-header
+  data-intro={onHome}
+>
   <Container width="full" class={styles.inner}>
     <a class={styles.mark} href={onHome ? "#top" : "/"}>
       Tak<span class={styles.dot}>.</span>

@@ -15,6 +15,8 @@ export default defineConfig({
       styles: ["normal"],
       subsets: ["latin"],
       fallbacks: ["system-ui", "sans-serif"],
+      // Waits up to 100 ms for the font before showing the fallback, so a cached font never flashes.
+      display: "fallback",
     },
   ],
 

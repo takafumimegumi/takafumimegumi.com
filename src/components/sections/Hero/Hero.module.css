@@ -1,0 +1,270 @@
+.root {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  min-height: clamp(600px, calc(100svh - var(--header-height)), 760px);
+  overflow: hidden;
+  color: var(--color-text);
+  background: linear-gradient(180deg, #11704e 0%, #18765a 65%, #84b6a5 100%);
+}
+
+/* Phone: the photo fills the width under the text and melts into the green at the top and bottom. */
+.photo {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  max-width: none;
+  height: 64%;
+  object-fit: cover;
+  object-position: 50% 100%;
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    #000 32%,
+    #000 84%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    #000 32%,
+    #000 84%,
+    transparent 100%
+  );
+}
+
+.text {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+  padding-top: 32px;
+  text-align: center;
+}
+
+.hello {
+  font-size: var(--text-lead);
+  line-height: var(--leading-lead);
+  opacity: 0.85;
+}
+
+.name {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  font-size: var(--text-heading-3);
+  font-weight: 700;
+  line-height: var(--leading-heading-3);
+}
+
+.name::after {
+  width: 56px;
+  height: 3px;
+  content: "";
+  background: var(--lime-9);
+  border-radius: 2px;
+}
+
+.headline {
+  margin-top: 8px;
+  font-size: var(--text-display);
+  font-weight: 700;
+  line-height: var(--leading-display);
+  letter-spacing: -0.01em;
+}
+
+.summary {
+  font-size: var(--text-lead);
+  line-height: var(--leading-lead);
+}
+
+.location {
+  font-size: var(--text-small);
+  line-height: var(--leading-small);
+  opacity: 0.85;
+}
+
+@media (min-width: 768px) {
+  .root {
+    min-height: clamp(820px, calc(100svh - var(--header-height)), 900px);
+  }
+
+  .text {
+    gap: 12px;
+    padding-top: 56px;
+  }
+
+  .location {
+    font-size: var(--text-body);
+  }
+
+  /* Portrait tablet: the photo keeps its height and melts at the sides too. */
+  .photo {
+    left: 50%;
+    width: auto;
+    aspect-ratio: 1000 / 1114;
+    transform: translateX(-50%);
+    -webkit-mask-image:
+      linear-gradient(
+        90deg,
+        transparent 0%,
+        #000 18%,
+        #000 82%,
+        transparent 100%
+      ),
+      linear-gradient(
+        180deg,
+        transparent 0%,
+        #000 32%,
+        #000 84%,
+        transparent 100%
+      );
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(
+        90deg,
+        transparent 0%,
+        #000 18%,
+        #000 82%,
+        transparent 100%
+      ),
+      linear-gradient(
+        180deg,
+        transparent 0%,
+        #000 32%,
+        #000 84%,
+        transparent 100%
+      );
+    mask-composite: intersect;
+  }
+}
+
+@media (min-width: 1024px) {
+  .root {
+    justify-content: center;
+    min-height: clamp(640px, calc(100svh - var(--header-height)), 820px);
+  }
+
+  /* Desktop: the photo takes the right 56% and melts into the green on the text side and at the bottom. */
+  .photo {
+    inset: 0 0 auto auto;
+    width: 56%;
+    height: 100%;
+    aspect-ratio: auto;
+    object-position: 0% 0%;
+    transform: none;
+    -webkit-mask-image:
+      linear-gradient(90deg, transparent 0%, #000 42%),
+      linear-gradient(0deg, transparent 0%, #000 22%);
+    mask-image:
+      linear-gradient(90deg, transparent 0%, #000 42%),
+      linear-gradient(0deg, transparent 0%, #000 22%);
+  }
+
+  /* The text grows with the screen, so it balances the photo on wide screens. */
+  .text {
+    gap: clamp(16px, 1.2vw, 24px);
+    justify-items: start;
+    padding-top: 0;
+    text-align: left;
+  }
+
+  .hello {
+    font-size: clamp(24px, 1.75vw, 32px);
+    line-height: 1.4;
+  }
+
+  .name {
+    position: relative;
+    display: flex;
+    align-items: center;
+    font-size: clamp(32px, 2.6vw, 48px);
+    line-height: 1.25;
+  }
+
+  /* The lime rule runs in from the left edge of the screen. */
+  .name::after {
+    position: absolute;
+    top: 50%;
+    right: calc(100% + clamp(16px, 1.2vw, 24px));
+    width: 100vw;
+    height: 2px;
+  }
+
+  .headline {
+    margin-top: 0;
+    font-size: clamp(64px, 5vw, 96px);
+    line-height: 1.1;
+  }
+
+  .summary {
+    font-size: clamp(24px, 1.75vw, 30px);
+    line-height: 1.4;
+  }
+
+  .location {
+    font-size: clamp(16px, 1.15vw, 20px);
+    line-height: 1.5;
+  }
+}
+
+/* Intro, on every load: the lines rise in order and the photo settles from a slight zoom.
+   The photo is never transparent, so the largest paint is not delayed. */
+@media (prefers-reduced-motion: no-preference) {
+  .text > * {
+    animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) 0.05s both;
+  }
+
+  .text > :nth-child(2) {
+    animation-delay: 0.12s;
+  }
+
+  .text > :nth-child(3) {
+    animation-delay: 0.19s;
+  }
+
+  .text > :nth-child(4) {
+    animation-delay: 0.26s;
+  }
+
+  .text > :nth-child(5) {
+    animation-delay: 0.33s;
+  }
+
+  .name::after {
+    animation: draw 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) 0.25s both;
+  }
+
+  .photo {
+    animation: settle 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) and (min-width: 1024px) {
+  .name::after {
+    transform-origin: left;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@keyframes draw {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes settle {
+  from {
+    scale: 1.06;
+  }
+}

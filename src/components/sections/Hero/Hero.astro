@@ -1,0 +1,73 @@
+---
+import { getImage } from "astro:assets";
+import desktopPhoto from "@/assets/photos/hero-desktop.jpg";
+import mobilePhoto from "@/assets/photos/hero-mobile.jpg";
+import { SITE_NAME } from "@/site";
+import Container from "@/components/common/Container/Container.astro";
+import styles from "./Hero.module.css";
+
+// Two crops of the same photo: waist-up for desktop, taller for phones and portrait tablets.
+const DESKTOP = {
+  photo: desktopPhoto,
+  media: "(min-width: 1024px)",
+  widths: [800, 1200, 1600, 1932],
+  sizes: "56vw",
+};
+const MOBILE = {
+  photo: mobilePhoto,
+  media: undefined,
+  widths: [480, 750, 1080],
+  sizes: "(min-width: 768px) 520px, 100vw",
+};
+
+const sources = await Promise.all(
+  [DESKTOP, MOBILE].flatMap(({ photo, media, widths, sizes }) =>
+    (["avif", "webp"] as const).map(async (format) => {
+      const image = await getImage({ src: photo, widths, format });
+      return {
+        media,
+        sizes,
+        type: `image/${format}`,
+        srcset: image.srcSet.attribute,
+        width: photo.width,
+        height: photo.height,
+      };
+    }),
+  ),
+);
+const fallback = await getImage({ src: mobilePhoto, width: 1080 });
+---
+
+<section
+  class={styles.root}
+  aria-labelledby="hero-name"
+  data-ground="forest"
+  data-hero
+>
+  <picture>
+    {sources.map((source) => (
+      <source {...source} />
+    ))}
+    <img
+      class={styles.photo}
+      src={fallback.src}
+      alt="Takafumi Megumi standing in a park in Vancouver"
+      width={mobilePhoto.width}
+      height={mobilePhoto.height}
+      fetchpriority="high"
+      decoding="async"
+    />
+  </picture>
+  <Container width="full" class={styles.text}>
+    <p class={styles.hello}>Hi, I'm Tak</p>
+    <h1 class={styles.name} id="hero-name">
+      {SITE_NAME}
+    </h1>
+    <p class={styles.headline}>
+      UI/UX ×<br />
+      <em>Engineering</em>
+    </p>
+    <p class={styles.summary}>6+ years of growing products people use.</p>
+    <p class={styles.location}>Based in Vancouver, Canada 🇨🇦</p>
+  </Container>
+</section>
