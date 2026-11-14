@@ -36,7 +36,7 @@ const opened = projects.find((project) => project.slug === openProject);
 >
   <Header onHome />
   <main id="top">
-    <Hero />
+    <Hero priority={!opened} />
     <About />
     <Experience />
     <Projects />

@@ -20,6 +20,13 @@ const MOBILE = {
   sizes: "(min-width: 768px) 520px, 100vw",
 };
 
+interface Props {
+  /** False when a case study covers the hero, so its photo does not compete with the cover. */
+  priority?: boolean;
+}
+
+const { priority = true } = Astro.props;
+
 const sources = await Promise.all(
   [DESKTOP, MOBILE].flatMap(({ photo, media, widths, sizes }) =>
     (["avif", "webp"] as const).map(async (format) => {
@@ -54,7 +61,7 @@ const fallback = await getImage({ src: mobilePhoto, width: 1080 });
       alt="Takafumi Megumi standing in a park in Vancouver"
       width={mobilePhoto.width}
       height={mobilePhoto.height}
-      fetchpriority="high"
+      fetchpriority={priority ? "high" : "low"}
       decoding="async"
     />
   </picture>
