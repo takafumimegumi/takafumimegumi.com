@@ -2,11 +2,14 @@
 import type { HTMLAttributes } from "astro/types";
 import styles from "./Button.module.css";
 
-type Props = HTMLAttributes<"a">;
+interface Props extends HTMLAttributes<"a"> {
+  /** "outline" is the quieter button, for when a filled one follows later. */
+  variant?: "filled" | "outline";
+}
 
-const { class: className, ...rest } = Astro.props;
+const { variant = "filled", class: className, ...rest } = Astro.props;
 ---
 
-<a class:list={[styles.root, className]} {...rest}>
+<a class:list={[styles.root, className]} data-variant={variant} {...rest}>
   <slot />
 </a>

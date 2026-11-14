@@ -1,0 +1,443 @@
+/* --case-gap comes from the case study dialog. */
+.label {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.itemTitle {
+  font-size: var(--text-title);
+  font-weight: 700;
+  line-height: var(--leading-title);
+}
+
+.itemText {
+  font-size: var(--text-small);
+  line-height: var(--leading-small);
+}
+
+.picture {
+  display: contents;
+}
+
+/* Research: three numbers. */
+.stats {
+  display: grid;
+  margin: 0;
+  background: var(--night-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.stat {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  padding: 16px;
+  border-top: 1px solid var(--color-border);
+}
+
+.stat:first-child {
+  border-top: 0;
+}
+
+.statNumber {
+  font-size: var(--text-heading-2);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: var(--leading-heading-2);
+  color: var(--lime-9);
+}
+
+.statText {
+  margin: 0;
+  font-size: var(--text-small);
+  line-height: var(--leading-small);
+}
+
+.sources {
+  margin-top: calc(var(--case-gap) * -1 + 12px);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--color-text-muted);
+}
+
+/* Defining the MVP: numbered decisions, and what was left out. */
+.decisions {
+  display: grid;
+  gap: 24px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.decision {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.decisionNumber {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--lime-9);
+  border: 1.5px solid var(--lime-9);
+  border-radius: 50%;
+}
+
+.decisionText {
+  display: grid;
+  gap: 4px;
+}
+
+.leftOut {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px dashed #5b625f;
+  border-radius: var(--radius-md);
+}
+
+.leftOutList {
+  display: grid;
+  gap: 12px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.leftOutItem {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  gap: 8px;
+  font-size: var(--text-small);
+  line-height: var(--leading-small);
+}
+
+.leftOutItem::before {
+  font-weight: 700;
+  color: var(--color-text-muted);
+  content: "×";
+}
+
+/* Solution: one feature per card, with its screen. */
+.features {
+  display: grid;
+  gap: 24px;
+}
+
+.feature {
+  display: grid;
+  gap: 24px;
+  align-items: center;
+  padding: 16px;
+  background: var(--night-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.featureText {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+}
+
+.browser {
+  overflow: hidden;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow:
+    0 0 0 1px var(--night-line),
+    0 16px 40px rgb(0 0 0 / 35%);
+}
+
+.browserBar {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  height: 22px;
+  padding: 0 10px;
+  background: #e6e9e7;
+}
+
+.browserDot {
+  width: 8px;
+  height: 8px;
+  background: #c3c8c5;
+  border-radius: 50%;
+}
+
+/* The budget frames sit on top of each other. The script fades one in at a time. */
+.flip {
+  position: relative;
+  aspect-ratio: 16 / 10;
+}
+
+.flipFrame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.4s ease-out;
+}
+
+.flipFrame[data-on] {
+  opacity: 1;
+}
+
+.phone {
+  justify-self: center;
+  width: 260px;
+  max-width: 100%;
+  padding: 7px;
+  background: #070a09;
+  border-radius: 34px;
+  box-shadow:
+    0 0 0 1px #2c3330,
+    0 16px 40px rgb(0 0 0 / 40%);
+}
+
+.phoneScreen {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 390 / 844;
+  object-fit: cover;
+  border-radius: 27px;
+}
+
+/* UI Components: phone screens in a row that scrolls sideways. */
+.stripWrap {
+  display: grid;
+  gap: 12px;
+}
+
+.stripNav {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.play {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  color: var(--night-text);
+  cursor: pointer;
+  background: transparent;
+  border: 1.5px solid var(--night-line);
+  border-radius: 50%;
+  transition:
+    background-color var(--ease),
+    border-color var(--ease);
+}
+
+.play:hover {
+  background: var(--night-2);
+  border-color: var(--night-text);
+}
+
+/* The button only makes sense while the row moves on its own. */
+.stripWrap:not([data-auto]) .play {
+  display: none;
+}
+
+.playIcon {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.4;
+}
+
+.playShape {
+  display: none;
+  fill: currentcolor;
+  stroke-width: 1.5;
+}
+
+.play[aria-pressed="true"] .playShape {
+  display: block;
+}
+
+.play[aria-pressed="true"] .pauseShape {
+  display: none;
+}
+
+/* The edges fade only where more screens wait. */
+.strip {
+  --fade-left: 0px;
+  --fade-right: 64px;
+
+  display: flex;
+  gap: 20px;
+  padding: 4px 2px 8px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 var(--fade-left),
+    #000 calc(100% - var(--fade-right)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 var(--fade-left),
+    #000 calc(100% - var(--fade-right)),
+    transparent 100%
+  );
+}
+
+.strip::-webkit-scrollbar {
+  display: none;
+}
+
+/* While the row runs on its own, snapping would fight the motion, and both edges fade. */
+.stripWrap[data-auto] .strip {
+  --fade-left: 48px;
+  --fade-right: 64px;
+
+  scroll-snap-type: none;
+}
+
+.screen {
+  flex: none;
+  width: 200px;
+  margin: 0;
+  scroll-snap-align: start;
+}
+
+.screen .phone {
+  width: 100%;
+  padding: 6px;
+  border-radius: 28px;
+}
+
+.screen .phoneScreen {
+  border-radius: 22px;
+}
+
+.caption {
+  display: grid;
+  gap: 2px;
+  margin-top: 12px;
+}
+
+.captionTitle {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.captionText {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--color-text-muted);
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: calc(var(--case-gap) * -1 + 16px);
+}
+
+.tile {
+  position: relative;
+  display: grid;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--night-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.tileImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.quote {
+  padding-left: 24px;
+  margin: 0;
+  font-size: var(--text-title);
+  font-weight: 700;
+  line-height: var(--leading-title);
+  border-left: 4px solid var(--lime-9);
+}
+
+.liveLink {
+  justify-self: start;
+}
+
+.thanks {
+  display: grid;
+  gap: 8px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-border);
+}
+
+@media (min-width: 768px) {
+  .stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .stat {
+    padding: 24px;
+    border-top: 0;
+    border-left: 1px solid var(--color-border);
+  }
+
+  .stat:first-child {
+    border-left: 0;
+  }
+
+  .leftOut {
+    padding: 24px;
+  }
+
+  .feature {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 8fr);
+    gap: 40px;
+    padding: 32px;
+  }
+
+  /* The phone goes on the left, so the two cards do not mirror each other. */
+  .feature[data-device="phone"] {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .feature[data-device="phone"] .phone {
+    order: -1;
+    width: 260px;
+  }
+
+  .screen {
+    width: 220px;
+  }
+
+  .tiles {
+    gap: 16px;
+  }
+
+  .quote {
+    font-size: 24px;
+    line-height: 32px;
+  }
+}

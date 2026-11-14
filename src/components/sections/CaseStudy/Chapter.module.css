@@ -1,0 +1,59 @@
+/* --case-gap comes from the case study dialog. */
+.root {
+  display: grid;
+  gap: var(--case-gap);
+  scroll-margin-top: 80px;
+}
+
+.intro {
+  display: grid;
+  gap: 16px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.heading {
+  margin-top: 8px;
+  font-size: var(--text-heading-3);
+  font-weight: 700;
+  line-height: var(--leading-heading-3);
+  text-wrap: wrap;
+}
+
+.body {
+  display: grid;
+  gap: 16px;
+}
+
+.separator {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.line {
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  background: var(--lime-9);
+  border-radius: 50%;
+}
+
+@media (min-width: 1024px) {
+  .intro {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 48px;
+  }
+}

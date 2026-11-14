@@ -27,3 +27,14 @@
 .root:active {
   transform: translateY(1px);
 }
+
+.root[data-variant="outline"] {
+  color: var(--color-bg-action);
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--color-bg-action);
+}
+
+/* Lime at 12%. The outline button is only used on the night ground. */
+.root[data-variant="outline"]:hover {
+  background: rgb(166 240 106 / 12%);
+}

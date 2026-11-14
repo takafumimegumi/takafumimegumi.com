@@ -1,6 +1,10 @@
+/* Covers the whole screen. --case-gap is the space between blocks; chapters use it too. */
 .root {
+  --case-gap: 40px;
+
   position: fixed;
   inset: 0;
+  z-index: 40;
   width: 100%;
   max-width: none;
   height: 100%;
@@ -9,8 +13,8 @@
   margin: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  color: #eceeed;
-  background: #0d1512;
+  color: var(--color-text);
+  background: var(--color-bg);
   border: 0;
   transition: opacity 0.3s ease-out;
 }
@@ -24,10 +28,11 @@
   overflow: hidden;
 }
 
+/* Deep green at the top fades into green-black. */
 .page {
   min-height: 100%;
   padding-bottom: 96px;
-  background: linear-gradient(180deg, #0b493c 0, #0d1512 720px);
+  background: linear-gradient(180deg, var(--forest-12) 0, var(--night-1) 720px);
   transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
@@ -38,24 +43,60 @@
 .top {
   position: sticky;
   top: 0;
+  z-index: 2;
+  box-sizing: content-box;
   display: flex;
+  gap: 12px;
   align-items: center;
   justify-content: space-between;
   height: 56px;
-  padding: 0 16px;
+  padding-top: env(safe-area-inset-top, 0);
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
   background: rgb(11 73 60 / 92%);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.current,
+.back {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.current {
+  color: var(--color-text-muted);
 }
 
 .back {
-  color: #a6f06a;
+  display: none;
+  padding: 8px 0;
+  font-family: var(--font-mono);
+  color: var(--lime-9);
+  text-decoration: none;
+}
+
+.back:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .close {
   position: relative;
+  flex: none;
   width: 32px;
   height: 32px;
-  border: 1.5px solid #eceeed;
+  border: 1.5px solid var(--night-text);
   border-radius: 50%;
+  transition: background-color var(--ease);
+}
+
+.close:hover {
+  background: var(--night-2);
 }
 
 .close::before,
@@ -66,7 +107,7 @@
   width: 14px;
   height: 2px;
   content: "";
-  background: #eceeed;
+  background: var(--night-text);
 }
 
 .close::before {
@@ -77,10 +118,275 @@
   transform: translate(-50%, -50%) rotate(-45deg);
 }
 
+.progress {
+  position: sticky;
+  top: calc(56px + env(safe-area-inset-top, 0px));
+  z-index: 2;
+  height: 3px;
+}
+
+.progressBar {
+  width: 0;
+  height: 100%;
+  background: var(--lime-9);
+}
+
+.grid {
+  padding: 24px max(16px, env(safe-area-inset-right, 0px)) 0
+    max(16px, env(safe-area-inset-left, 0px));
+}
+
+.toc {
+  display: none;
+}
+
 .main {
   display: grid;
-  gap: 40px;
+  gap: var(--case-gap);
+  min-width: 0;
   max-width: 880px;
-  padding: 24px 16px 0;
-  margin: 0 auto;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  padding: 4px 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--color-text-muted);
+  letter-spacing: 0.04em;
+  background: rgb(236 238 237 / 8%);
+  border-radius: var(--radius-xs);
+}
+
+/* Header spacing by proximity: tight inside a group, wider between groups. */
+.titleRow {
+  display: grid;
+  gap: 4px;
+  margin-top: calc(var(--case-gap) * -1 + 12px);
+}
+
+.name {
+  font-size: var(--text-heading-1);
+  font-weight: 700;
+  line-height: var(--leading-heading-1);
+  text-wrap: wrap;
+}
+
+/* The heading takes focus when the dialog opens, and it is not a control. */
+.name:focus-visible {
+  outline: none;
+}
+
+.divider {
+  display: none;
+}
+
+.tagline {
+  font-size: var(--text-lead);
+  line-height: var(--leading-lead);
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+  margin: calc(var(--case-gap) * -1 + 32px) 0 0;
+}
+
+.fact {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+}
+
+.factLabel {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.factValue {
+  margin: 0;
+  font-size: var(--text-small);
+  line-height: var(--leading-small);
+}
+
+.liveLink {
+  justify-self: start;
+  margin-top: calc(var(--case-gap) * -1 + 32px);
+}
+
+.rule {
+  height: 1px;
+  background: var(--color-border);
+}
+
+.cover {
+  position: relative;
+  display: grid;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--night-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.picture {
+  display: contents;
+}
+
+.coverImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (min-width: 768px) {
+  .root {
+    --case-gap: 48px;
+  }
+
+  .grid {
+    padding: 24px 40px 0;
+  }
+
+  .main {
+    margin: 0 auto;
+  }
+
+  .titleRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    align-items: baseline;
+    margin-top: calc(var(--case-gap) * -1 + 16px);
+  }
+
+  .facts,
+  .liveLink {
+    margin-top: calc(var(--case-gap) * -1 + 40px);
+  }
+}
+
+@media (min-width: 1024px) {
+  /* Desktop: Back at the top left, the close button fixed at the top right, chapters on the left. */
+  .top {
+    position: relative;
+    height: auto;
+    padding: 24px 40px;
+    background: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border: 0;
+  }
+
+  .current,
+  .progress {
+    display: none;
+  }
+
+  .back {
+    display: inline-block;
+  }
+
+  .close {
+    position: fixed;
+    top: 24px;
+    right: 40px;
+    width: 40px;
+    height: 40px;
+    background: var(--night-1);
+  }
+
+  .close::before,
+  .close::after {
+    width: 16px;
+  }
+
+  /* A 1280px frame, centered, so the columns keep their proportions on wide screens. */
+  .grid {
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    column-gap: 64px;
+    align-items: start;
+    max-width: 1280px;
+    padding: 24px 64px 0;
+    margin: 0 auto;
+  }
+
+  .toc {
+    position: sticky;
+    top: 96px;
+    display: grid;
+    gap: 4px;
+    padding-top: 296px;
+  }
+
+  /* A thin rail runs down the chapters. The current one gets a lime bar and bold text. */
+  .tocLink {
+    position: relative;
+    justify-self: stretch;
+    padding: 6px 0 6px 18px;
+    font-size: 14px;
+    line-height: 24px;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    border-left: 2px solid var(--color-border);
+    transition: color 0.25s ease-out;
+  }
+
+  .tocLink::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -2px;
+    width: 2px;
+    content: "";
+    background: var(--lime-9);
+    transform: scaleY(0);
+    transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .tocLink:hover {
+    color: var(--night-text);
+  }
+
+  .tocLink[aria-current="true"] {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--night-text);
+  }
+
+  .tocLink[aria-current="true"]::before {
+    transform: scaleY(1);
+  }
+
+  .main {
+    max-width: none;
+    margin: 0;
+  }
+
+  .titleRow {
+    align-items: center;
+  }
+
+  .divider {
+    display: block;
+    width: 2px;
+    height: 32px;
+    background: var(--color-border);
+  }
+
+  .facts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }

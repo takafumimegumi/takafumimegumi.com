@@ -1,15 +1,29 @@
 ---
+import { Picture } from "astro:assets";
+import Button from "@/components/common/Button/Button.astro";
+import Symbol from "@/components/common/Symbol/Symbol.astro";
 import type { Project } from "@/components/sections/Projects/projects";
 import styles from "./CaseStudy.module.css";
+
+export interface ChapterLink {
+  id: string;
+  title: string;
+}
 
 interface Props {
   project: Project;
   /** Rendered open, so the case study URL is readable without JavaScript. */
   open: boolean;
   homeTitle: string;
+  tags: string[];
+  tagline: string;
+  facts: { label: string; value: string }[];
+  liveUrl: string;
+  chapters: ChapterLink[];
 }
 
-const { project, open, homeTitle } = Astro.props;
+const { project, open, homeTitle, tags, tagline, facts, liveUrl, chapters } =
+  Astro.props;
 const headingId = `case-study-${project.slug}`;
 ---
 
@@ -17,6 +31,7 @@ const headingId = `case-study-${project.slug}`;
   class={styles.root}
   aria-labelledby={headingId}
   open={open}
+  data-ground="night"
   data-case-study={project.slug}
   data-page-title={project.pageTitle}
   data-home-title={homeTitle}
@@ -27,21 +42,91 @@ const headingId = `case-study-${project.slug}`;
       <a class={styles.back} href="/" data-close>
         ← Back
       </a>
+      <span class={styles.current} aria-hidden="true" data-current-chapter>
+        {chapters[0].title}
+      </span>
       <a
         class={styles.close}
         href="/"
         data-close
         aria-label="Close case study"
-        autofocus
       ></a>
     </div>
-    <article class={styles.main}>
-      <h2 id={headingId}>{project.name}</h2>
-      <slot />
-    </article>
+    <div class={styles.progress} aria-hidden="true">
+      <div class={styles.progressBar} data-progress></div>
+    </div>
+
+    <div class={styles.grid}>
+      <nav class={styles.toc} aria-label="Chapters">
+        {chapters.map((chapter, index) => (
+          <a
+            class={styles.tocLink}
+            href={`#${chapter.id}`}
+            aria-current={index === 0 ? "true" : null}
+            data-chapter-link
+          >
+            {chapter.title}
+          </a>
+        ))}
+      </nav>
+
+      <article class={styles.main}>
+        <div class={styles.tags}>
+          {tags.map((tag) => (
+            <span class={styles.tag}>{tag}</span>
+          ))}
+        </div>
+        <div class={styles.titleRow}>
+          <!-- Focus starts on the heading, so no button shows a focus ring before a key is pressed. -->
+          <h2 class={styles.name} id={headingId} tabindex="-1" autofocus>
+            {project.name}
+          </h2>
+          <span class={styles.divider} aria-hidden="true"></span>
+          <p class={styles.tagline}>{tagline}</p>
+        </div>
+        <dl class={styles.facts}>
+          {facts.map((fact) => (
+            <div class={styles.fact}>
+              <dt class={styles.factLabel}>{fact.label}</dt>
+              <dd class={styles.factValue}>{fact.value}</dd>
+            </div>
+          ))}
+        </dl>
+        <!-- Outlined, so the filled button at the end stays the strongest. -->
+        <div class={styles.liveLink}>
+          <Button
+            variant="outline"
+            href={liveUrl}
+            target="_blank"
+            rel="noopener"
+          >
+            <!-- One element, so the button's gap does not widen the space before the arrow. -->
+            <span>
+              Open {project.name} <Symbol>↗</Symbol>
+            </span>
+          </Button>
+        </div>
+        <div class={styles.rule}></div>
+        <div class={styles.cover}>
+          <Picture
+            class={styles.coverImage}
+            pictureAttributes={{ class: styles.picture }}
+            src={project.cover}
+            alt={project.coverAlt}
+            formats={["avif", "webp"]}
+            widths={[480, 768, 1000, 1280, 1600]}
+            sizes="(min-width: 1024px) 888px, (min-width: 768px) calc(100vw - 80px), calc(100vw - 32px)"
+            loading="lazy"
+          />
+        </div>
+
+        <slot />
+      </article>
+    </div>
   </div>
 </dialog>
 
 <script>
   import "./caseStudy";
+  import "./chapters";
 </script>

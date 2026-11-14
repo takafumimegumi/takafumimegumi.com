@@ -1,0 +1,391 @@
+---
+import type { ImageOutputFormat } from "astro";
+import { Picture } from "astro:assets";
+import budget1200 from "@/assets/projects/atras/budget-1200.jpg";
+import budget1600 from "@/assets/projects/atras/budget-1600.jpg";
+import budget2000 from "@/assets/projects/atras/budget-2000.jpg";
+import budget2400 from "@/assets/projects/atras/budget-2400.jpg";
+import budget2800 from "@/assets/projects/atras/budget-2800.jpg";
+import budget3400 from "@/assets/projects/atras/budget-3400.jpg";
+import logo from "@/assets/projects/atras/logo.jpg";
+import moodboard from "@/assets/projects/atras/moodboard.jpg";
+import screenAi from "@/assets/projects/atras/screen-ai.jpg";
+import screenArea from "@/assets/projects/atras/screen-area.jpg";
+import screenBudget from "@/assets/projects/atras/screen-budget.jpg";
+import screenDetails from "@/assets/projects/atras/screen-details.jpg";
+import screenHint from "@/assets/projects/atras/screen-hint.jpg";
+import screenMap from "@/assets/projects/atras/screen-map.jpg";
+import screenReviews from "@/assets/projects/atras/screen-reviews.jpg";
+import typography from "@/assets/projects/atras/typography.jpg";
+import Button from "@/components/common/Button/Button.astro";
+import Symbol from "@/components/common/Symbol/Symbol.astro";
+import type { Project } from "@/components/sections/Projects/projects";
+import CaseStudy from "./CaseStudy.astro";
+import Chapter from "./Chapter.astro";
+import styles from "./Atras.module.css";
+
+interface Props {
+  project: Project;
+  open: boolean;
+  homeTitle: string;
+}
+
+const LIVE_URL = "https://atras.rent";
+
+const CHAPTERS = {
+  overview: { id: "atras-overview", title: "Overview" },
+  research: { id: "atras-research", title: "Research" },
+  mvp: { id: "atras-mvp", title: "Defining the MVP" },
+  solution: { id: "atras-solution", title: "Solution" },
+  ui: { id: "atras-ui", title: "UI Components" },
+};
+
+const STATS = [
+  {
+    number: "90%",
+    text: "of population growth in Metro Vancouver comes from immigrants",
+  },
+  {
+    number: "55%+",
+    text: "of international students in Canada struggle to find housing",
+  },
+  {
+    number: "82.3%",
+    text: "neighbourhood satisfaction in Vancouver, below the 85.6% national average",
+  },
+];
+
+const DECISIONS = [
+  {
+    title: "Compare by neighbourhood",
+    text: "Cities were too broad and listing pins too detailed. CMHC's 25 rental zones were the right size.",
+  },
+  {
+    title: "Color by distance from the budget",
+    text: "Five colors, from well under budget to well over it.",
+  },
+  {
+    title: "Let AI write, not decide the facts",
+    text: "Each summary uses only public data I collected, and I checked every zone by eye.",
+  },
+];
+
+const LEFT_OUT = [
+  "Individual listings. Rental sites already do this, and collecting their data carries legal risk.",
+  "Open review posting. Reviews come from people I asked directly, with consent.",
+  "Cities other than Vancouver.",
+];
+
+// The map at six budgets, from $1,200 to $3,400 a month. The script shows them in turn.
+const BUDGET_FRAMES = [
+  budget1200,
+  budget1600,
+  budget2000,
+  budget2400,
+  budget2800,
+  budget3400,
+];
+
+const SCREENS = [
+  {
+    image: screenMap,
+    alt: "The map of Metro Vancouver with each area colored by how its rent compares to a $2,200 budget",
+    title: "Map",
+    text: "Every area, colored by your budget",
+  },
+  {
+    image: screenBudget,
+    alt: "The budget sheet with a slider set to $2,200 and bedroom buttons",
+    title: "Budget",
+    text: "Budget and bedrooms in one sheet",
+  },
+  {
+    image: screenHint,
+    alt: "A hint over the map that says: Tap an area to read what it is like",
+    title: "Hint",
+    text: "A hint points to the next step",
+  },
+  {
+    image: screenArea,
+    alt: "Kitsilano/Point Grey outlined on the map, with its estimated rent below",
+    title: "Area",
+    text: "The chosen area, outlined",
+  },
+  {
+    image: screenDetails,
+    alt: "The Kitsilano/Point Grey page with rent for each size, photos, and an AI summary",
+    title: "Details",
+    text: "Rent by size, photos, and a summary",
+  },
+  {
+    image: screenReviews,
+    alt: "A resident review with ratings, pros, and cons",
+    title: "Reviews",
+    text: "Ratings and words from residents",
+  },
+  {
+    image: screenAi,
+    alt: "A dialog explaining that the AI summary uses only public data",
+    title: "AI summary",
+    text: "Each summary says what it is based on",
+  },
+];
+
+const TILES = [
+  {
+    image: moodboard,
+    alt: "Moodboard: forest, ivory, and cedar colors with BC mountain and lake photos",
+  },
+  {
+    image: logo,
+    alt: "ATRAS logo: a mountain mark reflected in water, in green and white",
+  },
+  {
+    image: typography,
+    alt: "Type scale, from the area name to body text and price",
+  },
+];
+
+const PHONE_WIDTHS = [300, 600];
+const FORMATS: ImageOutputFormat[] = ["avif", "webp"];
+
+const { project, open, homeTitle } = Astro.props;
+---
+
+<CaseStudy
+  project={project}
+  open={open}
+  homeTitle={homeTitle}
+  tags={["Solo product", "PM & Engineering"]}
+  tagline="A rent map for first-time renters in Vancouver"
+  facts={[
+    { label: "Role", value: "Product, design & engineering (solo)" },
+    { label: "Timeline", value: "Jul – Sep 2026 (2 months)" },
+    { label: "Tech", value: "Astro, React, MapLibre, Claude API" },
+  ]}
+  liveUrl={LIVE_URL}
+  chapters={Object.values(CHAPTERS)}
+>
+  <Chapter
+    {...CHAPTERS.overview}
+    heading="See which neighbourhoods fit your budget, before you search for a room."
+    first
+  >
+    <Fragment slot="intro">
+      <p>
+        Newcomers to Vancouver know their budget, but not the city. Rent
+        statistics by area already exist, but only in tools built for
+        researchers.
+      </p>
+      <p>
+        ATRAS turns them into one map. Enter a budget and a bedroom count, and
+        every neighbourhood is colored by how far it sits from that budget.
+      </p>
+    </Fragment>
+  </Chapter>
+
+  <Chapter
+    {...CHAPTERS.research}
+    heading="Newcomers don't ask where to live. They ask where they can afford."
+  >
+    <p slot="intro">
+      I combined public statistics with Reddit threads from people moving to
+      Vancouver.
+    </p>
+    <dl class={styles.stats}>
+      {STATS.map((stat) => (
+        <div class={styles.stat}>
+          <dt class={styles.statNumber}>{stat.number}</dt>
+          <dd class={styles.statText}>{stat.text}</dd>
+        </div>
+      ))}
+    </dl>
+    <p class={styles.sources}>
+      Sources: Metro Vancouver forecast via CBC, BusinessToday (2025),
+      Statistics Canada Canadian Housing Survey (2018)
+    </p>
+  </Chapter>
+
+  <Chapter
+    {...CHAPTERS.mvp}
+    heading="What to build in two months, and what to leave out"
+  >
+    <p slot="intro">
+      I had two months and no backend, so I set three rules and wrote down what
+      I would not build.
+    </p>
+    <ol class={styles.decisions}>
+      {DECISIONS.map((decision, index) => (
+        <li class={styles.decision}>
+          <span class={styles.decisionNumber}>{index + 1}</span>
+          <div class={styles.decisionText}>
+            <p class={styles.itemTitle}>{decision.title}</p>
+            <p class={styles.itemText}>{decision.text}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+    <div class={styles.leftOut}>
+      <p class={styles.label}>Left out on purpose</p>
+      <ul class={styles.leftOutList}>
+        {LEFT_OUT.map((item) => (
+          <li class={styles.leftOutItem}>{item}</li>
+        ))}
+      </ul>
+    </div>
+  </Chapter>
+
+  <Chapter
+    {...CHAPTERS.solution}
+    heading="A map that reacts, and reviews you can trust."
+  >
+    <p slot="intro">Two features carry the product.</p>
+    <div class={styles.features}>
+      <div class={styles.feature}>
+        <div class={styles.featureText}>
+          <p class={styles.itemTitle}>Move your budget, watch the map change</p>
+          <p class={styles.itemText}>
+            All 25 zones recolor the moment you change your budget or bedroom
+            count.
+          </p>
+        </div>
+        <!-- Device frames are drawn in CSS: just enough to say "computer" or "phone". -->
+        <div class={styles.browser}>
+          <div class={styles.browserBar} aria-hidden="true">
+            <span class={styles.browserDot}></span>
+            <span class={styles.browserDot}></span>
+            <span class={styles.browserDot}></span>
+          </div>
+          <div
+            class={styles.flip}
+            role="img"
+            aria-label="The ATRAS map on a computer, recoloring as the budget moves between $1,200 and $3,400 a month"
+            data-flip
+          >
+            {BUDGET_FRAMES.map((frame, index) => (
+              <Picture
+                class={styles.flipFrame}
+                src={frame}
+                alt=""
+                formats={FORMATS}
+                widths={[480, 960, 1280]}
+                sizes="(min-width: 768px) 480px, calc(100vw - 66px)"
+                loading="lazy"
+                data-flip-frame
+                data-on={index === 0 ? "" : null}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+      <div class={styles.feature} data-device="phone">
+        <div class={styles.featureText}>
+          <p class={styles.itemTitle}>Hear from people who lived there</p>
+          <p class={styles.itemText}>
+            Past residents rate safety at night, friendly neighbours, groceries,
+            and transit, and say what they liked and didn't.
+          </p>
+        </div>
+        <div class={styles.phone}>
+          <Picture
+            class={styles.phoneScreen}
+            src={screenReviews}
+            alt="A review on a phone: a resident since 2026 rates the area 5 out of 5, with ratings for safety, neighbours, groceries, and transit, and their pros and cons"
+            formats={FORMATS}
+            widths={PHONE_WIDTHS}
+            sizes="260px"
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </div>
+  </Chapter>
+
+  <Chapter {...CHAPTERS.ui} heading="The design system behind the map">
+    <p slot="intro">
+      In Figma, I set the five budget colors, the type, and components such as
+      the budget input, the legend, and the area panel. Then I built them in
+      React.
+    </p>
+    <div class={styles.stripWrap} data-strip>
+      <div class={styles.stripNav}>
+        <button
+          type="button"
+          class={styles.play}
+          aria-pressed="false"
+          aria-label="Pause the moving screens"
+          data-strip-toggle
+        >
+          <svg class={styles.playIcon} viewBox="0 0 24 24" aria-hidden="true">
+            <path class={styles.pauseShape} d="M8 5v14M16 5v14"></path>
+            <path class={styles.playShape} d="M8 5l11 7-11 7z"></path>
+          </svg>
+        </button>
+      </div>
+      <div
+        class={styles.strip}
+        tabindex="0"
+        role="region"
+        aria-label="ATRAS phone screens. They move on their own; scroll sideways to see more."
+        data-strip-track
+      >
+        {SCREENS.map((screen) => (
+          <figure class={styles.screen}>
+            <div class={styles.phone}>
+              <Picture
+                class={styles.phoneScreen}
+                src={screen.image}
+                alt={screen.alt}
+                formats={FORMATS}
+                widths={PHONE_WIDTHS}
+                sizes="220px"
+                loading="lazy"
+              />
+            </div>
+            <figcaption class={styles.caption}>
+              <b class={styles.captionTitle}>{screen.title}</b>
+              <span class={styles.captionText}>{screen.text}</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+    <div class={styles.tiles}>
+      {TILES.map((tile) => (
+        <div class={styles.tile}>
+          <Picture
+            class={styles.tileImage}
+            pictureAttributes={{ class: styles.picture }}
+            src={tile.image}
+            alt={tile.alt}
+            formats={FORMATS}
+            widths={[320, 640]}
+            sizes="(min-width: 1024px) 290px, 33vw"
+            loading="lazy"
+          />
+        </div>
+      ))}
+    </div>
+    <blockquote class={styles.quote}>
+      Make an unfamiliar city a place you want to live.
+    </blockquote>
+    <div class={styles.liveLink}>
+      <Button href={LIVE_URL} target="_blank" rel="noopener">
+        <span>
+          Open ATRAS <Symbol>↗</Symbol>
+        </span>
+      </Button>
+    </div>
+    <div class={styles.thanks}>
+      <p class={styles.itemTitle}>Thanks for reading</p>
+      <p class={styles.itemText}>
+        Questions about ATRAS? I'm happy to walk you through it.
+      </p>
+    </div>
+  </Chapter>
+</CaseStudy>
+
+<script>
+  import "./flip";
+  import "./strip";
+</script>

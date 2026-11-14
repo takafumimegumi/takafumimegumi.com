@@ -8,7 +8,7 @@ import Experience from "@/components/sections/Experience/Experience.astro";
 import Hero from "@/components/sections/Hero/Hero.astro";
 import Projects from "@/components/sections/Projects/Projects.astro";
 import Skills from "@/components/sections/Skills/Skills.astro";
-import CaseStudy from "@/components/sections/CaseStudy/CaseStudy.astro";
+import Atras from "@/components/sections/CaseStudy/Atras.astro";
 import { projects } from "@/components/sections/Projects/projects";
 
 interface Props {
@@ -16,13 +16,13 @@ interface Props {
   openProject?: string;
 }
 
+// The content of each case study, by project slug.
+const CASE_STUDIES: Record<string, typeof Atras> = { atras: Atras };
+
 const HOME_TITLE = "Takafumi Megumi";
 
 const { openProject } = Astro.props;
 const opened = projects.find((project) => project.slug === openProject);
-
-// Placeholder content, tall enough to check that the scroll position survives.
-const filler = Array.from({ length: 12 });
 ---
 
 <BaseLayout title={opened?.pageTitle ?? HOME_TITLE}>
@@ -37,17 +37,16 @@ const filler = Array.from({ length: 12 });
   </main>
   <Footer />
 
-  {projects.map((project) => (
-    <CaseStudy
-      project={project}
-      open={project === opened}
-      homeTitle={HOME_TITLE}
-    >
-      {filler.map((_, i) => (
-        <p style="margin-block: 120px">Case study, block {i + 1}</p>
-      ))}
-    </CaseStudy>
-  ))}
+  {projects.map((project) => {
+    const Content = CASE_STUDIES[project.slug];
+    return (
+      <Content
+        project={project}
+        open={project === opened}
+        homeTitle={HOME_TITLE}
+      />
+    );
+  })}
 </BaseLayout>
 
 <script>

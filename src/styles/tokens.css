@@ -135,3 +135,18 @@
 
   color: var(--color-text);
 }
+
+/* The case study overlay: green-black, with lime for actions. */
+[data-ground="night"] {
+  --color-bg: var(--night-1);
+  --color-bg-action: var(--lime-9);
+  --color-bg-action-hover: #b8f388;
+  --color-text: var(--night-text);
+  --color-text-muted: var(--night-muted);
+  --color-text-accent: var(--lime-9);
+  --color-text-on-action: var(--sage-12);
+  --color-border: var(--night-line);
+  --color-focus: var(--lime-9);
+
+  color: var(--color-text);
+}
