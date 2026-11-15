@@ -87,7 +87,7 @@ describe("parseAvailabilityRules", () => {
 
   it("names the failure without repeating the rules", () => {
     expect(() => parseAvailabilityRules("{}")).toThrow(
-      expect.objectContaining({ code: "availability_rules:invalid" }),
+      expect.objectContaining({ code: "availability_rules:parse:invalid" }),
     );
   });
 });

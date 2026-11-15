@@ -1,5 +1,6 @@
 import type { SendEmail } from "@cloudflare/workers-types";
 import { OWNER_EMAIL } from "@/siteConstants";
+import { buildFailure, readFailureCode } from "../functions/failureCode";
 
 // Only a sender label. Nothing reads mail at this address.
 const FROM_ADDRESS = "contact-form@takafumimegumi.com";
@@ -31,16 +32,10 @@ export async function sendEmailToOwner(
     });
   } catch (error) {
     // The service puts a code such as "E_DELIVERY_FAILED" on its errors.
-    const serviceCode = (error as { code?: unknown } | null)?.code;
-    throw createFailure(
+    throw buildFailure(
+      "cloudflare_email",
       "send_email_to_owner",
-      typeof serviceCode === "string" ? serviceCode : "unknown",
+      readFailureCode(error) ?? "unknown",
     );
   }
-}
-
-// The code is what gets reported, so it must never contain anything a visitor typed.
-function createFailure(operation: string, detail: string): Error {
-  const code = `cloudflare_email:${operation}:${detail}`;
-  return Object.assign(new Error(code), { code });
 }

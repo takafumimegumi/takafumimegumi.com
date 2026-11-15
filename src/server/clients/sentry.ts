@@ -1,4 +1,5 @@
 import * as Sentry from "@sentry/cloudflare";
+import { readFailureCode } from "../functions/failureCode";
 
 /**
  * Reports a failure so that I get an alert (ADR-0010). Sends the source, such as "bookings", and the kind only.
@@ -15,10 +16,10 @@ export function reportFailure(source: string, error: unknown): void {
   });
 }
 
-/** Reads the code that the clients put on their errors. */
+/** The code that the clients put on their errors, or the error's name. */
 function readFailureKind(error: unknown): string {
-  const code = (error as { code?: unknown } | null)?.code;
-  if (typeof code === "string") return code;
+  const code = readFailureCode(error);
+  if (code) return code;
   // An error message can echo form input, so only the error's name is used.
   return error instanceof Error ? error.name : "unknown";
 }

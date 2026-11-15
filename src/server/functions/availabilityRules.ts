@@ -1,4 +1,5 @@
 import { z } from "astro/zod";
+import { buildFailure } from "./failureCode";
 
 export type Weekday = "0" | "1" | "2" | "3" | "4" | "5" | "6";
 
@@ -53,8 +54,7 @@ const availabilityRulesSchema = z.object({
 export function parseAvailabilityRules(json: string): AvailabilityRules {
   const parsed = availabilityRulesSchema.safeParse(parseJson(json));
   if (!parsed.success) {
-    const code = "availability_rules:invalid";
-    throw Object.assign(new Error(code), { code });
+    throw buildFailure("availability_rules", "parse", "invalid");
   }
   return parsed.data;
 }

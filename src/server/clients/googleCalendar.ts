@@ -1,5 +1,6 @@
+import type { BusyTime } from "../functions/computeOpenSlots";
 import {
-  createFailure,
+  buildCalendarFailure,
   requestCalendar,
   type GoogleCredentials,
 } from "./googleCalendarRequest";
@@ -7,11 +8,6 @@ import {
 export interface GoogleCalendarConfig extends GoogleCredentials {
   /** The calendar that bookings are written to. */
   calendarId: string;
-}
-
-export interface BusyTime {
-  start: Date;
-  end: Date;
 }
 
 interface FreeBusyResponse {
@@ -44,7 +40,7 @@ export async function listBusyTimes(
   const unreadable =
     calendars.length !== calendarIds.length ||
     calendars.some((calendar) => calendar.errors);
-  if (unreadable) throw createFailure("list_busy_times", "unreadable");
+  if (unreadable) throw buildCalendarFailure("list_busy_times", "unreadable");
 
   return calendars.flatMap((calendar) =>
     (calendar.busy ?? []).map((period) => ({
