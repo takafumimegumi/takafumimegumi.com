@@ -1,25 +1,20 @@
 import type { AnalyticsEngineDataset } from "@cloudflare/workers-types";
 import { buildFailure } from "../functions/buildFailure";
 
-/** One beacon as it is stored (ADR-0008). */
 export interface BeaconPoint {
   /** The hostname that received the beacon. A version preview URL has its own. */
   host: string;
   kind: string;
   path: string;
-  /** The source tag of the link the visit came from, or an empty string. */
   source: string;
   /** Ties the beacons of one page load together. */
   viewId: string;
   seconds: number;
-  /** The deepest scroll position, from 0 to 100. */
+  /** From 0 to 100. */
   depth: number;
 }
 
-/**
- * Stores one beacon. The write happens in the background and reports nothing back,
- * so a point that is dropped later cannot be noticed here.
- */
+/** The write happens in the background and reports nothing back, so a dropped point goes unnoticed (ADR-0008). */
 export function createBeaconPoint(
   dataset: AnalyticsEngineDataset,
   point: BeaconPoint,

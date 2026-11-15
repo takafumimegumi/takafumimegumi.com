@@ -1,5 +1,4 @@
-// Sends the page-view beacons: a view opened or left, and the events in it (ADR-0008).
-// A view is one page load. Its ID lives in memory only, and no referrer is read.
+// A view is one page load. Its ID stays in memory, and the referrer is never read (ADR-0008).
 
 import type { ContactEventName } from "@/components/sections/Contact/ContactForm";
 import { MAX_BEACON_SECONDS } from "@/siteConstants";
@@ -18,14 +17,12 @@ const FORM_EVENT_KINDS: Record<ContactEventName, BeaconKind> = {
   "contact:sent": "message_sent",
 };
 
-/** Counts the time something has been on screen, across several stretches. */
 interface Stopwatch {
   start: () => void;
   stop: () => void;
   readSeconds: () => number;
 }
 
-/** One case study, read inside its dialog. */
 interface Reading {
   dialog: HTMLDialogElement;
   path: string;
@@ -49,20 +46,19 @@ function buildStopwatch(): Stopwatch {
     readSeconds() {
       const runningMs =
         startedAt === undefined ? 0 : performance.now() - startedAt;
-      // The route refuses a longer time, and would then refuse every later beacon of the view.
+      // The route refuses a longer time, and with it every later beacon of the view.
       const seconds = Math.round((totalMs + runningMs) / 1000);
       return Math.min(seconds, MAX_BEACON_SECONDS);
     },
   };
 }
 
-/** Storage can be blocked, as in some private windows. Then the choice is not kept. */
 function storeMeasureChoice(choice: "on" | "off") {
   try {
     if (choice === "off") localStorage.setItem(MEASURE_KEY, "off");
     else localStorage.removeItem(MEASURE_KEY);
   } catch {
-    // Nothing to do: the visit is measured as usual.
+    // Storage can be blocked, as in some private windows.
   }
 }
 
@@ -76,7 +72,7 @@ function isMeasureOff(): boolean {
 
 function measureView(source: string) {
   const viewId = crypto.randomUUID();
-  // The path of the page that was loaded. Opening a case study changes the URL, not the view.
+  // Read once: opening a case study changes the URL, not the view.
   const pagePath = readPagePath(location.pathname);
   const pageStopwatch = buildStopwatch();
   let pageDepth = 0;
@@ -129,7 +125,7 @@ function measureView(source: string) {
     reading.depth = Math.max(reading.depth, depth);
   }
 
-  /** Makes a reading match its dialog, which another script opens and closes. */
+  // Another script opens and closes the dialog, so its state is read, not set.
   function syncReading(reading: Reading) {
     if (reading.dialog.open === reading.open) return;
     reading.open = reading.dialog.open;

@@ -1,6 +1,5 @@
 // Prints what the page-view beacons recorded (ADR-0008).
 // Usage: npm run report -- [days] [hostname]. The defaults are 7 days and the live site.
-// Needs CLOUDFLARE_ACCOUNT_ID and ANALYTICS_READ_TOKEN, read from .env.analytics when it exists.
 // A beacon can be read a minute or more after it is written, not at once.
 
 // Must match SITE_HOSTNAME in src/siteConstants.ts.
@@ -56,7 +55,6 @@ print(
   ),
 );
 
-/** Reads every beacon of the period, oldest first. The numbers are worked out here, not in SQL. */
 async function readRows() {
   const response = await fetch(
     `https://api.cloudflare.com/client/v4/accounts/${accountId}/analytics_engine/sql`,
@@ -88,7 +86,7 @@ async function readRows() {
   return data;
 }
 
-/** One view is one page load. A view left several times keeps its longest time. */
+/** A view can be left several times, so it keeps its longest time. */
 function groupIntoViews(rows) {
   const views = new Map();
   for (const row of rows) {
@@ -149,7 +147,6 @@ function describeView(view) {
   };
 }
 
-/** Groups items by a key and prints one line a group, the largest group first. */
 function summarizeBy(items, readKey, summarize) {
   const groups = Map.groupBy(items, readKey);
   return [...groups]

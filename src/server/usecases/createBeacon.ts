@@ -28,10 +28,7 @@ interface CreateBeaconDependencies {
 
 type CreateBeaconResult = { ok: true } | { ok: false; reason: "invalid" };
 
-/**
- * Stores one beacon from a page: a view opened or left, or an event (ADR-0008).
- * Anyone can post here, so only the shape is trusted, never what a beacon claims.
- */
+/** Anyone can post here, so only the shape of a beacon is trusted, never what it claims (ADR-0008). */
 export function createBeacon(
   dependencies: CreateBeaconDependencies,
   rawRequest: unknown,

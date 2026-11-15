@@ -3,18 +3,12 @@ const MEASURE_PARAMETER = "measure";
 const SOURCE_PATTERN = /^[a-z0-9-]{1,40}$/;
 
 export interface VisitOptions {
-  /** The source tag of the link the visit came from, or an empty string. */
   source: string;
-  /** Set when the URL asks to turn measurement on or off in this browser. */
   measure?: "on" | "off";
-  /** The URL without the two parameters. Undefined when it had neither. */
   cleanedUrl?: string;
 }
 
-/**
- * Reads what a page's URL says about measuring the visit (ADR-0008).
- * The parameters are then removed, so a copied URL does not carry them on.
- */
+/** The parameters are removed from the URL, so a copied link does not carry them on (ADR-0008). */
 export function readVisitOptions(href: string): VisitOptions {
   const url = new URL(href);
   const source = url.searchParams.get(SOURCE_PARAMETER);
