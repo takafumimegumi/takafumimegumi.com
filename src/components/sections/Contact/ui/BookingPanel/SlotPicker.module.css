@@ -20,11 +20,12 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* On a phone the arrows are the only way to the other days, so they are as large as a time. */
 .arrow {
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   cursor: pointer;
   background: var(--color-bg-surface);
@@ -102,9 +103,7 @@
   background: var(--color-bg-surface);
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-sm);
-  transition:
-    background-color var(--ease),
-    color var(--ease);
+  transition: background-color var(--ease);
 }
 
 .slot:hover {
@@ -120,6 +119,11 @@
 }
 
 @media (min-width: 768px) {
+  .arrow {
+    width: 32px;
+    height: 32px;
+  }
+
   .days {
     gap: 12px;
   }
@@ -137,6 +141,9 @@
 
   .days[data-entrance="appear"] {
     --slide-from: 0;
+
+    animation-duration: 0.25s;
+    animation-timing-function: ease-out;
   }
 }
 
