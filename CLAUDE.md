@@ -11,7 +11,6 @@ Write all committed files, comments, and commit messages in English. Use short, 
 ## Code
 
 - Comments explain why, or a constraint the code cannot show. Keep them to 3 lines or fewer.
-- When a comment relies on an external fact, include the date you checked it.
 
 ## Git
 
