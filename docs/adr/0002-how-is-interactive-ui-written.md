@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -50,7 +50,8 @@ Preact gives the same component model as React in about 3.5 kB, which is in prop
 
 ## Notes
 
-- Decided: 2026-11-13.
+- Decided: 2026-11-13. Accepted: 2026-11-15, after the form was built as an island.
 - Preact is about 3.5 kB. Checked 2026-11-13: [Preact project goals](https://preactjs.com/about/project-goals/). React publishes no official size. I have not measured it for this project.
+- Measured on the built site, 2026-11-15, gzipped: the island loads about 19 kB of JavaScript. The form's own code is 8.3 kB, Preact 4.6, signals 3.0, Astro's client for Preact 1.6, and hooks 1.3. The form does not use signals, but Astro's client loads them. None of it loads before the form is near the viewport.
 - Astro has official integrations for React, Preact, Svelte, Vue, and SolidJS. Checked 2026-11-13: [Astro docs](https://docs.astro.build/en/guides/framework-components/).
 - Revisit if the site gains several stateful screens.

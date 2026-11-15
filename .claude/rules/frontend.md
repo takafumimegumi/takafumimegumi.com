@@ -32,6 +32,9 @@ paths:
 - Name a component so that it reads without its folder: what it is for, then its shape. `BookingForm`, not `Details`.
 - The root component calls the hooks and passes what they return to `ui/`.
 - Only `api.ts` calls the server. Its functions do not throw. They return a result.
+- What decides the screen is a `status` union in `functions/`, with a pure function that returns the next state. Test that function.
+- State that only changes how a component looks, such as which page of a list is shown, stays in the component.
+- Do not decide again what the server decides. A form checks only what catches a slip: an empty field, the shape of an email.
 
 ## Styles
 
@@ -50,6 +53,8 @@ paths:
 - Use a native or ARIA state when one exists: `dialog[open]`, `aria-current`, `aria-pressed`.
 - Use a `data-*` attribute for the rest. Scripts cannot read hashed class names.
 - `base.css` turns transitions off for `prefers-reduced-motion`. Stop a looping animation where it is defined.
+- Put a one-off animation inside `@media (prefers-reduced-motion: no-preference)`. `base.css` turns off transitions only.
+- Move the focus only after the visitor acts. On page load it would scroll the page.
 
 ## Content and scripts
 
