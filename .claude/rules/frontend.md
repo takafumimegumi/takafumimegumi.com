@@ -14,7 +14,9 @@ paths:
 - `src/pages/` only assembles components. `src/layouts/` owns `<head>` and the global CSS.
 - `src/components/sections/` holds components used in one place. `src/components/common/` holds components used in two or more places.
 - A component is a folder with its markup, its styles, and its scripts.
-- Move code to `common/` or `src/scripts/` when a second place needs it, not before.
+- Move a component to `common/` when a second place needs it, not before.
+- `src/scripts/` holds scripts that belong to no single component. A script with pure functions of its own is a folder.
+- A pure function that another file calls lives in a `functions/` folder next to the code that uses it, in a file named after it.
 - Import a file in the same folder with `./`. Import anything else from `@/`, which is `src/`.
 
 ## Islands
@@ -60,4 +62,8 @@ paths:
 
 - Render repeated content at build time from a typed array at the top of the component.
 - Write visual effects in plain TypeScript. Only UI that holds state and talks to the server is an island (ADR-0002).
+- A script runs when an `.astro` file loads it in a `<script>`. It exports only types.
+- A script watches the page: the state of the DOM, and the events that components dispatch. Component code does not call a script. ESLint checks this.
+- Name a script as verb plus object, after what it does to the page: `revealBlocks.ts`.
+- Name a data file as a plural noun: `projects.ts`. It may also export a function that derives a value from its data.
 - Keep real links working: do not cancel a click that has a modifier key.

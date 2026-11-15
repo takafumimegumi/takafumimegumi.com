@@ -1,5 +1,5 @@
 // Counts each number up from zero when its block is revealed.
-import type { RevealDetail } from "@/scripts/reveal";
+import type { RevealDetail } from "@/scripts/revealBlocks";
 
 const DURATION_MS = 900;
 

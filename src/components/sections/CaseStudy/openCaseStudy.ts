@@ -1,6 +1,6 @@
 // Opens each case study over the home page and keeps the URL in step with it (ADR-0001).
 
-import { isPlainClick } from "@/scripts/plainClick";
+import { isPlainClick } from "./functions/isPlainClick";
 
 const FADE_MS = 300;
 

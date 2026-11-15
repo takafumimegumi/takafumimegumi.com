@@ -69,7 +69,7 @@ svg {
   }
 }
 
-/* Reveal on scroll (src/scripts/reveal.ts). Blocks are hidden only once the script
+/* Reveal on scroll (src/scripts/revealBlocks.ts). Blocks are hidden only once the script
    is ready, so the page reads fine without it. */
 html[data-reveal-ready] [data-reveal] {
   transition:

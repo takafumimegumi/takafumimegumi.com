@@ -1,4 +1,4 @@
-import { isPlainClick } from "@/scripts/plainClick";
+import { isPlainClick } from "./functions/isPlainClick";
 
 // Tracks the reading position in a case study: the current chapter and the progress bar.
 

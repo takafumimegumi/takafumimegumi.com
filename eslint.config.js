@@ -4,6 +4,13 @@ import astro from "eslint-plugin-astro";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
+const SCRIPT_IMPORTS = {
+  group: ["@/scripts/**"],
+  allowTypeImports: true,
+  message:
+    "A script watches the page; a component does not call it. Import only its types.",
+};
+
 export default defineConfig([
   // Build output and folders that git does not track.
   globalIgnores(["dist/", ".astro/", ".wrangler/", "private/", "tmp/"]),
@@ -67,7 +74,20 @@ export default defineConfig([
       ],
     },
   },
+  // A script watches the page. Component code does not call one (.claude/rules/frontend.md).
+  {
+    files: ["src/components/**/*.{ts,tsx}"],
+    // A <script> in an .astro file is how a script is loaded.
+    ignores: ["**/*.astro/**"],
+    rules: {
+      "@typescript-eslint/no-restricted-imports": [
+        "error",
+        { patterns: [SCRIPT_IMPORTS] },
+      ],
+    },
+  },
   // The dependency directions of the contact form (.claude/rules/frontend.md).
+  // Each block replaces the rule above for its files, so each repeats SCRIPT_IMPORTS.
   {
     files: ["src/components/sections/Contact/ui/**"],
     rules: {
@@ -75,6 +95,7 @@ export default defineConfig([
         "error",
         {
           patterns: [
+            SCRIPT_IMPORTS,
             {
               group: ["**/Contact/api", "**/Contact/hooks/**"],
               message:
@@ -92,6 +113,7 @@ export default defineConfig([
         "error",
         {
           patterns: [
+            SCRIPT_IMPORTS,
             {
               group: ["**/Contact/ui/**"],
               allowTypeImports: true,
@@ -109,6 +131,7 @@ export default defineConfig([
         "error",
         {
           patterns: [
+            SCRIPT_IMPORTS,
             {
               group: ["**/Contact/ui/**", "**/Contact/hooks/**"],
               message:
