@@ -1,6 +1,10 @@
 ---
 paths:
-  - "src/**"
+  - "src/components/**"
+  - "src/layouts/**"
+  - "src/pages/**/*.astro"
+  - "src/scripts/**"
+  - "src/styles/**"
 ---
 
 # Writing frontend code
