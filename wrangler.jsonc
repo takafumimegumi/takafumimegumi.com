@@ -20,6 +20,7 @@
   },
 
   // The message form can email this one verified address and no other (ADR-0006).
+  // It must match OWNER_EMAIL in src/siteConstants.ts.
   "send_email": [
     { "name": "EMAIL", "destination_address": "tmegumi1103@gmail.com" },
   ],

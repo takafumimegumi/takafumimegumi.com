@@ -14,18 +14,33 @@ export interface EmailContent {
 }
 
 /**
- * Emails me through Cloudflare Email Service (ADR-0005). In wrangler.jsonc, the binding allows
- * my address as the only recipient. A failed send throws with a code such as "E_DELIVERY_FAILED".
+ * Emails me through Cloudflare Email Service (ADR-0005).
+ * In wrangler.jsonc, the binding allows my address as the only recipient.
  */
 export async function sendEmailToOwner(
   binding: SendEmail,
   { senderName, replyToAddress, subject, text }: EmailContent,
 ): Promise<void> {
-  await binding.send({
-    from: { email: FROM_ADDRESS, name: senderName },
-    to: OWNER_EMAIL,
-    replyTo: replyToAddress,
-    subject,
-    text,
-  });
+  try {
+    await binding.send({
+      from: { email: FROM_ADDRESS, name: senderName },
+      to: OWNER_EMAIL,
+      replyTo: replyToAddress,
+      subject,
+      text,
+    });
+  } catch (error) {
+    // The service puts a code such as "E_DELIVERY_FAILED" on its errors.
+    const serviceCode = (error as { code?: unknown } | null)?.code;
+    throw createFailure(
+      "send_email_to_owner",
+      typeof serviceCode === "string" ? serviceCode : "unknown",
+    );
+  }
+}
+
+// The code is what gets reported, so it must never contain anything a visitor typed.
+function createFailure(operation: string, detail: string): Error {
+  const code = `cloudflare_email:${operation}:${detail}`;
+  return Object.assign(new Error(code), { code });
 }

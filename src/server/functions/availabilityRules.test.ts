@@ -36,6 +36,17 @@ describe("parseAvailabilityRules", () => {
     expect(() => parse({ windows: { "1": [["10:00", "10:00"]] } })).toThrow();
   });
 
+  it("accepts windows that touch and rejects windows that overlap by 1 minute", () => {
+    const morning = ["10:00", "12:00"];
+
+    expect(() =>
+      parse({ windows: { "1": [morning, ["12:00", "14:00"]] } }),
+    ).not.toThrow();
+    expect(() =>
+      parse({ windows: { "1": [["11:59", "14:00"], morning] } }),
+    ).toThrow();
+  });
+
   it("accepts 23:59 and rejects 25:00, which is not on the clock", () => {
     expect(() =>
       parse({ windows: { "1": [["10:00", "23:59"]] } }),

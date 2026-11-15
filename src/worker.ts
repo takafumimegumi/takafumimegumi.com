@@ -28,6 +28,9 @@ export default Sentry.withSentry(
       delete event.request;
       delete event.user;
       delete event.breadcrumbs;
+      // An uncaught error's message can echo form input. Its type and stack are enough.
+      for (const exception of event.exception?.values ?? [])
+        exception.value = "";
       // The visitor's time zone, taken from the request.
       delete event.contexts?.culture;
       // Otherwise Sentry records the address the event was sent from as the user.

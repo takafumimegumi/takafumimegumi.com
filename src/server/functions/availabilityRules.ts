@@ -33,7 +33,12 @@ const timeWindowSchema = z
 const availabilityRulesSchema = z.object({
   windows: z.partialRecord(
     z.enum(["0", "1", "2", "3", "4", "5", "6"]),
-    z.array(timeWindowSchema),
+    z
+      .array(timeWindowSchema)
+      .refine(
+        (windows) => !containsOverlap(windows),
+        "Windows on one weekday must not overlap.",
+      ),
   ),
   slotMinutes: z.number().int().positive(),
   minNoticeMinutes: z.number().int().nonnegative(),
@@ -52,6 +57,14 @@ export function parseAvailabilityRules(json: string): AvailabilityRules {
     throw Object.assign(new Error(code), { code });
   }
   return parsed.data;
+}
+
+/** Overlapping windows would offer the same slot twice. Windows that only touch are fine. */
+function containsOverlap(windows: TimeWindow[]): boolean {
+  const sorted = [...windows].sort(([a], [b]) => a - b);
+  return sorted.some(
+    ([start], index) => index > 0 && start < sorted[index - 1][1],
+  );
 }
 
 function parseJson(json: string): unknown {

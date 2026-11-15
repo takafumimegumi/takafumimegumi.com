@@ -15,7 +15,7 @@ export interface BusyTime {
 }
 
 interface FreeBusyResponse {
-  calendars: Record<
+  calendars?: Record<
     string,
     { busy?: { start: string; end: string }[]; errors?: unknown[] }
   >;
@@ -39,14 +39,19 @@ export async function listBusyTimes(
     },
   });
 
-  return Object.values(response.calendars).flatMap((calendar) => {
-    // Treating an unreadable calendar as free could double-book.
-    if (calendar.errors) throw createFailure("list_busy_times", "unreadable");
-    return (calendar.busy ?? []).map((period) => ({
+  // A calendar that is missing or unreadable must not count as free: that could double-book.
+  const calendars = Object.values(response.calendars ?? {});
+  const unreadable =
+    calendars.length !== calendarIds.length ||
+    calendars.some((calendar) => calendar.errors);
+  if (unreadable) throw createFailure("list_busy_times", "unreadable");
+
+  return calendars.flatMap((calendar) =>
+    (calendar.busy ?? []).map((period) => ({
       start: new Date(period.start),
       end: new Date(period.end),
-    }));
-  });
+    })),
+  );
 }
 
 export interface NewEvent {
@@ -58,7 +63,8 @@ export interface NewEvent {
 
 export interface CreatedEvent {
   id: string;
-  meetUrl: string;
+  /** Missing when Google has not made the link yet. The invitation carries it later. */
+  meetUrl?: string;
 }
 
 interface EventResponse {
@@ -88,23 +94,7 @@ export async function createEvent(
       },
     },
   });
-  if (!response.hangoutLink) {
-    throw createFailure("create_event", "no_meet_link");
-  }
-
   return { id: response.id, meetUrl: response.hangoutLink };
-}
-
-/** Deletes an event without emailing the guest a cancellation. */
-export async function deleteEvent(
-  config: GoogleCalendarConfig,
-  eventId: string,
-): Promise<void> {
-  await requestCalendar(config, {
-    operation: "delete_event",
-    method: "DELETE",
-    path: `${buildEventsPath(config)}/${encodeURIComponent(eventId)}?sendUpdates=none`,
-  });
 }
 
 function buildEventsPath(config: GoogleCalendarConfig): string {

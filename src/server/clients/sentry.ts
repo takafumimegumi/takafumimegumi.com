@@ -15,7 +15,7 @@ export function reportFailure(source: string, error: unknown): void {
   });
 }
 
-/** Reads the code that the clients and the Email Service put on their errors. */
+/** Reads the code that the clients put on their errors. */
 function readFailureKind(error: unknown): string {
   const code = (error as { code?: unknown } | null)?.code;
   if (typeof code === "string") return code;
