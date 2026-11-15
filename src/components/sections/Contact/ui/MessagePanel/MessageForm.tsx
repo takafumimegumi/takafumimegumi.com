@@ -19,7 +19,6 @@ import {
 } from "@/components/sections/Contact/ui/Turnstile";
 import styles from "./MessageForm.module.css";
 
-// What the visitor reads when a message fails for a reason no field explains.
 const FAILURE_TEXT: Record<MessageFailure, string> = {
   unverified: UNVERIFIED_TEXT,
   rate_limited: RATE_LIMITED_TEXT,
@@ -35,7 +34,6 @@ interface Props {
   onSubmit: (requestToken: RequestToken) => void;
 }
 
-/** The form for a message: who it is from, and what it says. */
 export function MessageForm({
   state,
   fields,
@@ -46,7 +44,6 @@ export function MessageForm({
   const turnstileBox = useRef<HTMLDivElement>(null);
   const form = useRef<HTMLFormElement>(null);
 
-  // Each rejection moves the focus to the first field to fix.
   useEffect(() => {
     if (rejectionCount === 0) return;
     form.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
@@ -59,6 +56,7 @@ export function MessageForm({
     <form
       ref={form}
       class={styles.root}
+      method="post"
       noValidate
       onSubmit={(event) => {
         event.preventDefault();

@@ -13,9 +13,13 @@ import { EmptyState } from "./EmptyState";
 import { SlotPicker } from "./SlotPicker";
 import styles from "./BookingPanel.module.css";
 
+const TAKEN_TEXT = "That time is no longer available. Please pick another.";
+// The earlier try may be what took the time. Booking another would make two calls (ADR-0007).
+const TAKEN_AFTER_NO_ANSWER_TEXT =
+  "That time is now taken, possibly by your first try. If an invitation arrives in your inbox, your call is booked and you don't need to book again. If not, please pick another time.";
+
 interface Props {
   state: BookingState;
-  /** The visitor's time zone. Undefined until the page runs in the browser. */
   timeZone: string | undefined;
   fields: BookingFields;
   rejectionCount: number;
@@ -27,7 +31,6 @@ interface Props {
   onSubmit: (requestToken: RequestToken) => void;
 }
 
-/** The booking side of the contact form. Draws the state it is given. */
 export function BookingPanel({
   state,
   timeZone,
@@ -107,7 +110,7 @@ export function BookingPanel({
     <div class={styles.choosing}>
       {step.status === "taken" && (
         <ErrorNotice>
-          That time is no longer available. Please pick another.
+          {step.mayBeBooked ? TAKEN_AFTER_NO_ANSWER_TEXT : TAKEN_TEXT}
         </ErrorNotice>
       )}
       {slots.slots.length === 0 ? (

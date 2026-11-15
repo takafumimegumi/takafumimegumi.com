@@ -18,14 +18,22 @@ const LOADED: SlotsState = { status: "loaded", slots: [START, LATER] };
 const ENTERING: BookingStep = {
   status: "entering",
   start: START,
+  mayBeBooked: false,
   invalidFields: [],
 };
-const SUBMITTING: BookingStep = { status: "submitting", start: START };
+const SUBMITTING: BookingStep = {
+  status: "submitting",
+  start: START,
+  mayBeBooked: false,
+};
+// A booking that got no answer may have been made.
 const FAILED: BookingStep = {
   status: "failed",
   start: START,
+  mayBeBooked: true,
   reason: "failed",
 };
+const TAKEN: BookingStep = { status: "taken", mayBeBooked: false };
 
 const at = (step: BookingStep, slots: SlotsState = LOADED): BookingState => ({
   slots,
@@ -84,7 +92,7 @@ describe("reduceBookingState", () => {
       );
     });
 
-    it.each([ENTERING, SUBMITTING, FAILED, { status: "taken" }] as const)(
+    it.each([ENTERING, SUBMITTING, FAILED, TAKEN] as const)(
       "takes a new list at the $status step, without leaving the step",
       (step) => {
         const state = reduceBookingState(at(step), {
@@ -152,7 +160,7 @@ describe("reduceBookingState", () => {
       ).toEqual(SUBMITTING);
       expect(
         reduceBookingState(at(FAILED), { type: "submitStarted" }).step,
-      ).toEqual(SUBMITTING);
+      ).toEqual({ ...SUBMITTING, mayBeBooked: true });
     });
 
     it("ignores a second press while a booking is being sent", () => {
@@ -180,7 +188,7 @@ describe("reduceBookingState", () => {
 
     it("goes back to the open times, without the time that was taken", () => {
       expect(finish({ ok: false, reason: "taken" })).toEqual(
-        at({ status: "taken" }, { status: "loaded", slots: [LATER] }),
+        at(TAKEN, { status: "loaded", slots: [LATER] }),
       );
     });
 
@@ -190,26 +198,66 @@ describe("reduceBookingState", () => {
       expect(state.step).toEqual({ ...ENTERING, invalidFields: ["email"] });
     });
 
-    it("fails when the server rejects only something the visitor cannot fix", () => {
-      const state = finish({ ok: false, reason: "invalid", fields: ["token"] });
+    it.each([["token"], []])(
+      "says the booking was rejected when the server names no field the visitor can fix",
+      (...fields) => {
+        const state = finish({ ok: false, reason: "invalid", fields });
 
-      expect(state.step).toEqual(FAILED);
-    });
+        // A rejected request booked nothing.
+        expect(state.step).toEqual({
+          status: "failed",
+          start: START,
+          mayBeBooked: false,
+          reason: "rejected",
+        });
+      },
+    );
 
-    it.each(["unverified", "rate_limited", "failed"] as const)(
+    it.each(["unverified", "rate_limited"] as const)(
       "keeps the details and gives the reason when the booking is %s",
       (reason) => {
         expect(finish({ ok: false, reason }).step).toEqual({
-          ...FAILED,
+          status: "failed",
+          start: START,
+          mayBeBooked: false,
           reason,
         });
       },
     );
 
+    it("notes that the call may be booked when no answer came", () => {
+      expect(finish({ ok: false, reason: "failed" }).step).toEqual(FAILED);
+    });
+
     it("ignores an answer that arrives when nothing is being sent", () => {
       const entering = at(ENTERING);
 
       expect(finish({ ok: false, reason: "failed" }, entering)).toBe(entering);
+    });
+  });
+
+  describe("trying again after no answer came", () => {
+    const retry = at({ ...SUBMITTING, mayBeBooked: true });
+
+    it("remembers that the call may be booked when the time turns out taken", () => {
+      expect(finish({ ok: false, reason: "taken" }, retry).step).toEqual({
+        status: "taken",
+        mayBeBooked: true,
+      });
+    });
+
+    it("keeps remembering it through a failure that books nothing", () => {
+      const step = finish({ ok: false, reason: "unverified" }, retry).step;
+
+      expect(step).toMatchObject({ status: "failed", mayBeBooked: true });
+    });
+
+    it("forgets it once the visitor chooses a time again", () => {
+      const taken = finish({ ok: false, reason: "taken" }, retry);
+
+      expect(
+        reduceBookingState(taken, { type: "slotChosen", start: LATER }).step,
+      ).toMatchObject({ status: "entering", mayBeBooked: false });
     });
   });
 
@@ -221,7 +269,7 @@ describe("reduceBookingState", () => {
       expect(taken.slots).toEqual({ status: "loaded", slots: [] });
       expect(
         reduceBookingState(taken, { type: "slotsLoaded", slots: FRESH }),
-      ).toEqual(at({ status: "taken" }, { status: "loaded", slots: FRESH }));
+      ).toEqual(at(TAKEN, { status: "loaded", slots: FRESH }));
     });
 
     it("shows the new list after the visitor chose another time before it arrived", () => {
@@ -249,7 +297,7 @@ describe("hasNoSlotsToShow", () => {
     expect(
       hasNoSlotsToShow(at({ status: "choosing" }, { status: "unavailable" })),
     ).toBe(true);
-    expect(hasNoSlotsToShow(at({ status: "taken" }, empty))).toBe(true);
+    expect(hasNoSlotsToShow(at(TAKEN, empty))).toBe(true);
   });
 
   it("is false while the times load, and when there is one to pick", () => {

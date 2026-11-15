@@ -4,8 +4,12 @@ import { isEmailLike } from "./isEmailLike";
 export type BookingFieldName = "name" | "email" | "topic";
 export type BookingFields = Record<BookingFieldName, string>;
 
-/** Why a booking did not go through, when no field is to blame. */
-export type BookingFailure = "unverified" | "rate_limited" | "failed";
+/**
+ * Why a booking did not go through, when no field is to blame.
+ * "failed" leaves it unknown whether the call was booked. With the others it was not.
+ */
+export type BookingFailure =
+  "unverified" | "rate_limited" | "rejected" | "failed";
 
 /** The open times. They are kept apart from the step, so they can be loaded again at any step. */
 export type SlotsState =
@@ -13,14 +17,18 @@ export type SlotsState =
   | { status: "unavailable" }
   | { status: "loaded"; slots: string[] };
 
-/** Where the visitor is in booking a call. */
+interface Attempt {
+  start: string;
+  /** An earlier try for this time ended without an answer, so the call may be booked already (ADR-0007). */
+  mayBeBooked: boolean;
+}
+
 export type BookingStep =
   | { status: "choosing" }
-  /** The chosen time could not be booked, so the visitor picks another. */
-  | { status: "taken" }
-  | { status: "entering"; start: string; invalidFields: BookingFieldName[] }
-  | { status: "submitting"; start: string }
-  | { status: "failed"; start: string; reason: BookingFailure }
+  | { status: "taken"; mayBeBooked: boolean }
+  | ({ status: "entering"; invalidFields: BookingFieldName[] } & Attempt)
+  | ({ status: "submitting" } & Attempt)
+  | ({ status: "failed"; reason: BookingFailure } & Attempt)
   | { status: "booked"; start: string; email: string; meetUrl?: string };
 
 /** What the booking panel shows: the step decides the screen, and the open times fill it. */
@@ -29,7 +37,6 @@ export interface BookingState {
   step: BookingStep;
 }
 
-/** Something that happened, which may change the open times or move to another step. */
 export type BookingEvent =
   | { type: "slotsRequested" }
   | { type: "slotsLoaded"; slots: string[] }
@@ -75,7 +82,12 @@ export function reduceBookingState(
       if (step.status !== "choosing" && step.status !== "taken") return state;
       return {
         ...state,
-        step: { status: "entering", start: event.start, invalidFields: [] },
+        step: {
+          status: "entering",
+          start: event.start,
+          mayBeBooked: false,
+          invalidFields: [],
+        },
       };
 
     case "slotChangeRequested":
@@ -101,17 +113,25 @@ export function reduceBookingState(
         step: {
           status: "entering",
           start: step.start,
+          mayBeBooked: step.mayBeBooked,
           invalidFields: event.fields,
         },
       };
 
     case "submitStarted":
       if (step.status !== "entering" && step.status !== "failed") return state;
-      return { ...state, step: { status: "submitting", start: step.start } };
+      return {
+        ...state,
+        step: {
+          status: "submitting",
+          start: step.start,
+          mayBeBooked: step.mayBeBooked,
+        },
+      };
 
     case "submitFinished":
       if (step.status !== "submitting") return state;
-      return reduceSubmitResult(slots, step.start, event.result, event.email);
+      return reduceSubmitResult(slots, step, event.result, event.email);
   }
 }
 
@@ -124,7 +144,6 @@ export function hasNoSlotsToShow({ slots, step }: BookingState): boolean {
   );
 }
 
-/** The fields the form can reject before asking the server: an empty name, and an email that is not shaped like one. */
 export function findInvalidBookingFields(
   fields: BookingFields,
 ): BookingFieldName[] {
@@ -136,7 +155,7 @@ export function findInvalidBookingFields(
 
 function reduceSubmitResult(
   slots: SlotsState,
-  start: string,
+  { start, mayBeBooked }: Attempt,
   result: BookingResult,
   email: string,
 ): BookingState {
@@ -156,9 +175,11 @@ function reduceSubmitResult(
     case "invalid": {
       // The server can also name a field the visitor does not fill in, such as the token.
       const invalidFields = result.fields.filter(isBookingFieldName);
-      return invalidFields.length > 0
-        ? { slots, step: { status: "entering", start, invalidFields } }
-        : { slots, step: { status: "failed", start, reason: "failed" } };
+      const step: BookingStep =
+        invalidFields.length > 0
+          ? { status: "entering", start, mayBeBooked, invalidFields }
+          : { status: "failed", start, mayBeBooked, reason: "rejected" };
+      return { slots, step };
     }
     // The time goes away at once. The rest of the list follows when it is loaded again.
     case "taken":
@@ -170,12 +191,17 @@ function reduceSubmitResult(
                 slots: slots.slots.filter((slot) => slot !== start),
               }
             : slots,
-        step: { status: "taken" },
+        step: { status: "taken", mayBeBooked },
+      };
+    case "failed":
+      return {
+        slots,
+        step: { status: "failed", start, mayBeBooked: true, reason: "failed" },
       };
     default:
       return {
         slots,
-        step: { status: "failed", start, reason: result.reason },
+        step: { status: "failed", start, mayBeBooked, reason: result.reason },
       };
   }
 }

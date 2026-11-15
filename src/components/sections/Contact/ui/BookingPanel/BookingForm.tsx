@@ -21,10 +21,11 @@ import {
 import { ChosenTimeCard } from "./ChosenTimeCard";
 import styles from "./BookingForm.module.css";
 
-// What the visitor reads when a booking fails for a reason no field explains.
 const FAILURE_TEXT: Record<BookingFailure, string> = {
   unverified: UNVERIFIED_TEXT,
   rate_limited: RATE_LIMITED_TEXT,
+  rejected:
+    "Your booking couldn't be sent. Please try again, or send me a message.",
   // A slow answer can hide a booking that was made (ADR-0007).
   failed:
     "I couldn't confirm your booking. If an invitation arrives in your inbox, your call is booked. If not, please try again or send me a message.",
@@ -40,7 +41,6 @@ interface Props {
   onSubmit: (requestToken: RequestToken) => void;
 }
 
-/** The chosen time on one side, and the form for the visitor's details on the other. */
 export function BookingForm({
   state,
   timeZone,
@@ -53,7 +53,6 @@ export function BookingForm({
   const turnstileBox = useRef<HTMLDivElement>(null);
   const form = useRef<HTMLFormElement>(null);
 
-  // Each rejection moves the focus to the first field to fix.
   useEffect(() => {
     if (rejectionCount === 0) return;
     form.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
@@ -83,6 +82,7 @@ export function BookingForm({
       <form
         ref={form}
         class={styles.form}
+        method="post"
         noValidate
         onSubmit={(event) => {
           event.preventDefault();

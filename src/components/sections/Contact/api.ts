@@ -101,7 +101,7 @@ export async function sendMessage(
   }
 }
 
-/** Sends a GET, or a POST when there is a body. Returns undefined when the server cannot be reached in time. */
+/** Returns undefined when the server cannot be reached in time. */
 async function sendRequest(
   path: string,
   body?: object,
@@ -132,14 +132,16 @@ async function readBody(response: Response): Promise<Record<string, unknown>> {
   }
 }
 
-/** A 400 names the fields that did not pass. With none named, the form has nothing to point at. */
+/** A 400 names the fields that did not pass. It names none when the body could not be read. */
 async function readInvalidResult(
   response: Response,
-): Promise<{ ok: false; reason: "invalid"; fields: string[] } | typeof FAILED> {
+): Promise<{ ok: false; reason: "invalid"; fields: string[] }> {
   const { fields } = await readBody(response);
-  return isStringArray(fields) && fields.length > 0
-    ? { ok: false, reason: "invalid", fields }
-    : FAILED;
+  return {
+    ok: false,
+    reason: "invalid",
+    fields: isStringArray(fields) ? fields : [],
+  };
 }
 
 function isStringArray(value: unknown): value is string[] {

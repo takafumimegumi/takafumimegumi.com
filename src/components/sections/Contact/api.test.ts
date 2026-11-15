@@ -120,12 +120,19 @@ describe("createBooking", () => {
     });
   });
 
-  it("fails when a 400 lists no fields", async () => {
+  it("keeps a 400 as invalid when it lists no fields, or cannot be read", async () => {
     answerWith(400, { error: "invalid", fields: [] });
-
     expect(await createBooking(BOOKING)).toEqual({
       ok: false,
-      reason: "failed",
+      reason: "invalid",
+      fields: [],
+    });
+
+    answerWithHtml(400);
+    expect(await createBooking(BOOKING)).toEqual({
+      ok: false,
+      reason: "invalid",
+      fields: [],
     });
   });
 
