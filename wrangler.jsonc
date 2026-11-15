@@ -1,11 +1,13 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "takafumimegumi-com",
-  "main": "@astrojs/cloudflare/entrypoints/server",
+  // Wraps the Astro adapter's handler with failure reporting.
+  "main": "./src/worker.ts",
   "compatibility_date": "2026-11-10",
 
-  // Astro adapter default: fetch() to this site's own domain is routed like a public request.
-  "compatibility_flags": ["global_fetch_strictly_public"],
+  // global_fetch_strictly_public is the Astro adapter default: fetch() to this site's own
+  // domain is routed like a public request. nodejs_compat gives the Sentry SDK AsyncLocalStorage.
+  "compatibility_flags": ["global_fetch_strictly_public", "nodejs_compat"],
 
   // A request that matches a file here is served without running the Worker.
   "assets": {
@@ -15,5 +17,23 @@
 
   "observability": {
     "enabled": true,
+  },
+
+  // The message form can email this one verified address and no other (ADR-0006).
+  "send_email": [
+    { "name": "EMAIL", "destination_address": "tmegumi1103@gmail.com" },
+  ],
+
+  // Names only. The values are entered into Cloudflare directly (ADR-0009).
+  "secrets": {
+    "required": [
+      "GOOGLE_CLIENT_ID",
+      "GOOGLE_CLIENT_SECRET",
+      "GOOGLE_REFRESH_TOKEN",
+      "GOOGLE_CALENDAR_ID",
+      "TURNSTILE_SECRET_KEY",
+      "AVAILABILITY_RULES",
+      "SENTRY_DSN",
+    ],
   },
 }
