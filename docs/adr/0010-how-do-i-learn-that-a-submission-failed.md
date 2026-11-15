@@ -41,7 +41,7 @@ The alert travels on a path that is separate from both things that can fail: Goo
 
 - One more company is involved. It receives no visitor data.
 - Two failures raise no alert: a script error in the browser that stops the form from submitting, and the bot check turning away a real visitor.
-- A repeat of the same kind of failure joins its existing issue. I have not confirmed whether that sends another alert.
+- A repeat of the same kind of failure joins its existing issue. While that issue is open, the repeat sends no new alert.
 - A later SDK version may collect more by default. The code also strips those fields just before sending.
 - Sentry records a rough location for each report. It is where the Worker ran, not where the visitor is.
 
