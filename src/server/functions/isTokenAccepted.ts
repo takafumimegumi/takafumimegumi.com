@@ -1,7 +1,7 @@
+import { SITE_HOSTNAME } from "@/siteConstants";
 import type { TokenCheck } from "../types";
 
 // The pages that may produce a token: the site, its workers.dev address, and its version URLs.
-const SITE_HOSTNAME = "takafumimegumi.com";
 const WORKER_HOSTNAME = "takafumimegumi-com.takafumimegumi.workers.dev";
 
 /** Each form has its own action, so a token from one form cannot be used on the other. */

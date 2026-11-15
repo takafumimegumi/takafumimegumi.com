@@ -1,9 +1,13 @@
 import { env } from "cloudflare:workers";
 import { sendEmailToOwner } from "@/server/clients/cloudflareEmail";
 import { checkRateLimit } from "@/server/clients/cloudflareRateLimit";
-import { verifyToken } from "@/server/clients/turnstile";
 import { sendMessage } from "@/server/usecases/sendMessage";
-import { buildJsonResponse, buildRoute, readJsonBody } from "./_route";
+import {
+  buildJsonResponse,
+  buildRoute,
+  readJsonBody,
+  verifyFormToken,
+} from "./_route";
 
 export const prerender = false;
 
@@ -16,17 +20,7 @@ export const POST = buildRoute(ROUTE, async ({ request }) => {
     {
       checkRateLimit: () =>
         checkRateLimit(env.RATE_LIMITER, { route: ROUTE, visitorIp }),
-      verifyToken: async (token) => {
-        const check = await verifyToken(
-          { secretKey: env.TURNSTILE_SECRET_KEY },
-          token,
-          visitorIp,
-        );
-        // Turnstile's test keys answer "example.com" and no action, so local runs fill them in.
-        return import.meta.env.DEV && check.valid
-          ? { valid: true, action: "message", hostname: "takafumimegumi.com" }
-          : check;
-      },
+      verifyToken: (token) => verifyFormToken("message", token, visitorIp),
       sendEmailToOwner: (email) => sendEmailToOwner(env.EMAIL, email),
     },
     await readJsonBody(request),

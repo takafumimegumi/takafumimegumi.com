@@ -24,7 +24,7 @@ paths:
 - A use case names the value it receives `rawRequest`, and the value that passed the schema `request`.
 - A use case file exports only the use case.
 - A route catches every error, reports it with `reportFailure`, and returns a 500. It never lets an error reach Astro, which logs the error's message.
-- What every route must do lives in `src/pages/api/_route.ts`: catching errors, the `no-store` response, and reading the body. Reading configuration and binding dependencies stay in each route.
+- What two or more routes share lives in `src/pages/api/_route.ts`, such as catching errors, the `no-store` response, and reading the body. Binding dependencies to a use case stays in each route.
 
 ## Clients
 

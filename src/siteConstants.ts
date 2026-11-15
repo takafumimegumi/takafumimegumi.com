@@ -1,4 +1,5 @@
 export const SITE_NAME = "Takafumi Megumi";
+export const SITE_HOSTNAME = "takafumimegumi.com";
 
 export const HOME_TITLE = "Takafumi Megumi | UI/UX × Engineering";
 export const HOME_DESCRIPTION =

@@ -1,5 +1,11 @@
 import type { APIContext, APIRoute } from "astro";
+import { env } from "cloudflare:workers";
+import type { GoogleCalendarConfig } from "@/server/clients/googleCalendar";
 import { reportFailure } from "@/server/clients/sentry";
+import { verifyToken } from "@/server/clients/turnstile";
+import type { TokenAction } from "@/server/functions/isTokenAccepted";
+import type { TokenCheck } from "@/server/types";
+import { SITE_HOSTNAME } from "@/siteConstants";
 
 // The largest valid form is about 18 KB: a message of 5,000 characters can take 15 KB in UTF-8.
 const MAX_BODY_BYTES = 32 * 1024;
@@ -57,4 +63,30 @@ export async function readJsonBody(request: Request): Promise<unknown> {
   } catch {
     return undefined;
   }
+}
+
+export function readCalendarConfig(): GoogleCalendarConfig {
+  return {
+    clientId: env.GOOGLE_CLIENT_ID,
+    clientSecret: env.GOOGLE_CLIENT_SECRET,
+    refreshToken: env.GOOGLE_REFRESH_TOKEN,
+    calendarId: env.GOOGLE_CALENDAR_ID,
+  };
+}
+
+/** Asks the bot check about a token from one of the forms. */
+export async function verifyFormToken(
+  action: TokenAction,
+  token: string,
+  visitorIp: string | null,
+): Promise<TokenCheck> {
+  const check = await verifyToken(
+    { secretKey: env.TURNSTILE_SECRET_KEY },
+    token,
+    visitorIp,
+  );
+  // Turnstile's test keys answer "example.com" and no action, so a local run fills them in.
+  return import.meta.env.DEV && check.valid
+    ? { valid: true, action, hostname: SITE_HOSTNAME }
+    : check;
 }
