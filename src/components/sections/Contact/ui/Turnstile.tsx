@@ -59,21 +59,37 @@ export async function requestToken(
   if (!turnstile) return undefined;
 
   return new Promise((resolve) => {
+    let widgetId: string | undefined;
+    let isFinished = false;
+
+    // Called by whichever comes first. The widget is removed once its id is known.
     const finish = (token: string | undefined) => {
-      turnstile.remove(widgetId);
+      if (isFinished) return;
+      isFinished = true;
+      if (widgetId !== undefined) turnstile.remove(widgetId);
       resolve(token);
     };
-    const widgetId = turnstile.render(box, {
-      sitekey: SITE_KEY,
-      action,
-      appearance: "interaction-only",
-      // The token goes into the request body, not into a hidden input.
-      "response-field": false,
-      retry: "never",
-      callback: (token: string) => finish(token),
-      "error-callback": () => finish(undefined),
-      "unsupported-callback": () => finish(undefined),
-    });
+
+    try {
+      widgetId = turnstile.render(box, {
+        sitekey: SITE_KEY,
+        action,
+        appearance: "interaction-only",
+        // The token goes into the request body, not into a hidden input.
+        "response-field": false,
+        retry: "never",
+        callback: (token: string) => finish(token),
+        "error-callback": () => finish(undefined),
+        "unsupported-callback": () => finish(undefined),
+        // The visitor left a challenge unsolved. Ending here gives the form back.
+        "timeout-callback": () => finish(undefined),
+      });
+    } catch {
+      finish(undefined);
+      return;
+    }
+    // A callback that ran inside render finished before the id was known.
+    if (isFinished) turnstile.remove(widgetId);
   });
 }
 

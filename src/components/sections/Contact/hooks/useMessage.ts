@@ -72,7 +72,8 @@ export function useMessage(): Message {
     fields,
     rejectionCount,
     updateField: (name, value) => {
-      setFields({ ...fields, [name]: value });
+      // From the latest values: autofill changes two fields before the next render.
+      setFields((latest) => ({ ...latest, [name]: value }));
       dispatch({ type: "fieldEdited", name });
     },
     submit: (requestToken) => void submit(requestToken),
