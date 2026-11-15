@@ -15,21 +15,28 @@ const timeWindowSchema = z
   .tuple([timeOfDaySchema, timeOfDaySchema])
   .refine(([start, end]) => start < end, "A window must end after it starts.");
 
-const availabilityRulesSchema = z.object({
-  windows: z.partialRecord(
-    z.enum(["0", "1", "2", "3", "4", "5", "6"]),
-    z
-      .array(timeWindowSchema)
-      .refine(
-        (windows) => !containsOverlap(windows),
-        "Windows on one weekday must not overlap.",
-      ),
-  ),
-  slotMinutes: z.number().int().positive(),
-  minNoticeMinutes: z.number().int().nonnegative(),
-  daysOffered: z.number().int().positive(),
-  bufferMinutes: z.number().int().nonnegative(),
-});
+const availabilityRulesSchema = z
+  .object({
+    windows: z.partialRecord(
+      z.enum(["0", "1", "2", "3", "4", "5", "6"]),
+      z
+        .array(timeWindowSchema)
+        .refine(
+          (windows) => !containsOverlap(windows),
+          "Windows on one weekday must not overlap.",
+        ),
+    ),
+    slotMinutes: z.number().int().positive(),
+    slotIntervalMinutes: z.number().int().positive().optional(),
+    minNoticeMinutes: z.number().int().nonnegative(),
+    daysOffered: z.number().int().positive(),
+    bufferMinutes: z.number().int().nonnegative(),
+  })
+  // Rules written before the interval existed start a slot when the one before ends.
+  .transform((rules) => ({
+    ...rules,
+    slotIntervalMinutes: rules.slotIntervalMinutes ?? rules.slotMinutes,
+  }));
 
 /**
  * Reads the rules from their JSON text in Worker configuration.

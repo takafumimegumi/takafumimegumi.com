@@ -11,6 +11,7 @@ export function computeOpenSlots(
   now: Date,
 ): Date[] {
   const slotLengthMs = rules.slotMinutes * MINUTE_MS;
+  const slotIntervalMs = rules.slotIntervalMinutes * MINUTE_MS;
   const bufferMs = rules.bufferMinutes * MINUTE_MS;
   const earliestStartMs = now.getTime() + rules.minNoticeMinutes * MINUTE_MS;
   const todayNumber = Math.floor(
@@ -32,7 +33,7 @@ export function computeOpenSlots(
       for (
         let slotStartMs = midnightMs + windowStart * MINUTE_MS;
         slotStartMs <= lastSlotStartMs;
-        slotStartMs += slotLengthMs
+        slotStartMs += slotIntervalMs
       ) {
         if (slotStartMs < earliestStartMs) continue;
         const slotEndMs = slotStartMs + slotLengthMs;

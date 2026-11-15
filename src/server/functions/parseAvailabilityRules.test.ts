@@ -66,6 +66,19 @@ describe("parseAvailabilityRules", () => {
     expect(() => parse({ slotMinutes: 0 })).toThrow();
   });
 
+  it("starts slots one slot apart when no interval is given", () => {
+    expect(parse().slotIntervalMinutes).toBe(30);
+  });
+
+  it("keeps an interval that is given", () => {
+    expect(parse({ slotIntervalMinutes: 60 }).slotIntervalMinutes).toBe(60);
+  });
+
+  it("accepts an interval of 1 minute and rejects 0", () => {
+    expect(() => parse({ slotIntervalMinutes: 1 })).not.toThrow();
+    expect(() => parse({ slotIntervalMinutes: 0 })).toThrow();
+  });
+
   it("accepts 1 day offered and rejects 0", () => {
     expect(() => parse({ daysOffered: 1 })).not.toThrow();
     expect(() => parse({ daysOffered: 0 })).toThrow();

@@ -12,6 +12,7 @@ const MOCK_RULES: AvailabilityRules = {
     ]),
   ),
   slotMinutes: 30,
+  slotIntervalMinutes: 30,
   minNoticeMinutes: 0,
   daysOffered: 2,
   bufferMinutes: 0,

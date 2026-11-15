@@ -7,6 +7,7 @@ import { listOpenSlots } from "./listOpenSlots";
 const MOCK_RULES: AvailabilityRules = {
   windows: { "1": [[600, 720]] },
   slotMinutes: 30,
+  slotIntervalMinutes: 30,
   minNoticeMinutes: 0,
   daysOffered: 1,
   bufferMinutes: 15,

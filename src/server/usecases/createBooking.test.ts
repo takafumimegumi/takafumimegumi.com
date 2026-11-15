@@ -7,6 +7,7 @@ import { createBooking } from "./createBooking";
 const MOCK_RULES: AvailabilityRules = {
   windows: { "1": [[600, 720]] },
   slotMinutes: 30,
+  slotIntervalMinutes: 30,
   minNoticeMinutes: 120,
   daysOffered: 1,
   bufferMinutes: 15,

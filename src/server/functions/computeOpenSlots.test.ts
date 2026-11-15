@@ -7,6 +7,7 @@ import { computeOpenSlots } from "./computeOpenSlots";
 const MOCK_RULES: AvailabilityRules = {
   windows: { "1": [[600, 720]] },
   slotMinutes: 30,
+  slotIntervalMinutes: 30,
   minNoticeMinutes: 0,
   daysOffered: 1,
   bufferMinutes: 0,
@@ -50,6 +51,43 @@ describe("computeOpenSlots", () => {
 
     // 10:00 to 11:45 fits three 30-minute slots. A fourth would end at 12:00.
     expect(slots).toHaveLength(3);
+  });
+
+  describe("interval", () => {
+    it("starts a slot every interval, which can be longer than a slot", () => {
+      const slots = computeOpenSlots(
+        buildRules({ slotIntervalMinutes: 60 }),
+        [],
+        MONDAY_MORNING,
+      );
+
+      // 10:00 and 11:00. The 30-minute calls no longer start at 10:30 or 11:30.
+      expect(formatSlots(slots)).toEqual([
+        "2026-11-16T17:00:00.000Z",
+        "2026-11-16T18:00:00.000Z",
+      ]);
+    });
+
+    it("keeps a last slot that ends exactly with the window", () => {
+      const slots = computeOpenSlots(
+        buildRules({ windows: { "1": [[600, 690]] }, slotIntervalMinutes: 60 }),
+        [],
+        MONDAY_MORNING,
+      );
+
+      // 10:00 to 11:30: the 11:00 slot ends at 11:30.
+      expect(slots).toHaveLength(2);
+    });
+
+    it("drops a last slot that would end one minute past the window", () => {
+      const slots = computeOpenSlots(
+        buildRules({ windows: { "1": [[600, 689]] }, slotIntervalMinutes: 60 }),
+        [],
+        MONDAY_MORNING,
+      );
+
+      expect(slots).toHaveLength(1);
+    });
   });
 
   it("returns slots from several windows in time order", () => {

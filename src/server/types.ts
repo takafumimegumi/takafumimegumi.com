@@ -7,7 +7,10 @@ export type TimeWindow = [start: number, end: number];
 export interface AvailabilityRules {
   /** Open windows by weekday. "0" is Sunday. */
   windows: Partial<Record<Weekday, TimeWindow[]>>;
+  /** How long a call is. */
   slotMinutes: number;
+  /** How far apart slots start. 60 offers 10:00 and 11:00, and not 10:30. */
+  slotIntervalMinutes: number;
   /** A slot must start at least this long after now. */
   minNoticeMinutes: number;
   /** How many Vancouver days are offered, counting today. */
