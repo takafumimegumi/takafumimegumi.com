@@ -28,7 +28,7 @@ One person works on the repository, from one clone, and pushes straight to `main
 Stop them in two places: a local pre-push hook, and GitHub push protection. CI runs no scan.
 
 - **Local hook.** It reads the diffs, commit messages, and file names of the commits being pushed. It blocks the push if they contain a term from a list kept outside git, or a value from the local `.dev.vars` file. `npm install` turns the hook on.
-- **Push protection.** GitHub rejects a push that contains a secret with a known format. It works on pushes to public repositories.
+- **Push protection.** GitHub rejects a push that contains a secret with a known format. It works on pushes to public repositories. Push protection and secret scanning are also turned on for the repository, so the whole history is scanned once it is public.
 - **Before going public.** The whole history is scanned once with a secret scanner.
 
 ## Rationale
@@ -58,5 +58,6 @@ Finding secrets by their format is left to GitHub. Push protection rejects a pus
 - Decided: 2026-11-13.
 - Push protection blocks a push before it reaches the repository, and is on by default for pushes to public repositories. Checked 2026-11-13: [about push protection](https://docs.github.com/en/code-security/secret-scanning/introduction/about-push-protection).
 - Its supported formats include Cloudflare API tokens, and Google OAuth client secrets and refresh tokens. The Turnstile secret is not listed. Checked 2026-11-13: [supported patterns](https://docs.github.com/en/code-security/secret-scanning/introduction/supported-secret-scanning-patterns).
+- On a public repository, secret scanning is free and scans the whole history on all branches. Checked 2026-11-15: [about secret scanning](https://docs.github.com/en/code-security/secret-scanning/introduction/about-secret-scanning).
 - Tested 2026-11-13 in a separate repository. Clean commits were pushed. A listed term in a file, a commit message, or a file name blocked the push, and so did a `.dev.vars` value and a missing list.
 - Revisit if someone else joins, if work moves to pull requests, or if the repository stays private for long.
