@@ -16,7 +16,8 @@ paths:
 | `functions/` | Pure functions only: calculations and validation whose result depends only on the input. | Nothing else in `src/server/` |
 | `clients/` | Code that calls an external API. | `functions/` |
 
-- ESLint checks these directions.
+- ESLint checks these directions. Every folder may use `src/server/types.ts` and `src/server/constants.ts`.
+- A type lives in the file of the function when only that function takes or returns it. A type that two or more functions take or return lives in `src/server/types.ts`.
 - A route in `src/pages/api/` only assembles. It reads configuration and secrets, passes the implementations from `clients/` to a use case, and maps the result to a status code.
 - A use case takes the functions that call external APIs as arguments. It does not import an implementation from `clients/`.
 - Put the schema for a request in the use case file that receives the request.
@@ -39,7 +40,7 @@ paths:
 
 - Name a use case file as verb plus object, the same as the function in it: `createBooking.ts` holds `createBooking`.
 - Name a file in `clients/` after the service it calls: `googleCalendar.ts`, `sentry.ts`.
-- Name a file in `functions/` after its function when it holds one: `computeOpenSlots.ts`. Name it after the thing when it holds a type and the functions for it: `availabilityRules.ts`.
+- A file in `functions/` exports one function and is named after it: `computeOpenSlots.ts`.
 - Name a use case, and an operation that a client exports, as verb plus object.
   - For something that is stored, use a CRUD verb: `create`, `list` (returns many), `find` (looks for one), `update`, `delete`.
   - For any other action, use the verb for that action: `send`, `verify`, `check`, `report`, `request`. Add a verb only when none of these fits.

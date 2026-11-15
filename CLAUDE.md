@@ -11,6 +11,7 @@ Write all committed files, comments, and commit messages in English. Use short, 
 ## Code
 
 - Comments explain why, or a constraint the code cannot show. Keep them to 3 lines or fewer.
+- Put a constant in the narrowest place that holds every file that uses it: the file itself, `src/server/constants.ts`, or `src/siteConstants.ts`.
 
 ## Git
 
