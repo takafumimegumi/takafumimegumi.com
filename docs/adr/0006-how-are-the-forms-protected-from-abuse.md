@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -32,7 +32,7 @@ Use server-verified checks, and limit what a successful submission can do.
 - **Rate limit.** The Workers rate limiting binding stops bursts from one client.
 - **Booking caps.** There is a limit on bookings per day and on open bookings per email address.
 - **No email to typed addresses from the message form.** The screen confirms that a message was sent. There is no automatic reply.
-- **Invitation content.** Free text from the booking form goes only to me. It is never included in the invitation.
+- **Invitation content.** The invitation has a fixed title. The visitor's name and free text go only to me, and are never included in it.
 - **Honeypot field.** A hidden field catches the simplest bots before the other checks run.
 
 ## Rationale

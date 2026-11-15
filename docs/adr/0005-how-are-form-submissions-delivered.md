@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -49,5 +49,6 @@ Sending email to my own verified address is free on Cloudflare and needs no outs
 
 - Decided: 2026-11-13.
 - Sending to a verified destination address is free on Cloudflare. Sending to any address needs the Workers Paid plan. Checked 2026-11-13: [Email Service pricing](https://developers.cloudflare.com/email-service/platform/pricing/).
-- I have not confirmed that the send binding accepts a reply-to header.
+- The send binding accepts a reply-to address. Sent from the Worker, 2026-11-14.
+- The sender's domain must be onboarded to Email Routing, even when the only recipient is my own verified address. Before that, the send failed with `E_SENDER_DOMAIN_NOT_CONFIGURED`. Seen 2026-11-14.
 - Revisit if messages are lost in practice.
