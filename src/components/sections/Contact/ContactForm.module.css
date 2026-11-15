@@ -61,8 +61,34 @@
   border-radius: var(--radius-md);
 }
 
+/* My address, as text to select or copy. An email link is awkward inside an in-app browser. */
+.direct {
+  display: grid;
+  gap: 6px;
+  padding: 16px 18px;
+  margin-top: 12px;
+  background: rgb(255 255 255 / 70%);
+  border-radius: var(--radius-md);
+}
+
+.directLabel {
+  font-size: var(--text-small);
+  line-height: var(--leading-small);
+  color: var(--color-text-muted);
+}
+
+.directRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .address {
+  font-weight: 700;
   overflow-wrap: anywhere;
+  user-select: all;
 }
 
 @media (min-width: 768px) {
@@ -101,7 +127,8 @@
     padding: 32px;
   }
 
-  .panel[data-width="narrow"] {
+  .panel[data-width="narrow"],
+  .direct {
     max-width: 720px;
     margin-inline: auto;
   }

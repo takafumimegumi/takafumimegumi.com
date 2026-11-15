@@ -3,6 +3,9 @@ import { useErrorBoundary, useState } from "preact/hooks";
 import { OWNER_EMAIL } from "@/siteConstants";
 import { BookingPanel } from "@/components/sections/Contact/ui/BookingPanel/BookingPanel";
 import { useBooking } from "@/components/sections/Contact/hooks/useBooking";
+import { useMessage } from "@/components/sections/Contact/hooks/useMessage";
+import { CopyButton } from "@/components/sections/Contact/ui/CopyButton";
+import { MessagePanel } from "@/components/sections/Contact/ui/MessagePanel/MessagePanel";
 import styles from "./ContactForm.module.css";
 
 type Mode = "booking" | "message";
@@ -19,6 +22,7 @@ export function ContactForm() {
 function ContactPanels() {
   const [mode, setMode] = useState<Mode>("booking");
   const booking = useBooking();
+  const message = useMessage();
   // A short message reads better in the narrow panel than in the wide one that holds the times.
   const isBookingNote =
     booking.state.status === "unavailable" || booking.state.status === "empty";
@@ -73,13 +77,25 @@ function ContactPanels() {
             onSendMessage={() => setMode("message")}
           />
         </div>
-        <div
-          class={styles.panel}
-          id="contact-message"
-          aria-live="polite"
-          data-width="narrow"
-          hidden={mode !== "message"}
-        />
+        <div id="contact-message" hidden={mode !== "message"}>
+          <div class={styles.panel} aria-live="polite" data-width="narrow">
+            <MessagePanel
+              state={message.state}
+              fields={message.fields}
+              onUpdateField={message.updateField}
+              onSubmit={message.submit}
+              onEditAgain={message.editAgain}
+            />
+          </div>
+          {/* Stays below the form and the sent screen, as the way around a failed send (ADR-0005). */}
+          <div class={styles.direct}>
+            <p class={styles.directLabel}>Prefer email?</p>
+            <div class={styles.directRow}>
+              <span class={styles.address}>{OWNER_EMAIL}</span>
+              <CopyButton text={OWNER_EMAIL} />
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );

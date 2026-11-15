@@ -10,27 +10,8 @@
   justify-items: start;
 }
 
-.check {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  margin-bottom: 8px;
-  background: var(--color-bg-success);
-  border-radius: 50%;
-}
-
-.check svg {
-  width: 20px;
-  height: 20px;
-  fill: none;
-  stroke: var(--forest-12);
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 2.4;
-}
-
 .heading {
+  margin-top: 8px;
   font-size: var(--text-title);
   line-height: var(--leading-title);
 }
@@ -81,16 +62,6 @@
 .changeNote {
   font-size: var(--text-small);
   line-height: var(--leading-small);
-}
-
-.textButton {
-  padding: 0;
-  font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  cursor: pointer;
-  background: none;
-  border: 0;
 }
 
 @media (min-width: 768px) {

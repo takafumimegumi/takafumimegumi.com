@@ -1,4 +1,6 @@
+import { CheckMark } from "@/components/sections/Contact/ui/CheckMark";
 import { CopyButton } from "@/components/sections/Contact/ui/CopyButton";
+import { TextButton } from "@/components/sections/Contact/ui/TextButton";
 import { ChosenTimeCard } from "./ChosenTimeCard";
 import styles from "./BookingConfirmation.module.css";
 
@@ -21,11 +23,7 @@ export function BookingConfirmation({
   return (
     <div class={styles.root}>
       <div class={styles.head}>
-        <span class={styles.check} aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <path d="M5 12.5l4.5 4.5L19 7.5" />
-          </svg>
-        </span>
+        <CheckMark />
         <h3 class={styles.heading}>You're booked.</h3>
         <p class={styles.text}>
           I've sent a calendar invitation to <b>{email}</b>.
@@ -57,10 +55,7 @@ export function BookingConfirmation({
       </div>
       <p class={styles.changeNote}>
         Need to change the time? Reply to the invitation, or{" "}
-        <button type="button" class={styles.textButton} onClick={onSendMessage}>
-          send me a message
-        </button>
-        .
+        <TextButton onPress={onSendMessage}>send me a message</TextButton>.
       </p>
     </div>
   );

@@ -1,0 +1,72 @@
+import { useReducer, useState } from "preact/hooks";
+import {
+  sendMessage,
+  type MessageResult,
+} from "@/components/sections/Contact/api";
+import {
+  findInvalidMessageFields,
+  INITIAL_MESSAGE_STATE,
+  reduceMessageState,
+  type MessageFieldName,
+  type MessageFields,
+  type MessageState,
+} from "@/components/sections/Contact/functions/messageState";
+import type { RequestToken } from "@/components/sections/Contact/ui/Turnstile";
+
+export interface Message {
+  state: MessageState;
+  fields: MessageFields;
+  updateField: (name: MessageFieldName, value: string) => void;
+  /** Checks the fields, runs the bot check, and sends the message. */
+  submit: (requestToken: RequestToken) => void;
+  /** Goes back from the sent screen to the form, with what was typed still in it. */
+  editAgain: () => void;
+}
+
+/** Holds the state of the message panel and sends the message. */
+export function useMessage(): Message {
+  const [state, dispatch] = useReducer(
+    reduceMessageState,
+    INITIAL_MESSAGE_STATE,
+  );
+  const [fields, setFields] = useState<MessageFields>({
+    name: "",
+    email: "",
+    text: "",
+  });
+
+  async function submit(requestToken: RequestToken) {
+    if (state.status !== "editing" && state.status !== "failed") return;
+
+    const invalidFields = findInvalidMessageFields(fields);
+    if (invalidFields.length > 0) {
+      dispatch({ type: "fieldsRejected", fields: invalidFields });
+      return;
+    }
+
+    dispatch({ type: "submitStarted" });
+    const email = fields.email.trim();
+    const token = await requestToken();
+    const result: MessageResult =
+      token === undefined
+        ? { ok: false, reason: "unverified" }
+        : await sendMessage({
+            name: fields.name.trim(),
+            email,
+            text: fields.text.trim(),
+            token,
+          });
+    dispatch({ type: "submitFinished", result, email });
+  }
+
+  return {
+    state,
+    fields,
+    updateField: (name, value) => {
+      setFields({ ...fields, [name]: value });
+      dispatch({ type: "fieldEdited", name });
+    },
+    submit: (requestToken) => void submit(requestToken),
+    editAgain: () => dispatch({ type: "editRequested" }),
+  };
+}

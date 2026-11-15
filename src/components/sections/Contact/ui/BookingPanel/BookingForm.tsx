@@ -1,5 +1,4 @@
 import { useRef } from "preact/hooks";
-import buttonStyles from "@/components/common/Button/Button.module.css";
 import symbolStyles from "@/components/common/Symbol/Symbol.module.css";
 import type {
   BookingFailure,
@@ -8,10 +7,15 @@ import type {
   BookingState,
 } from "@/components/sections/Contact/functions/bookingState";
 import { ErrorNotice } from "@/components/sections/Contact/ui/ErrorNotice";
+import {
+  RATE_LIMITED_TEXT,
+  UNVERIFIED_TEXT,
+} from "@/components/sections/Contact/ui/failureTexts";
+import { NameAndEmailFields } from "@/components/sections/Contact/ui/NameAndEmailFields";
+import { SubmitFooter } from "@/components/sections/Contact/ui/SubmitFooter";
 import { TextField } from "@/components/sections/Contact/ui/TextField";
 import {
   requestToken,
-  Turnstile,
   type RequestToken,
 } from "@/components/sections/Contact/ui/Turnstile";
 import { ChosenTimeCard } from "./ChosenTimeCard";
@@ -19,8 +23,8 @@ import styles from "./BookingForm.module.css";
 
 // What the visitor reads when a booking fails for a reason no field explains.
 const FAILURE_TEXT: Record<BookingFailure, string> = {
-  unverified: "The security check didn't pass. Please try again.",
-  rate_limited: "Too many attempts. Please wait a minute and try again.",
+  unverified: UNVERIFIED_TEXT,
+  rate_limited: RATE_LIMITED_TEXT,
   // A slow answer can hide a booking that was made (ADR-0007).
   failed:
     "I couldn't confirm your booking. If an invitation arrives in your inbox, your call is booked. If not, please try again or send me a message.",
@@ -51,10 +55,6 @@ export function BookingForm({
 
   const isSubmitting = state.status === "submitting";
   const invalidFields = state.status === "entering" ? state.invalidFields : [];
-  const emailError =
-    fields.email.trim() === ""
-      ? "Enter your email."
-      : "Enter an email like name@example.com.";
 
   return (
     <div class={styles.root}>
@@ -78,33 +78,14 @@ export function BookingForm({
           if (box) onSubmit(() => requestToken(box, "booking"));
         }}
       >
-        <div class={styles.pair}>
-          <TextField
-            id="booking-name"
-            label="Name"
-            value={fields.name}
-            error={
-              invalidFields.includes("name") ? "Enter your name." : undefined
-            }
-            placeholder="Your name"
-            maxLength={100}
-            autocomplete="name"
-            isDisabled={isSubmitting}
-            onInput={(value) => onUpdateField("name", value)}
-          />
-          <TextField
-            id="booking-email"
-            label="Email"
-            type="email"
-            value={fields.email}
-            error={invalidFields.includes("email") ? emailError : undefined}
-            placeholder="you@example.com"
-            maxLength={254}
-            autocomplete="email"
-            isDisabled={isSubmitting}
-            onInput={(value) => onUpdateField("email", value)}
-          />
-        </div>
+        <NameAndEmailFields
+          idPrefix="booking"
+          name={fields.name}
+          email={fields.email}
+          invalidFields={invalidFields}
+          isDisabled={isSubmitting}
+          onInput={onUpdateField}
+        />
         <TextField
           id="booking-topic"
           label="What would you like to talk about?"
@@ -124,27 +105,14 @@ export function BookingForm({
         {state.status === "failed" && (
           <ErrorNotice>{FAILURE_TEXT[state.reason]}</ErrorNotice>
         )}
-        <Turnstile boxRef={turnstileBox} />
-        <p class={styles.consent}>
-          By booking, you agree to the <a href="/privacy/">Privacy Policy</a>.
-        </p>
-        <button
-          type="submit"
-          class={`${buttonStyles.root} ${styles.submit}`}
-          disabled={isSubmitting}
-          data-busy={isSubmitting ? "" : undefined}
-        >
-          {isSubmitting ? (
-            <>
-              <span class={buttonStyles.spinner} aria-hidden="true" />
-              Booking…
-            </>
-          ) : state.status === "failed" ? (
-            "Try again"
-          ) : (
-            "Confirm booking"
-          )}
-        </button>
+        <SubmitFooter
+          turnstileBoxRef={turnstileBox}
+          consentVerb="booking"
+          label="Confirm booking"
+          busyLabel="Booking…"
+          isSubmitting={isSubmitting}
+          hasFailed={state.status === "failed"}
+        />
       </form>
     </div>
   );

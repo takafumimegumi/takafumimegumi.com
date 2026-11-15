@@ -1,4 +1,5 @@
 import type { BookingResult } from "@/components/sections/Contact/api";
+import { isEmailLike } from "./isEmailLike";
 
 export type BookingFieldName = "name" | "email" | "topic";
 export type BookingFields = Record<BookingFieldName, string>;
@@ -116,9 +117,7 @@ export function findInvalidBookingFields(
 ): BookingFieldName[] {
   const invalidFields: BookingFieldName[] = [];
   if (fields.name.trim() === "") invalidFields.push("name");
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email.trim())) {
-    invalidFields.push("email");
-  }
+  if (!isEmailLike(fields.email)) invalidFields.push("email");
   return invalidFields;
 }
 

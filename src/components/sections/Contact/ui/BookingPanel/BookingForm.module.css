@@ -38,40 +38,11 @@
   gap: 16px;
 }
 
-.pair {
-  display: grid;
-  gap: 16px;
-}
-
-.consent {
-  font-size: 13px;
-  line-height: 18px;
-  color: var(--color-text-muted);
-}
-
-.consent a {
-  font-weight: 700;
-  color: var(--color-text);
-}
-
-.submit {
-  width: 100%;
-}
-
 @media (min-width: 768px) {
   .root {
     grid-template-columns: 220px minmax(0, 1fr);
     gap: 32px;
     align-items: start;
-  }
-
-  .pair {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .submit {
-    justify-self: start;
-    width: auto;
   }
 }
 

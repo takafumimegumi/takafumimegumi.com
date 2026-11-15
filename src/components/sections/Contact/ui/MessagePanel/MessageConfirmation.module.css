@@ -1,0 +1,42 @@
+/* One centred column. The space before the last line is wider than the space inside the words. */
+.root {
+  display: grid;
+  gap: 24px;
+  justify-items: center;
+  padding: 20px 4px;
+  text-align: center;
+}
+
+.words {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+}
+
+/* The mark sits a little further from the heading than the heading from the text. */
+.heading {
+  margin-top: 8px;
+  font-size: var(--text-title);
+  line-height: var(--leading-title);
+}
+
+.text {
+  color: var(--color-text-muted);
+}
+
+.text b {
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+}
+
+.fix {
+  font-size: var(--text-small);
+  line-height: var(--leading-small);
+}
+
+@media (min-width: 768px) {
+  .root {
+    gap: 32px;
+    padding-block: 28px;
+  }
+}
