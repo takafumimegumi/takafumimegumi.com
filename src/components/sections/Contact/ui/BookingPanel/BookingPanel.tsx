@@ -115,7 +115,7 @@ export function BookingPanel({
       )}
       {slots.slots.length === 0 ? (
         <EmptyState
-          heading="No open times in the next two weeks."
+          heading="No open times right now."
           text="Send me a message, and I'll find a time that works."
         >
           <button

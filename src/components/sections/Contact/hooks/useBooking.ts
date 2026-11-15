@@ -12,6 +12,7 @@ import {
   type BookingFields,
   type BookingState,
 } from "@/components/sections/Contact/functions/bookingState";
+import { cleanName } from "@/components/sections/Contact/functions/cleanName";
 import type { RequestToken } from "@/components/sections/Contact/ui/Turnstile";
 
 export interface Booking {
@@ -70,7 +71,7 @@ export function useBooking(): Booking {
       token === undefined
         ? { ok: false, reason: "unverified" }
         : await createBooking({
-            name: fields.name.trim(),
+            name: cleanName(fields.name),
             email,
             topic: fields.topic.trim() || undefined,
             start: step.start,

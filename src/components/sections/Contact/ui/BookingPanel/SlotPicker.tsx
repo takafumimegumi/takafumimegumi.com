@@ -44,6 +44,8 @@ export function SlotPicker({
     0,
   );
   const page = pages[pageIndex];
+  // The offset can change with the season, so it is taken from the days on screen.
+  const firstSlotShown = page.flatMap((day) => day.slots)[0] ?? slots[0];
   // Every page gets the height of the fullest day, so paging does not make the panel jump.
   const rows = Math.max(...pages.flat().map((day) => day.slots.length));
 
@@ -52,7 +54,7 @@ export function SlotPicker({
       <div class={styles.head}>
         <p class={styles.timeZone}>
           Times are shown in your local time (
-          <b>{formatUtcOffset(slots[0], timeZone)}</b>).
+          <b>{formatUtcOffset(firstSlotShown, timeZone)}</b>).
         </p>
         <div class={styles.range}>
           <button

@@ -11,6 +11,7 @@ import {
   type MessageFields,
   type MessageState,
 } from "@/components/sections/Contact/functions/messageState";
+import { cleanName } from "@/components/sections/Contact/functions/cleanName";
 import type { RequestToken } from "@/components/sections/Contact/ui/Turnstile";
 
 export interface Message {
@@ -53,7 +54,7 @@ export function useMessage(): Message {
       token === undefined
         ? { ok: false, reason: "unverified" }
         : await sendMessage({
-            name: fields.name.trim(),
+            name: cleanName(fields.name),
             email,
             text: fields.text.trim(),
             token,

@@ -62,7 +62,6 @@ function ContactPanels() {
           class={styles.panel}
           id="contact-booking"
           tabIndex={-1}
-          aria-live="polite"
           data-width={hasNoSlotsToShow(booking.state) ? "narrow" : undefined}
           hidden={mode !== "booking"}
         >
@@ -94,7 +93,6 @@ function ContactPanels() {
           <div
             ref={messagePanel}
             class={styles.panel}
-            aria-live="polite"
             data-width="narrow"
             tabIndex={-1}
           >
