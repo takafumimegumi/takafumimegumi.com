@@ -2,6 +2,7 @@
 
 const LOCALE = "en-US";
 const CALL_MINUTES = 30;
+const DAY_MS = 24 * 60 * 60 * 1000;
 
 /** One day in the visitor's time zone, with the open times that start on it. */
 export interface DayColumn {
@@ -33,6 +34,32 @@ export function groupSlotsByDay(
   return days;
 }
 
+/**
+ * Splits the open times into weeks of seven days in a row, starting on the first day with an open time.
+ * A day without open times is kept, with no slots, so every week has the same columns.
+ */
+export function buildWeeks(slots: string[], timeZone: string): DayColumn[][] {
+  const days = groupSlotsByDay(slots, timeZone);
+  if (days.length === 0) return [];
+
+  const daysByDate = new Map(days.map((day) => [day.date, day]));
+  const firstDayMs = Date.parse(days[0].date);
+  const lastDayMs = Date.parse(days[days.length - 1].date);
+
+  const weeks: DayColumn[][] = [];
+  for (let weekMs = firstDayMs; weekMs <= lastDayMs; weekMs += 7 * DAY_MS) {
+    weeks.push(
+      Array.from({ length: 7 }, (_, index) => {
+        const date = new Date(weekMs + index * DAY_MS)
+          .toISOString()
+          .slice(0, 10);
+        return daysByDate.get(date) ?? { date, slots: [] };
+      }),
+    );
+  }
+  return weeks;
+}
+
 /** "Mon, Nov 16" */
 export function formatDay(start: string, timeZone: string): string {
   return new Intl.DateTimeFormat(LOCALE, {
@@ -41,6 +68,44 @@ export function formatDay(start: string, timeZone: string): string {
     month: "short",
     day: "numeric",
   }).format(new Date(start));
+}
+
+/** "Monday, November 16", for a screen reader. */
+export function formatLongDay(start: string, timeZone: string): string {
+  return new Intl.DateTimeFormat(LOCALE, {
+    timeZone,
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  }).format(new Date(start));
+}
+
+/** The two parts of a day's heading, from a local date such as "2026-11-16": "Mon" and "16". */
+export function formatDateParts(date: string): {
+  weekday: string;
+  dayOfMonth: string;
+} {
+  // A date without a time parses as midnight UTC, so it is formatted in UTC.
+  const midnight = new Date(date);
+  return {
+    weekday: new Intl.DateTimeFormat(LOCALE, {
+      timeZone: "UTC",
+      weekday: "short",
+    }).format(midnight),
+    dayOfMonth: new Intl.DateTimeFormat(LOCALE, {
+      timeZone: "UTC",
+      day: "numeric",
+    }).format(midnight),
+  };
+}
+
+/** The days of a week, from two local dates: "Nov 16 – 22", or "Nov 30 – Dec 6". */
+export function formatDateRange(firstDate: string, lastDate: string): string {
+  return new Intl.DateTimeFormat(LOCALE, {
+    timeZone: "UTC",
+    month: "short",
+    day: "numeric",
+  }).formatRange(new Date(firstDate), new Date(lastDate));
 }
 
 /** "9:30 AM" */

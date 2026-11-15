@@ -1,0 +1,231 @@
+/* About the height of a week with 15 times a day, so the panel does not jump when the times arrive. */
+.loading {
+  display: grid;
+  place-items: center;
+  min-height: 880px;
+  color: var(--color-text-muted);
+}
+
+/* The words and the buttons are two groups. The space between them is wider than the space inside either. */
+.note {
+  display: grid;
+  gap: 24px;
+  justify-items: center;
+  padding: 20px 4px;
+  text-align: center;
+}
+
+.noteWords {
+  display: grid;
+  gap: 8px;
+}
+
+.noteHeading {
+  font-size: var(--text-title);
+  line-height: var(--leading-title);
+}
+
+.noteText {
+  color: var(--color-text-muted);
+}
+
+/* On a phone the buttons stack and take the full width, like the button of a form. */
+.noteActions {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+}
+
+/* The outline button of the light ground. The shared outline variant is drawn for the night ground. */
+.quietButton {
+  min-height: 48px;
+  padding: 12px 24px;
+  font-weight: 700;
+  line-height: 24px;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 0 0 1.5px var(--color-text);
+  transition: background-color var(--ease);
+}
+
+.quietButton:hover {
+  background: var(--color-bg-muted);
+}
+
+.list {
+  display: grid;
+  gap: 16px;
+}
+
+.listHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.week {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: var(--text-small);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.arrow {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  cursor: pointer;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  transition: background-color var(--ease);
+}
+
+.arrow:hover {
+  background: var(--color-bg-muted);
+}
+
+.arrow:disabled {
+  cursor: not-allowed;
+  background: var(--color-bg-surface);
+  opacity: 0.4;
+}
+
+.arrow svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.4;
+}
+
+.timeZone {
+  font-size: var(--text-small);
+  line-height: var(--leading-small);
+}
+
+.schedule {
+  display: grid;
+  gap: 8px;
+}
+
+/* On a phone the days scroll sideways, three to a screen.
+   A row is a 44px time and the 8px above it. The heading and the bottom padding add 52px. */
+.days {
+  display: grid;
+  min-height: calc(52px + var(--rows) * 52px);
+  grid-auto-columns: calc((100% - 16px) / 3);
+  grid-auto-flow: column;
+  gap: 8px;
+  padding-bottom: 4px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.days::-webkit-scrollbar {
+  display: none;
+}
+
+.day {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  scroll-snap-align: start;
+}
+
+.dayHeading {
+  display: grid;
+  justify-items: center;
+  padding-bottom: 4px;
+}
+
+.weekday {
+  font-size: var(--text-label);
+  font-weight: 700;
+  line-height: var(--leading-label);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.dayOfMonth {
+  font-size: var(--text-title);
+  line-height: 28px;
+}
+
+.slot {
+  min-height: 44px;
+  padding: 8px 4px;
+  font-size: var(--text-small);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  transition:
+    background-color var(--ease),
+    color var(--ease);
+}
+
+.slot:hover {
+  background: var(--color-bg-muted);
+}
+
+.noTimes {
+  padding-top: 8px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.swipe {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--color-text-muted);
+  text-align: right;
+}
+
+@media (min-width: 768px) {
+  .note {
+    gap: 32px;
+    padding-block: 28px;
+  }
+
+  .noteActions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    width: auto;
+  }
+
+  .days {
+    grid-auto-columns: calc((100% - 36px) / 4);
+    gap: 12px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .days {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    grid-auto-columns: auto;
+    grid-auto-flow: row;
+    overflow: visible;
+  }
+
+  .swipe {
+    display: none;
+  }
+}

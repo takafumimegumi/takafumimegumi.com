@@ -1,6 +1,8 @@
 import type { ComponentChildren } from "preact";
 import { useErrorBoundary, useState } from "preact/hooks";
 import { OWNER_EMAIL } from "@/siteConstants";
+import { BookingPanel } from "./BookingPanel";
+import { useBooking } from "./useBooking";
 import styles from "./ContactForm.module.css";
 
 type Mode = "booking" | "message";
@@ -16,6 +18,10 @@ export function ContactForm() {
 
 function ContactPanels() {
   const [mode, setMode] = useState<Mode>("booking");
+  const booking = useBooking();
+  // A short message reads better in the narrow panel than in the wide one that holds the times.
+  const isBookingNote =
+    booking.state.status === "unavailable" || booking.state.status === "empty";
 
   return (
     <>
@@ -52,9 +58,15 @@ function ContactPanels() {
           class={styles.panel}
           id="contact-booking"
           aria-live="polite"
+          data-width={isBookingNote ? "narrow" : undefined}
           hidden={mode !== "booking"}
         >
-          <p class={styles.loading}>Loading open times…</p>
+          <BookingPanel
+            state={booking.state}
+            timeZone={booking.timeZone}
+            onReloadSlots={booking.reloadSlots}
+            onSendMessage={() => setMode("message")}
+          />
         </div>
         <div
           class={styles.panel}

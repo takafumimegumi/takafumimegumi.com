@@ -61,14 +61,6 @@
   border-radius: var(--radius-md);
 }
 
-/* Holds the height of the list of times, so the panel does not jump when they arrive. */
-.loading {
-  display: grid;
-  place-items: center;
-  min-height: 240px;
-  color: var(--color-text-muted);
-}
-
 .address {
   overflow-wrap: anywhere;
 }
