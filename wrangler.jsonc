@@ -5,11 +5,9 @@
   "main": "./src/worker.ts",
   "compatibility_date": "2026-11-10",
 
-  // global_fetch_strictly_public is the Astro adapter default: fetch() to this site's own
-  // domain is routed like a public request. nodejs_compat gives the Sentry SDK AsyncLocalStorage.
+  // The first flag is the Astro adapter's default. The Sentry SDK needs nodejs_compat.
   "compatibility_flags": ["global_fetch_strictly_public", "nodejs_compat"],
 
-  // A request that matches a file here is served without running the Worker.
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
@@ -19,14 +17,12 @@
     "enabled": true,
   },
 
-  // The message form can email this one verified address and no other (ADR-0006).
-  // It must match OWNER_EMAIL in src/siteConstants.ts.
+  // Must match OWNER_EMAIL in src/siteConstants.ts (ADR-0006).
   "send_email": [
     { "name": "EMAIL", "destination_address": "tmegumi1103@gmail.com" },
   ],
 
-  // Stops bursts from one visitor on the form routes (ADR-0006). Counted per Cloudflare location.
-  // namespace_id is a number of my choosing, written as a string.
+  // Counted per Cloudflare location (ADR-0006). namespace_id is any number, as a string.
   "ratelimits": [
     {
       "name": "RATE_LIMITER",
@@ -35,7 +31,7 @@
     },
   ],
 
-  // Page views and events (ADR-0008). A version preview URL writes to this same dataset.
+  // A version URL writes to this same dataset (ADR-0008).
   "analytics_engine_datasets": [{ "binding": "BEACONS", "dataset": "beacons" }],
 
   // Names only. The values are entered into Cloudflare directly (ADR-0009).
