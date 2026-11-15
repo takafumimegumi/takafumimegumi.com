@@ -7,6 +7,9 @@ const TOKEN_URL = "https://oauth2.googleapis.com/token";
 const API_URL = "https://www.googleapis.com/calendar/v3";
 const SERVICE = "google_calendar";
 
+// A token is treated as expired this long before Google says so, to cover the call that uses it.
+const EXPIRY_MARGIN_MS = 60 * 1000;
+
 export interface GoogleCredentials {
   clientId: string;
   clientSecret: string;
@@ -36,6 +39,8 @@ export async function requestCalendar<Body = void>(
     },
     body: request.body ? JSON.stringify(request.body) : undefined,
   });
+  // Google no longer takes the token, so the next call asks for a new one.
+  if (response.status === 401) keptToken = undefined;
   // The status only. A Google error body can echo the guest's address.
   if (!response.ok) {
     throw buildCalendarFailure(request.operation, String(response.status));
@@ -51,12 +56,29 @@ export function buildCalendarFailure(operation: string, detail: string): Error {
 
 interface TokenResponse {
   access_token?: string;
+  /** How long the token lasts, in seconds. */
+  expires_in?: number;
   error?: string;
 }
+
+interface AccessToken {
+  value: string;
+  /** The refresh token it was made from, so a changed secret is never served a stale token. */
+  refreshToken: string;
+  expiresAtMs: number;
+}
+
+// Kept while this Worker instance lives, so a booking, which calls Google twice, asks for a token once.
+let keptToken: AccessToken | undefined;
 
 async function requestAccessToken(
   credentials: GoogleCredentials,
 ): Promise<string> {
+  const isUsable =
+    keptToken?.refreshToken === credentials.refreshToken &&
+    Date.now() < keptToken.expiresAtMs;
+  if (keptToken && isUsable) return keptToken.value;
+
   const source = { service: SERVICE, operation: "request_access_token" };
   const response = await requestWithTimeout(source, TOKEN_URL, {
     method: "POST",
@@ -79,5 +101,10 @@ async function requestAccessToken(
     );
   }
 
-  return body.access_token;
+  keptToken = {
+    value: body.access_token,
+    refreshToken: credentials.refreshToken,
+    expiresAtMs: Date.now() + (body.expires_in ?? 0) * 1000 - EXPIRY_MARGIN_MS,
+  };
+  return keptToken.value;
 }
