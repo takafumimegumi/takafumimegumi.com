@@ -1,7 +1,7 @@
 import {
   formatDay,
   formatTimeRange,
-  formatTimeZoneName,
+  formatUtcOffset,
 } from "@/components/sections/Contact/functions/timeFormats";
 import styles from "./ChosenTimeCard.module.css";
 
@@ -22,9 +22,7 @@ export function ChosenTimeCard({ start, timeZone, isBooked = false }: Props) {
         <p class={styles.day}>{formatDay(start, timeZone)}</p>
         <p class={styles.time}>
           {formatTimeRange(start, timeZone)}{" "}
-          <span class={styles.zone}>
-            {formatTimeZoneName(timeZone, "short")}
-          </span>
+          <span class={styles.zone}>{formatUtcOffset(start, timeZone)}</span>
         </p>
       </div>
       <ul class={styles.details}>

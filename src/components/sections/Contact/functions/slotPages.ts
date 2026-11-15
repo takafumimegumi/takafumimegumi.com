@@ -1,4 +1,4 @@
-// Sorts open times into the days and weeks the visitor sees. A slot is the UTC ISO string that /api/slots returns.
+// Sorts open times into the days and pages of days the visitor sees. A slot is the UTC ISO string that /api/slots returns.
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -30,10 +30,14 @@ export function groupSlotsByDay(slots: string[], timeZone: string): OpenDay[] {
 }
 
 /**
- * Splits the open times into weeks of seven days in a row, starting on the first day with an open time.
- * A day without open times is kept, with no slots, so every week has the same columns.
+ * Splits the open times into pages of days in a row, starting on the first day with an open time.
+ * A day without open times is kept, with no slots, so every page has the same columns.
  */
-export function buildWeeks(slots: string[], timeZone: string): OpenDay[][] {
+export function buildDayPages(
+  slots: string[],
+  timeZone: string,
+  daysPerPage: number,
+): OpenDay[][] {
   const days = groupSlotsByDay(slots, timeZone);
   if (days.length === 0) return [];
 
@@ -41,16 +45,20 @@ export function buildWeeks(slots: string[], timeZone: string): OpenDay[][] {
   const firstDayMs = Date.parse(days[0].date);
   const lastDayMs = Date.parse(days[days.length - 1].date);
 
-  const weeks: OpenDay[][] = [];
-  for (let weekMs = firstDayMs; weekMs <= lastDayMs; weekMs += 7 * DAY_MS) {
-    weeks.push(
-      Array.from({ length: 7 }, (_, index) => {
-        const date = new Date(weekMs + index * DAY_MS)
+  const pages: OpenDay[][] = [];
+  for (
+    let pageMs = firstDayMs;
+    pageMs <= lastDayMs;
+    pageMs += daysPerPage * DAY_MS
+  ) {
+    pages.push(
+      Array.from({ length: daysPerPage }, (_, index) => {
+        const date = new Date(pageMs + index * DAY_MS)
           .toISOString()
           .slice(0, 10);
         return daysByDate.get(date) ?? { date, slots: [] };
       }),
     );
   }
-  return weeks;
+  return pages;
 }

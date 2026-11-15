@@ -6,7 +6,7 @@ import {
   formatLongDay,
   formatTime,
   formatTimeRange,
-  formatTimeZoneName,
+  formatUtcOffset,
 } from "./timeFormats";
 
 // Neither zone changes its clock, so the expected times hold all year.
@@ -84,11 +84,21 @@ describe("formatTimeRange", () => {
   });
 });
 
-describe("formatTimeZoneName", () => {
-  it("drops the country note", () => {
-    expect(formatTimeZoneName("America/Vancouver", "long")).toBe(
-      "Pacific Time",
+describe("formatUtcOffset", () => {
+  it("gives the distance from UTC in the zone", () => {
+    const start = "2026-11-16T17:00:00.000Z";
+
+    expect(formatUtcOffset(start, PHOENIX)).toBe("GMT-7");
+    expect(formatUtcOffset(start, TOKYO)).toBe("GMT+9");
+  });
+
+  it("follows the season of the zone", () => {
+    // Berlin is one hour ahead of UTC in November and two in July.
+    expect(formatUtcOffset("2026-11-16T12:00:00.000Z", "Europe/Berlin")).toBe(
+      "GMT+1",
     );
-    expect(formatTimeZoneName("America/Vancouver", "short")).toBe("PT");
+    expect(formatUtcOffset("2026-07-16T12:00:00.000Z", "Europe/Berlin")).toBe(
+      "GMT+2",
+    );
   });
 });

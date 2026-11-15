@@ -1,17 +1,20 @@
-import { useState } from "preact/hooks";
-import symbolStyles from "@/components/common/Symbol/Symbol.module.css";
+import { useEffect, useState } from "preact/hooks";
 import {
-  buildWeeks,
+  buildDayPages,
   type OpenDay,
-} from "@/components/sections/Contact/functions/slotWeeks";
+} from "@/components/sections/Contact/functions/slotPages";
 import {
   formatDateParts,
   formatDateRange,
   formatLongDay,
   formatTime,
-  formatTimeZoneName,
+  formatUtcOffset,
 } from "@/components/sections/Contact/functions/timeFormats";
 import styles from "./SlotPicker.module.css";
+
+// How many days fit side by side, by the width of the screen: phone, tablet, desktop.
+const TABLET_QUERY = "(min-width: 768px)";
+const DESKTOP_QUERY = "(min-width: 1024px)";
 
 interface Props {
   slots: string[];
@@ -19,48 +22,50 @@ interface Props {
   onChooseSlot: (start: string) => void;
 }
 
-/** The open times of one week, by day, with arrows to the other weeks. */
+/** The open times of a few days in a row, with arrows to the days before and after. */
 export function SlotPicker({ slots, timeZone, onChooseSlot }: Props) {
-  const [weekIndex, setWeekIndex] = useState(0);
+  const daysPerPage = useDaysPerPage();
+  // Counted in days, not pages, so the same days stay in view when the screen is turned.
+  const [firstDayIndex, setFirstDayIndex] = useState(0);
 
-  const weeks = buildWeeks(slots, timeZone);
+  const pages = buildDayPages(slots, timeZone, daysPerPage);
   // The list can get shorter when it is loaded again.
-  const week = weeks[Math.min(weekIndex, weeks.length - 1)];
-  // Every week gets the height of the fullest day, so paging does not make the panel jump.
-  const rows = Math.max(...weeks.flat().map((day) => day.slots.length));
-  const longName = formatTimeZoneName(timeZone, "long");
-  const shortName = formatTimeZoneName(timeZone, "short");
+  const pageIndex = Math.min(
+    Math.floor(firstDayIndex / daysPerPage),
+    pages.length - 1,
+  );
+  const page = pages[pageIndex];
+  // Every page gets the height of the fullest day, so paging does not make the panel jump.
+  const rows = Math.max(...pages.flat().map((day) => day.slots.length));
 
   return (
     <div class={styles.root}>
       <div class={styles.head}>
         <p class={styles.timeZone}>
-          Times in your time zone:{" "}
-          <b>
-            {longName === shortName ? longName : `${longName} (${shortName})`}
-          </b>
+          Times are shown in your local time (
+          <b>{formatUtcOffset(slots[0], timeZone)}</b>).
         </p>
-        <div class={styles.week}>
+        <div class={styles.range}>
           <button
             type="button"
             class={styles.arrow}
-            aria-label="Previous week"
-            disabled={weekIndex === 0}
-            onClick={() => setWeekIndex(weekIndex - 1)}
+            aria-label="Previous days"
+            disabled={pageIndex === 0}
+            onClick={() => setFirstDayIndex((pageIndex - 1) * daysPerPage)}
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M15 5l-7 7 7 7" />
             </svg>
           </button>
           <span aria-live="polite">
-            {formatDateRange(week[0].date, week[week.length - 1].date)}
+            {formatDateRange(page[0].date, page[page.length - 1].date)}
           </span>
           <button
             type="button"
             class={styles.arrow}
-            aria-label="Next week"
-            disabled={weekIndex === weeks.length - 1}
-            onClick={() => setWeekIndex(weekIndex + 1)}
+            aria-label="Next days"
+            disabled={pageIndex === pages.length - 1}
+            onClick={() => setFirstDayIndex((pageIndex + 1) * daysPerPage)}
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M9 5l7 7-7 7" />
@@ -68,28 +73,49 @@ export function SlotPicker({ slots, timeZone, onChooseSlot }: Props) {
           </button>
         </div>
       </div>
-      <div class={styles.schedule}>
-        <div
-          class={styles.days}
-          style={{ "--rows": rows }}
-          role="group"
-          aria-label="Open times"
-        >
-          {week.map((day) => (
-            <DayColumn
-              key={day.date}
-              day={day}
-              timeZone={timeZone}
-              onChooseSlot={onChooseSlot}
-            />
-          ))}
-        </div>
-        <p class={styles.swipe} aria-hidden="true">
-          Swipe for more days <span class={symbolStyles.root}>→</span>
-        </p>
+      <div
+        class={styles.days}
+        style={{ "--columns": daysPerPage, "--rows": rows }}
+        role="group"
+        aria-label="Open times"
+      >
+        {page.map((day) => (
+          <DayColumn
+            key={day.date}
+            day={day}
+            timeZone={timeZone}
+            onChooseSlot={onChooseSlot}
+          />
+        ))}
       </div>
     </div>
   );
+}
+
+/**
+ * The arrows move by as many days as are shown, so no day stays hidden between two pages.
+ * This component is only drawn in the browser, after the time zone is known.
+ */
+function useDaysPerPage(): number {
+  const [daysPerPage, setDaysPerPage] = useState(readDaysPerPage);
+
+  useEffect(() => {
+    const queries = [TABLET_QUERY, DESKTOP_QUERY].map((query) =>
+      window.matchMedia(query),
+    );
+    const update = () => setDaysPerPage(readDaysPerPage());
+    queries.forEach((query) => query.addEventListener("change", update));
+    return () =>
+      queries.forEach((query) => query.removeEventListener("change", update));
+  }, []);
+
+  return daysPerPage;
+}
+
+function readDaysPerPage(): number {
+  if (window.matchMedia(DESKTOP_QUERY).matches) return 7;
+  if (window.matchMedia(TABLET_QUERY).matches) return 4;
+  return 3;
 }
 
 interface DayColumnProps {

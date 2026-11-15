@@ -63,20 +63,18 @@ export function formatTimeRange(start: string, timeZone: string): string {
   return buildTimeFormat(timeZone).formatRange(startDate, endDate);
 }
 
-/** "Pacific Time", or "PT" for the short style. */
-export function formatTimeZoneName(
-  timeZone: string,
-  style: "long" | "short",
-): string {
-  const name = new Intl.DateTimeFormat(LOCALE, {
+/**
+ * The distance from UTC at that time: "GMT-7". It can change with the season.
+ * A zone's name or city is not shown: a device can be set to another zone with the same time.
+ */
+export function formatUtcOffset(start: string, timeZone: string): string {
+  const offset = new Intl.DateTimeFormat(LOCALE, {
     timeZone,
-    timeZoneName: style === "long" ? "longGeneric" : "shortGeneric",
+    timeZoneName: "shortOffset",
   })
-    .formatToParts(new Date())
+    .formatToParts(new Date(start))
     .find((part) => part.type === "timeZoneName");
-
-  // Some zones carry a country note, such as "Pacific Time (Canada)".
-  return name ? name.value.replace(/ \(.*\)$/, "") : timeZone;
+  return offset ? offset.value : timeZone;
 }
 
 function buildTimeFormat(timeZone: string): Intl.DateTimeFormat {

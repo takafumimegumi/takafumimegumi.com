@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildWeeks, groupSlotsByDay } from "./slotWeeks";
+import { buildDayPages, groupSlotsByDay } from "./slotPages";
 
 // Neither zone changes its clock, so the expected days hold all year.
 const TOKYO = "Asia/Tokyo"; // UTC+9
@@ -40,7 +40,7 @@ describe("groupSlotsByDay", () => {
   });
 });
 
-describe("buildWeeks", () => {
+describe("buildDayPages", () => {
   // In Phoenix these are Monday the 16th, Wednesday the 18th, and Monday the 23rd.
   const slots = [
     "2026-11-16T17:00:00.000Z",
@@ -48,10 +48,10 @@ describe("buildWeeks", () => {
     "2026-11-23T17:00:00.000Z",
   ];
 
-  it("starts the first week on the first day with an open time", () => {
-    const [firstWeek] = buildWeeks(slots, PHOENIX);
+  it("starts the first page on the first day with an open time", () => {
+    const [firstPage] = buildDayPages(slots, PHOENIX, 7);
 
-    expect(firstWeek.map((day) => day.date)).toEqual([
+    expect(firstPage.map((day) => day.date)).toEqual([
       "2026-11-16",
       "2026-11-17",
       "2026-11-18",
@@ -63,22 +63,32 @@ describe("buildWeeks", () => {
   });
 
   it("keeps a day without open times, with no slots", () => {
-    const [firstWeek] = buildWeeks(slots, PHOENIX);
+    const [firstPage] = buildDayPages(slots, PHOENIX, 7);
 
-    expect(firstWeek[0].slots).toEqual(["2026-11-16T17:00:00.000Z"]);
-    expect(firstWeek[1].slots).toEqual([]);
-    expect(firstWeek[2].slots).toEqual(["2026-11-18T17:00:00.000Z"]);
+    expect(firstPage[0].slots).toEqual(["2026-11-16T17:00:00.000Z"]);
+    expect(firstPage[1].slots).toEqual([]);
+    expect(firstPage[2].slots).toEqual(["2026-11-18T17:00:00.000Z"]);
   });
 
-  it("starts a second week on the eighth day, and not on the seventh", () => {
-    expect(buildWeeks(slots, PHOENIX)).toHaveLength(2);
-    expect(buildWeeks(slots.slice(0, 2), PHOENIX)).toHaveLength(1);
+  it("starts a second page on the day after the first page ends, and not before", () => {
+    expect(buildDayPages(slots, PHOENIX, 7)).toHaveLength(2);
     // Sunday the 22nd is the seventh day.
     const upToSunday = [slots[0], "2026-11-22T17:00:00.000Z"];
-    expect(buildWeeks(upToSunday, PHOENIX)).toHaveLength(1);
+    expect(buildDayPages(upToSunday, PHOENIX, 7)).toHaveLength(1);
   });
 
-  it("returns no weeks when there are no times", () => {
-    expect(buildWeeks([], PHOENIX)).toEqual([]);
+  it("leaves no day out between pages of three days", () => {
+    const pages = buildDayPages(slots, PHOENIX, 3);
+
+    // The 16th to the 23rd is eight days: three pages, the last one filled up with empty days.
+    expect(pages.map((page) => page.map((day) => day.date))).toEqual([
+      ["2026-11-16", "2026-11-17", "2026-11-18"],
+      ["2026-11-19", "2026-11-20", "2026-11-21"],
+      ["2026-11-22", "2026-11-23", "2026-11-24"],
+    ]);
+  });
+
+  it("returns no pages when there are no times", () => {
+    expect(buildDayPages([], PHOENIX, 7)).toEqual([]);
   });
 });

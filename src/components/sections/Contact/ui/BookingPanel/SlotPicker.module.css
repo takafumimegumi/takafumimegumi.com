@@ -11,7 +11,7 @@
   justify-content: space-between;
 }
 
-.week {
+.range {
   display: flex;
   gap: 8px;
   align-items: center;
@@ -58,34 +58,18 @@
   line-height: var(--leading-small);
 }
 
-.schedule {
-  display: grid;
-  gap: 8px;
-}
-
-/* On a phone the days scroll sideways, three to a screen.
-   A row is a 44px time and the 8px above it. The heading and the bottom padding add 52px. */
+/* A row is a 44px time and the 8px above it. The heading adds 48px. */
 .days {
   display: grid;
-  min-height: calc(52px + var(--rows) * 52px);
-  grid-auto-columns: calc((100% - 16px) / 3);
-  grid-auto-flow: column;
+  grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
   gap: 8px;
-  padding-bottom: 4px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-}
-
-.days::-webkit-scrollbar {
-  display: none;
+  min-height: calc(48px + var(--rows) * 52px);
 }
 
 .day {
   display: grid;
   gap: 8px;
   align-content: start;
-  scroll-snap-align: start;
 }
 
 .dayHeading {
@@ -135,29 +119,8 @@
   text-align: center;
 }
 
-.swipe {
-  font-size: 12px;
-  line-height: 16px;
-  color: var(--color-text-muted);
-  text-align: right;
-}
-
 @media (min-width: 768px) {
   .days {
-    grid-auto-columns: calc((100% - 36px) / 4);
     gap: 12px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .days {
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-    grid-auto-columns: auto;
-    grid-auto-flow: row;
-    overflow: visible;
-  }
-
-  .swipe {
-    display: none;
   }
 }
