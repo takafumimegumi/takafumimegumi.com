@@ -35,6 +35,9 @@
     },
   ],
 
+  // Page views and events (ADR-0008). A version preview URL writes to this same dataset.
+  "analytics_engine_datasets": [{ "binding": "BEACONS", "dataset": "beacons" }],
+
   // Names only. The values are entered into Cloudflare directly (ADR-0009).
   "secrets": {
     "required": [

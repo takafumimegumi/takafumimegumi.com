@@ -1,0 +1,49 @@
+import { z } from "astro/zod";
+import type { BeaconPoint } from "../clients/cloudflareAnalyticsEngine";
+
+const beaconRequestSchema = z.object({
+  kind: z.enum([
+    "opened",
+    "left",
+    "case_study_read",
+    "call_booked",
+    "message_sent",
+  ]),
+  // Any path of this shape is stored. A list of real pages would silently drop a new page.
+  path: z
+    .string()
+    .max(100)
+    .regex(/^\/[a-z0-9/-]*$/),
+  source: z
+    .string()
+    .max(40)
+    .regex(/^[a-z0-9-]*$/)
+    .default(""),
+  viewId: z.uuid(),
+  seconds: z.int().min(0).max(86_400),
+  depth: z.int().min(0).max(100),
+});
+
+interface CreateBeaconDependencies {
+  createBeaconPoint: (point: BeaconPoint) => void;
+}
+
+type CreateBeaconResult = { ok: true } | { ok: false; reason: "invalid" };
+
+/**
+ * Stores one beacon from a page: a view opened or left, or an event (ADR-0008).
+ * Anyone can post here, so only the shape is trusted, never what a beacon claims.
+ */
+export function createBeacon(
+  dependencies: CreateBeaconDependencies,
+  rawRequest: unknown,
+  host: string,
+): CreateBeaconResult {
+  const parsed = beaconRequestSchema.safeParse(rawRequest);
+  if (!parsed.success) return { ok: false, reason: "invalid" };
+  const request = parsed.data;
+
+  dependencies.createBeaconPoint({ host, ...request });
+
+  return { ok: true };
+}
