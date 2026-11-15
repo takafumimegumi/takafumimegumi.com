@@ -1,11 +1,12 @@
-.consent {
+.notice {
   font-size: 13px;
   line-height: 18px;
   color: var(--color-text-muted);
 }
 
-.consent a {
+.notice a {
   font-weight: 700;
+  white-space: nowrap;
   color: var(--color-text);
 }
 

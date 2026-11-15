@@ -119,7 +119,7 @@ export function BookingForm({
         )}
         <SubmitFooter
           turnstileBoxRef={turnstileBox}
-          consentVerb="booking"
+          usageNotice="I'll use your details only to set up this call."
           label="Confirm booking"
           busyLabel="Booking…"
           isSubmitting={isSubmitting}

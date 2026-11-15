@@ -88,7 +88,7 @@ export function MessageForm({
       )}
       <SubmitFooter
         turnstileBoxRef={turnstileBox}
-        consentVerb="sending"
+        usageNotice="I'll use your details only to reply to you."
         label="Send message"
         busyLabel="Sending…"
         isSubmitting={isSubmitting}

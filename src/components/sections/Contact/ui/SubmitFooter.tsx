@@ -5,8 +5,7 @@ import styles from "./SubmitFooter.module.css";
 
 interface Props {
   turnstileBoxRef: RefObject<HTMLDivElement | null>;
-  /** What the visitor agrees to by pressing the button: "By booking, you agree…". */
-  consentVerb: "booking" | "sending";
+  usageNotice: string;
   label: string;
   busyLabel: string;
   isSubmitting: boolean;
@@ -15,7 +14,7 @@ interface Props {
 
 export function SubmitFooter({
   turnstileBoxRef,
-  consentVerb,
+  usageNotice,
   label,
   busyLabel,
   isSubmitting,
@@ -24,9 +23,8 @@ export function SubmitFooter({
   return (
     <>
       <Turnstile boxRef={turnstileBoxRef} />
-      <p class={styles.consent}>
-        By {consentVerb}, you agree to the{" "}
-        <a href="/privacy/">Privacy Policy</a>.
+      <p class={styles.notice}>
+        {usageNotice} <a href="/privacy/">Privacy Policy</a>
       </p>
       <button
         type="submit"
