@@ -2,12 +2,13 @@
 // Usage: npm run report -- [days] [hostname]. The defaults are 7 days and the live site.
 // A beacon can be read a minute or more after it is written, not at once.
 
-// Must match SITE_HOSTNAME in src/siteConstants.ts.
-const SITE_HOSTNAME = "takafumimegumi.com";
-// Vancouver stays on UTC-7 all year since March 2026.
-const VANCOUVER_UTC_OFFSET_MS = -7 * 60 * 60 * 1000;
+import { VANCOUVER_UTC_OFFSET_MS } from "../src/server/constants.ts";
+import { SITE_HOSTNAME } from "../src/siteConstants.ts";
+
 const ROW_LIMIT = 10_000;
 const EVENT_LABELS = { call_booked: "booked", message_sent: "message" };
+// Shown for a view whose page beacons are all older than the period.
+const EARLIER_PAGE = "(opened earlier)";
 
 const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
 const token = process.env.ANALYTICS_READ_TOKEN;
@@ -40,7 +41,7 @@ print("Beacons a day", countByDayAndKind(rows));
 print("Views, newest first", views.toReversed().map(describeView));
 print(
   "By page",
-  summarizeBy(views, (view) => view.path, summarizeReading),
+  summarizeBy(views, (view) => view.path ?? EARLIER_PAGE, summarizeReading),
 );
 print(
   "By source",
@@ -92,7 +93,8 @@ function groupIntoViews(rows) {
   for (const row of rows) {
     const view = views.get(row.viewId) ?? {
       at: row.timestamp,
-      path: row.path,
+      // A case study beacon carries the case study's path, not the page's.
+      path: undefined,
       source: row.source,
       seconds: 0,
       depth: 0,
@@ -109,6 +111,7 @@ function groupIntoViews(rows) {
       };
       view.caseStudies.set(row.path, keepLargest(reading, row));
     } else {
+      view.path ??= row.path;
       keepLargest(view, row);
       if (row.kind in EVENT_LABELS) view.events.add(EVENT_LABELS[row.kind]);
     }
@@ -139,7 +142,7 @@ function describeView(view) {
   );
   return {
     "opened (Vancouver)": formatVancouverTime(view.at),
-    page: view.path,
+    page: view.path ?? EARLIER_PAGE,
     source: view.source,
     seconds: view.seconds,
     "depth %": view.depth,
