@@ -19,6 +19,7 @@ paths:
 - A route in `src/pages/api/` only assembles. It reads configuration and secrets, passes the implementations from `clients/` to a use case, and maps the result to a status code.
 - A use case takes the functions that call external APIs as arguments. It does not import an implementation from `clients/`.
 - Put the schema for a request in the use case file that receives the request.
+- A route catches every error, reports it with `reportFailure`, and returns a 500. It never lets an error reach Astro, which logs the error's message.
 
 ## Clients
 
