@@ -34,10 +34,14 @@ describe("isTokenAccepted", () => {
     );
   });
 
-  it("accepts the workers.dev address and a version URL", () => {
-    for (const hostname of [WORKER_HOSTNAME, `1a2b3c4d-${WORKER_HOSTNAME}`]) {
-      expect(isTokenAccepted(buildCheck({ hostname }), "booking")).toBe(true);
-    }
+  it("accepts a version URL", () => {
+    const hostname = `1a2b3c4d-${WORKER_HOSTNAME}`;
+    expect(isTokenAccepted(buildCheck({ hostname }), "booking")).toBe(true);
+  });
+
+  it("refuses the workers.dev address, which is turned off", () => {
+    const hostname = WORKER_HOSTNAME;
+    expect(isTokenAccepted(buildCheck({ hostname }), "booking")).toBe(false);
   });
 
   it("refuses a hostname that only ends like the site's", () => {

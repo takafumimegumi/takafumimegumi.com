@@ -1,7 +1,7 @@
 import { SITE_HOSTNAME } from "@/siteConstants";
 import type { TokenCheck } from "../types";
 
-// The pages that may produce a token: the site, its workers.dev address, and its version URLs.
+// The pages that may produce a token: the site and its version URLs.
 const WORKER_HOSTNAME = "takafumimegumi-com.takafumimegumi.workers.dev";
 
 /** Each form has its own action, so a token from one form cannot be used on the other. */
@@ -22,7 +22,6 @@ export function isTokenAccepted(
 function isSiteHostname(hostname: string): boolean {
   return (
     hostname === SITE_HOSTNAME ||
-    hostname === WORKER_HOSTNAME ||
     // A version URL puts the version's ID and a hyphen in front.
     hostname.endsWith(`-${WORKER_HOSTNAME}`)
   );

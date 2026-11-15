@@ -23,8 +23,6 @@ const shareImageUrl = new URL(shareImage.path, Astro.site);
     <meta charset="utf-8" />
     <!-- viewport-fit=cover lets the page paint under the notch; the CSS pads with env(). -->
     <meta name="viewport" content="width=device-width, viewport-fit=cover" />
-    <!-- Removed at launch. Until then the site must stay out of search. -->
-    <meta name="robots" content="noindex" />
     <title>{title}</title>
     <meta name="description" content={description} />
     {canonical && <link rel="canonical" href={canonical} />}

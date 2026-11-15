@@ -8,6 +8,11 @@
   // The first flag is the Astro adapter's default. The Sentry SDK needs nodejs_compat.
   "compatibility_flags": ["global_fetch_strictly_public", "nodejs_compat"],
 
+  "routes": [{ "pattern": "takafumimegumi.com", "custom_domain": true }],
+  "workers_dev": false,
+  // A route turns version URLs off unless this is set. Access keeps them private (ADR-0004).
+  "preview_urls": true,
+
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",

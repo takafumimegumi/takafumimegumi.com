@@ -2,8 +2,6 @@
 
 Source code for [takafumimegumi.com](https://takafumimegumi.com), the personal website of Takafumi Megumi, a product engineer based in Vancouver. The site shows who I am, what I have built, and how to reach me.
 
-This site is being rebuilt from scratch.
-
 ## Development
 
 The site is built with [Astro](https://astro.build) and runs on Cloudflare Workers. It needs the Node.js version in the `volta` field of `package.json`.
