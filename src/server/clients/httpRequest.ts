@@ -1,4 +1,4 @@
-import { buildFailure } from "../functions/failureCode";
+import { buildFailure } from "../functions/buildFailure";
 
 const TIMEOUT_MS = 10_000;
 

@@ -1,6 +1,7 @@
 import type { SendEmail } from "@cloudflare/workers-types";
 import { OWNER_EMAIL } from "@/siteConstants";
-import { buildFailure, readFailureCode } from "../functions/failureCode";
+import { buildFailure } from "../functions/buildFailure";
+import { readFailureCode } from "../functions/readFailureCode";
 
 // Only a sender label. Nothing reads mail at this address.
 const FROM_ADDRESS = "contact-form@takafumimegumi.com";

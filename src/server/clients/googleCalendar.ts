@@ -1,4 +1,4 @@
-import type { BusyTime } from "../functions/computeOpenSlots";
+import type { BusyTime } from "../types";
 import {
   buildCalendarFailure,
   requestCalendar,

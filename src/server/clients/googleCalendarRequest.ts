@@ -1,4 +1,4 @@
-import { buildFailure } from "../functions/failureCode";
+import { buildFailure } from "../functions/buildFailure";
 import { readJson, requestWithTimeout } from "./httpRequest";
 
 // How googleCalendar.ts talks to Google: an access token, an authorized call, and failure codes.

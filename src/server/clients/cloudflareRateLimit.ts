@@ -1,5 +1,5 @@
 import type { RateLimit } from "@cloudflare/workers-types";
-import { buildFailure } from "../functions/failureCode";
+import { buildFailure } from "../functions/buildFailure";
 
 export interface RateLimitKey {
   /** The route being called, such as "bookings". Each route is counted on its own. */

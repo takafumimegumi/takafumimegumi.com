@@ -1,20 +1,8 @@
-import type { AvailabilityRules, Weekday } from "./availabilityRules";
-
-// Vancouver stays on UTC-7 all year since March 2026.
-// A fixed offset avoids time zone data, which is stale in some runtimes.
-const VANCOUVER_UTC_OFFSET_MS = -7 * 60 * 60 * 1000;
-
-const MINUTE_MS = 60 * 1000;
-const DAY_MS = 24 * 60 * MINUTE_MS;
+import { DAY_MS, MINUTE_MS, VANCOUVER_UTC_OFFSET_MS } from "../constants";
+import type { AvailabilityRules, BusyTime, Weekday } from "../types";
 
 // 1970-01-01 was a Thursday.
 const EPOCH_WEEKDAY = 4;
-
-/** A stretch of time when I am not free, such as another meeting. */
-export interface BusyTime {
-  start: Date;
-  end: Date;
-}
 
 /** Returns the start of every open slot, earliest first. */
 export function computeOpenSlots(

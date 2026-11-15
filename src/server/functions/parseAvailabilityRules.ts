@@ -1,22 +1,6 @@
 import { z } from "astro/zod";
-import { buildFailure } from "./failureCode";
-
-export type Weekday = "0" | "1" | "2" | "3" | "4" | "5" | "6";
-
-/** Start and end, as minutes from midnight in Vancouver. 600 is 10:00. */
-export type TimeWindow = [start: number, end: number];
-
-export interface AvailabilityRules {
-  /** Open windows by weekday. "0" is Sunday. */
-  windows: Partial<Record<Weekday, TimeWindow[]>>;
-  slotMinutes: number;
-  /** A slot must start at least this long after now. */
-  minNoticeMinutes: number;
-  /** How many Vancouver days are offered, counting today. */
-  daysOffered: number;
-  /** Free time kept before and after every busy time. */
-  bufferMinutes: number;
-}
+import type { AvailabilityRules, TimeWindow } from "../types";
+import { buildFailure } from "./buildFailure";
 
 /** A time of day such as "09:30", read as minutes from midnight. "24:00" is the end of the day. */
 const timeOfDaySchema = z

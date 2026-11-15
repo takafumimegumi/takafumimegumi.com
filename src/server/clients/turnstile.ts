@@ -1,4 +1,5 @@
-import { buildFailure } from "../functions/failureCode";
+import { buildFailure } from "../functions/buildFailure";
+import type { TokenCheck } from "../types";
 import { readJson, requestWithTimeout } from "./httpRequest";
 
 const SITEVERIFY_URL =
@@ -14,14 +15,6 @@ const TOKEN_ERROR_CODES = [
 
 export interface TurnstileConfig {
   secretKey: string;
-}
-
-export interface TokenCheck {
-  valid: boolean;
-  /** The action the widget was rendered with, such as "booking". */
-  action?: string;
-  /** The hostname of the page that produced the token. */
-  hostname?: string;
 }
 
 interface SiteverifyResponse {

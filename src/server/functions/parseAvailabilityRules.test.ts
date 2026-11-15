@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseAvailabilityRules } from "./availabilityRules";
+import { parseAvailabilityRules } from "./parseAvailabilityRules";
 
 // Made-up rules. The real ones live in Worker configuration.
 const MOCK_RULES = {

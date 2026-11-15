@@ -1,5 +1,5 @@
 import * as Sentry from "@sentry/cloudflare";
-import { readFailureCode } from "../functions/failureCode";
+import { readFailureCode } from "../functions/readFailureCode";
 
 /**
  * Reports a failure so that I get an alert (ADR-0010). Sends the source, such as "bookings", and the kind only.

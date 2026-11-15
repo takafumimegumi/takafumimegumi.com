@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { computeOpenSlots, type BusyTime } from "./computeOpenSlots";
-import type { AvailabilityRules } from "./availabilityRules";
+import type { AvailabilityRules, BusyTime } from "../types";
+import { computeOpenSlots } from "./computeOpenSlots";
 
 // Made-up rules: Mondays from 10:00 to 12:00. The real ones live in Worker configuration.
 // Vancouver is UTC-7, so 10:00 there is 17:00 UTC, in winter too.
