@@ -1,0 +1,18 @@
+---
+import Footer from "@/components/common/Footer/Footer.astro";
+import Header from "@/components/common/Header/Header.astro";
+import Privacy from "@/components/sections/Privacy/Privacy.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { HOME_SHARE_IMAGE, SITE_NAME } from "@/siteConstants";
+---
+
+<BaseLayout
+  title={`Privacy Policy | ${SITE_NAME}`}
+  description="What this site collects, why, where it goes, and how to ask about it."
+  path="/privacy/"
+  shareImage={HOME_SHARE_IMAGE}
+>
+  <Header />
+  <Privacy />
+  <Footer />
+</BaseLayout>

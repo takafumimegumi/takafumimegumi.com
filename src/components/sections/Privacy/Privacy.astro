@@ -1,0 +1,150 @@
+---
+import Container from "@/components/common/Container/Container.astro";
+import { OWNER_EMAIL } from "@/siteConstants";
+import styles from "./Privacy.module.css";
+
+const LAST_UPDATED = "November 15, 2026";
+const TURNSTILE_PRIVACY_URL =
+  "https://www.cloudflare.com/turnstile-privacy-policy/";
+const BC_PRIVACY_COMMISSIONER_URL = "https://www.oipc.bc.ca/";
+---
+
+<main>
+  <div class={styles.intro} data-ground="forest" data-hero>
+    <Container>
+      <div class={styles.column}>
+        <p class={styles.updated}>Last updated: {LAST_UPDATED}</p>
+        <h1 class={styles.heading}>Privacy Policy</h1>
+        <p class={styles.summary}>
+          This is my personal site. I'm Takafumi Megumi, and I wrote this page
+          myself. The site has no ads and no third-party trackers. I only
+          receive what you send me through the forms, plus anonymous records of
+          page views.
+        </p>
+      </div>
+    </Container>
+  </div>
+
+  <Container>
+    <div class:list={[styles.column, styles.body]}>
+      <h2>Who is responsible</h2>
+      <p>
+        I am. For any question about your information, email me at {OWNER_EMAIL}
+        .
+      </p>
+
+      <h2>What I collect and why</h2>
+      <p>
+        <strong>When you book a call.</strong> Your name, your email address,
+        and, if you add it, what you'd like to talk about. I use them to set up
+        the call and to get in touch about it. Booking creates an event on my
+        Google Calendar, Google emails an invitation to the address you entered,
+        and the site emails me the details.
+      </p>
+      <p>
+        <strong>When you send a message.</strong> Your name, your email address,
+        and your message. I use them to reply. The message reaches me by email.
+      </p>
+      <p>
+        <strong>When you submit either form.</strong> Cloudflare Turnstile
+        checks that a person is sending the form. It looks at signals such as
+        your IP address and browser details, and it may use cookies and browser
+        storage that Cloudflare describes as strictly necessary for detecting
+        bots. It runs only when you submit a form.{" "}
+        <a href={TURNSTILE_PRIVACY_URL} target="_blank" rel="noopener">
+          Cloudflare's Turnstile Privacy Addendum
+        </a>{" "}
+        has the details. The site also uses your IP address for a moment to stop
+        a burst of submissions, and does not keep it.
+      </p>
+      <p>
+        <strong>When you view a page.</strong> The site records that a page was
+        opened, how long it stayed on screen, how far it was scrolled, whether a
+        call was booked, a message was sent, or a case study was read, and a tag
+        from the link you followed, if it had one. I use this to see which pages
+        are read. It uses no cookies. It does not record your IP address or the
+        page you came from, and it stores nothing in your browser to recognize
+        you later.
+      </p>
+
+      <h2>Your consent, and how to withdraw it</h2>
+      <p>
+        When you submit a form, you agree to the uses above. You can ask me to
+        delete what you sent at any time.
+      </p>
+      <p>
+        You can turn off page-view measurement in this browser:{" "}
+        <a href="/privacy/?measure=off">Turn measurement off</a>. To remember
+        that choice, the site saves one small marker in your browser.{" "}
+        <a href="/privacy/?measure=on">Turn it back on</a> removes the marker.
+      </p>
+
+      <h2>Who else handles your information</h2>
+      <ul>
+        <li>
+          <strong>Cloudflare</strong> hosts the site, runs the bot check,
+          delivers messages to my inbox, and stores the page-view records.
+        </li>
+        <li>
+          <strong>Google</strong> holds the calendar events and invitations, and
+          the emails I receive.
+        </li>
+        <li>
+          <strong>Sentry</strong> receives error reports from the server. They
+          contain no information about you.
+        </li>
+      </ul>
+      <p>
+        I don't sell your information or share it for any other purpose. These
+        companies process information on servers outside Canada, mainly in the
+        United States, where authorities may be able to access it under local
+        law.
+      </p>
+
+      <h2>How long I keep it</h2>
+      <ul>
+        <li>The site itself stores nothing you enter in the forms.</li>
+        <li>
+          Messages and bookings stay in my inbox and calendar while they are
+          useful for our conversation. I delete them when you ask.
+        </li>
+        <li>
+          Page-view records are deleted automatically after about three months.
+        </li>
+        <li>
+          Cloudflare keeps short-lived logs of requests to the site, which
+          include technical details such as IP addresses.
+        </li>
+      </ul>
+
+      <h2>How I protect it</h2>
+      <p>
+        The site keeps no copy of what you send, so there is nothing on it to
+        leak. Connections to the site are encrypted. Only I can access my inbox
+        and calendar, and the account is protected with two-step verification.
+      </p>
+
+      <h2>Seeing or correcting your information</h2>
+      <p>
+        Email me to see, correct, or delete the information I have about you. I
+        will reply within 30 days.
+      </p>
+
+      <h2>Complaints</h2>
+      <p>
+        If you have a concern about how I've handled your information, email me
+        first. If we can't resolve it, you can contact the{" "}
+        <a href={BC_PRIVACY_COMMISSIONER_URL} target="_blank" rel="noopener">
+          Office of the Information and Privacy Commissioner for British
+          Columbia
+        </a>
+        .
+      </p>
+
+      <h2>Changes</h2>
+      <p>
+        If this policy changes, I will update this page and the date at the top.
+      </p>
+    </div>
+  </Container>
+</main>

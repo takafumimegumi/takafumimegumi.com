@@ -1,0 +1,72 @@
+.intro {
+  padding-block: 40px 44px;
+  background: linear-gradient(180deg, var(--forest-9) 0%, #18765a 100%);
+}
+
+/* About 70 characters a line, which a long text needs to stay readable. */
+.column {
+  max-width: 680px;
+  margin-inline: auto;
+}
+
+.updated {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  line-height: var(--leading-small);
+  color: var(--color-text-accent);
+}
+
+.heading {
+  margin-block: 8px 16px;
+  font-size: var(--text-heading-1);
+  font-weight: 700;
+  line-height: var(--leading-heading-1);
+}
+
+.body {
+  padding-bottom: var(--section-space);
+}
+
+.body h2 {
+  margin-block: 40px 12px;
+  font-size: var(--text-title);
+  font-weight: 700;
+  line-height: var(--leading-title);
+}
+
+.body p,
+.body ul {
+  margin-block: 0 12px;
+}
+
+.body ul {
+  padding-left: 20px;
+}
+
+.body li {
+  margin-bottom: 8px;
+}
+
+.body a {
+  color: var(--color-text-accent);
+  text-underline-offset: 3px;
+}
+
+@media (min-width: 768px) {
+  .intro {
+    padding-block: 72px 80px;
+  }
+
+  .heading {
+    margin-block: 12px 24px;
+  }
+
+  .summary {
+    font-size: 20px;
+    line-height: 32px;
+  }
+
+  .body h2 {
+    margin-top: 56px;
+  }
+}
