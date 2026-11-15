@@ -51,3 +51,7 @@ const shareImageUrl = new URL(shareImage.path, Astro.site);
     <slot />
   </body>
 </html>
+
+<script>
+  import "@/scripts/beacon/sendBeacons";
+</script>

@@ -1,5 +1,5 @@
 import type { ComponentChildren } from "preact";
-import { useErrorBoundary, useRef, useState } from "preact/hooks";
+import { useEffect, useErrorBoundary, useRef, useState } from "preact/hooks";
 import { OWNER_EMAIL } from "@/siteConstants";
 import { BookingPanel } from "@/components/sections/Contact/ui/BookingPanel/BookingPanel";
 import { hasNoSlotsToShow } from "@/components/sections/Contact/functions/bookingState";
@@ -10,6 +10,9 @@ import { MessagePanel } from "@/components/sections/Contact/ui/MessagePanel/Mess
 import styles from "./ContactForm.module.css";
 
 type Mode = "booking" | "message";
+
+/** Dispatched on the document when the form succeeds, for scripts that watch the page. */
+export type ContactEventName = "contact:booked" | "contact:sent";
 
 /** The island of the Contact section: book a call, or send a message (ADR-0002). */
 export function ContactForm() {
@@ -25,6 +28,15 @@ function ContactPanels() {
   const message = useMessage();
   const bookingPanel = useRef<HTMLDivElement>(null);
   const messagePanel = useRef<HTMLDivElement>(null);
+
+  const isBooked = booking.state.step.status === "booked";
+  const isSent = message.state.status === "sent";
+  useEffect(() => {
+    if (isBooked) announce("contact:booked");
+  }, [isBooked]);
+  useEffect(() => {
+    if (isSent) announce("contact:sent");
+  }, [isSent]);
 
   return (
     <>
@@ -122,6 +134,10 @@ function ContactPanels() {
       </div>
     </>
   );
+}
+
+function announce(name: ContactEventName) {
+  document.dispatchEvent(new Event(name));
 }
 
 /** Moves the focus to an element that the next render shows or creates. */
