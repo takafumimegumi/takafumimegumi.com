@@ -1,8 +1,8 @@
 import type { ComponentChildren } from "preact";
 import { useErrorBoundary, useState } from "preact/hooks";
 import { OWNER_EMAIL } from "@/siteConstants";
-import { BookingPanel } from "./BookingPanel";
-import { useBooking } from "./useBooking";
+import { BookingPanel } from "@/components/sections/Contact/ui/BookingPanel/BookingPanel";
+import { useBooking } from "@/components/sections/Contact/hooks/useBooking";
 import styles from "./ContactForm.module.css";
 
 type Mode = "booking" | "message";

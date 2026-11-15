@@ -1,0 +1,43 @@
+/* The words and the buttons are two groups. The space between them is wider than the space inside either. */
+.root {
+  display: grid;
+  gap: 24px;
+  justify-items: center;
+  padding: 20px 4px;
+  text-align: center;
+}
+
+.words {
+  display: grid;
+  gap: 8px;
+}
+
+.heading {
+  font-size: var(--text-title);
+  line-height: var(--leading-title);
+}
+
+.text {
+  color: var(--color-text-muted);
+}
+
+/* On a phone the buttons stack and take the full width, like the button of a form. */
+.actions {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .root {
+    gap: 32px;
+    padding-block: 28px;
+  }
+
+  .actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    width: auto;
+  }
+}

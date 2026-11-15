@@ -1,107 +1,24 @@
-import type { ComponentChildren } from "preact";
 import { useState } from "preact/hooks";
-import buttonStyles from "@/components/common/Button/Button.module.css";
-import type { BookingState } from "./bookingState";
 import {
   buildWeeks,
+  type OpenDay,
+} from "@/components/sections/Contact/functions/slotWeeks";
+import {
   formatDateParts,
   formatDateRange,
   formatLongDay,
   formatTime,
   formatTimeZoneName,
-  type DayColumn,
-} from "./time";
-import styles from "./BookingPanel.module.css";
+} from "@/components/sections/Contact/functions/timeFormats";
+import styles from "./SlotPicker.module.css";
 
 interface Props {
-  state: BookingState;
-  /** The visitor's time zone. Undefined until the page runs in the browser. */
-  timeZone: string | undefined;
-  onReloadSlots: () => void;
-  onSendMessage: () => void;
-}
-
-/** The booking side of the contact form. Draws the state it is given. */
-export function BookingPanel({
-  state,
-  timeZone,
-  onReloadSlots,
-  onSendMessage,
-}: Props) {
-  // Times cannot be drawn before the time zone is known.
-  if (state.status === "loading" || timeZone === undefined) {
-    return <p class={styles.loading}>Loading open times…</p>;
-  }
-
-  switch (state.status) {
-    case "unavailable":
-      return (
-        <Note
-          heading="Couldn't load open times."
-          text="Try again, or send me a message and I'll find a time that works."
-        >
-          <button
-            type="button"
-            class={buttonStyles.root}
-            onClick={onSendMessage}
-          >
-            Send a message
-          </button>
-          <button
-            type="button"
-            class={styles.quietButton}
-            onClick={onReloadSlots}
-          >
-            Try again
-          </button>
-        </Note>
-      );
-    case "empty":
-      return (
-        <Note
-          heading="No open times in the next two weeks."
-          text="Send me a message, and I'll find a time that works."
-        >
-          <button
-            type="button"
-            class={buttonStyles.root}
-            onClick={onSendMessage}
-          >
-            Send a message
-          </button>
-        </Note>
-      );
-    case "choosing":
-      return <SlotList slots={state.slots} timeZone={timeZone} />;
-  }
-}
-
-interface NoteProps {
-  heading: string;
-  text: string;
-  /** The buttons. */
-  children: ComponentChildren;
-}
-
-/** A short message in place of the times, with what the visitor can do next. */
-function Note({ heading, text, children }: NoteProps) {
-  return (
-    <div class={styles.note}>
-      <div class={styles.noteWords}>
-        <h3 class={styles.noteHeading}>{heading}</h3>
-        <p class={styles.noteText}>{text}</p>
-      </div>
-      <div class={styles.noteActions}>{children}</div>
-    </div>
-  );
-}
-
-interface SlotListProps {
   slots: string[];
   timeZone: string;
 }
 
-function SlotList({ slots, timeZone }: SlotListProps) {
+/** The open times of one week, by day, with arrows to the other weeks. */
+export function SlotPicker({ slots, timeZone }: Props) {
   const [weekIndex, setWeekIndex] = useState(0);
 
   const weeks = buildWeeks(slots, timeZone);
@@ -112,8 +29,8 @@ function SlotList({ slots, timeZone }: SlotListProps) {
   const shortName = formatTimeZoneName(timeZone, "short");
 
   return (
-    <div class={styles.list}>
-      <div class={styles.listHead}>
+    <div class={styles.root}>
+      <div class={styles.head}>
         <p class={styles.timeZone}>
           Times in your time zone:{" "}
           <b>
@@ -156,7 +73,7 @@ function SlotList({ slots, timeZone }: SlotListProps) {
           aria-label="Open times"
         >
           {week.map((day) => (
-            <Day key={day.date} day={day} timeZone={timeZone} />
+            <DayColumn key={day.date} day={day} timeZone={timeZone} />
           ))}
         </div>
         <p class={styles.swipe} aria-hidden="true">
@@ -167,12 +84,12 @@ function SlotList({ slots, timeZone }: SlotListProps) {
   );
 }
 
-interface DayProps {
-  day: DayColumn;
+interface DayColumnProps {
+  day: OpenDay;
   timeZone: string;
 }
 
-function Day({ day, timeZone }: DayProps) {
+function DayColumn({ day, timeZone }: DayColumnProps) {
   const { weekday, dayOfMonth } = formatDateParts(day.date);
 
   return (

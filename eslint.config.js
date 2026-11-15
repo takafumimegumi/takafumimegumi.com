@@ -67,4 +67,62 @@ export default defineConfig([
       ],
     },
   },
+  // The dependency directions of the contact form (.claude/rules/frontend.md).
+  {
+    files: ["src/components/sections/Contact/ui/**"],
+    rules: {
+      "@typescript-eslint/no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["**/Contact/api", "**/Contact/hooks/**"],
+              message:
+                "A component in ui/ draws what it is given. It does not call the server or use the form's hooks.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ["src/components/sections/Contact/hooks/**"],
+    rules: {
+      "@typescript-eslint/no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["**/Contact/ui/**"],
+              allowTypeImports: true,
+              message: "A hook does not draw. Import only types from ui/.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ["src/components/sections/Contact/functions/**"],
+    rules: {
+      "@typescript-eslint/no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["**/Contact/ui/**", "**/Contact/hooks/**"],
+              message:
+                "functions/ holds pure functions and depends on nothing else in the form.",
+            },
+            {
+              group: ["**/Contact/api"],
+              allowTypeImports: true,
+              message:
+                "A pure function does not call the server. Import only types from api.",
+            },
+          ],
+        },
+      ],
+    },
+  },
 ]);

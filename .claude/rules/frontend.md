@@ -17,6 +17,22 @@ paths:
 - Move code to `common/` or `src/scripts/` when a second place needs it, not before.
 - Import a file in the same folder with `./`. Import anything else from `@/`, which is `src/`.
 
+## Islands
+
+- An island's folder holds its root component, `api.ts`, and three folders.
+
+| Folder | Holds | May depend on |
+| --- | --- | --- |
+| `ui/` | Components that draw the props they are given. | `functions/` |
+| `hooks/` | State, and the operations that change it. | `functions/`, `api.ts`, and types from `ui/` |
+| `functions/` | Pure functions only: state transitions and formatting. | Nothing else in the island, except types from `api.ts` |
+
+- ESLint checks these directions.
+- A component in `ui/` that has child components of its own is a folder. Its main file has the folder's name: `BookingPanel/BookingPanel.tsx`.
+- Name a component so that it reads without its folder: what it is for, then its shape. `BookingForm`, not `Details`.
+- The root component calls the hooks and passes what they return to `ui/`.
+- Only `api.ts` calls the server. Its functions do not throw. They return a result.
+
 ## Styles
 
 - Use CSS Modules. One `.module.css` per component, with the same name.

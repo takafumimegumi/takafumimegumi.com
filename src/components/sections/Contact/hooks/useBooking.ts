@@ -1,10 +1,10 @@
 import { useEffect, useReducer, useState } from "preact/hooks";
-import { listOpenSlots } from "./api";
+import { listOpenSlots } from "@/components/sections/Contact/api";
 import {
   INITIAL_BOOKING_STATE,
   reduceBookingState,
   type BookingState,
-} from "./bookingState";
+} from "@/components/sections/Contact/functions/bookingState";
 
 export interface Booking {
   state: BookingState;
