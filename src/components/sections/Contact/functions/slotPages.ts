@@ -1,6 +1,6 @@
-// Sorts open times into the days and pages of days the visitor sees. A slot is the UTC ISO string that /api/slots returns.
+import { DAY_MS } from "@/siteConstants";
 
-const DAY_MS = 24 * 60 * 60 * 1000;
+// Sorts open times into the days and pages of days the visitor sees. A slot is the UTC ISO string that /api/slots returns.
 
 export interface OpenDay {
   /** The local date, as "2026-11-16". */

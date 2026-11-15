@@ -1,3 +1,5 @@
+import { MINUTE_MS } from "@/siteConstants";
+
 // Writes dates and times in the visitor's time zone. A start is the UTC ISO string that /api/slots returns.
 
 const LOCALE = "en-US";
@@ -59,7 +61,7 @@ export function formatTime(start: string, timeZone: string): string {
 /** The whole call, with AM or PM written once when both ends share it: "9:30 – 10:00 AM". */
 export function formatTimeRange(start: string, timeZone: string): string {
   const startDate = new Date(start);
-  const endDate = new Date(startDate.getTime() + CALL_MINUTES * 60 * 1000);
+  const endDate = new Date(startDate.getTime() + CALL_MINUTES * MINUTE_MS);
   return buildTimeFormat(timeZone).formatRange(startDate, endDate);
 }
 

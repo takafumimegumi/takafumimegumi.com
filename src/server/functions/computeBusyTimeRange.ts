@@ -1,5 +1,5 @@
 import type { AvailabilityRules } from "../types";
-import { DAY_MS, MINUTE_MS } from "../constants";
+import { DAY_MS, MINUTE_MS } from "@/siteConstants";
 
 export interface TimeRange {
   from: Date;

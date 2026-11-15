@@ -1,8 +1,8 @@
 import { z } from "astro/zod";
+import { MINUTE_MS } from "@/siteConstants";
 import type { EmailContent } from "../clients/cloudflareEmail";
 import type { RateLimitCheck } from "../clients/cloudflareRateLimit";
 import type { CreatedEvent, NewEvent } from "../clients/googleCalendar";
-import { MINUTE_MS } from "../constants";
 import { buildFailure } from "../functions/buildFailure";
 import { computeBusyTimeRange } from "../functions/computeBusyTimeRange";
 import { computeOpenSlots } from "../functions/computeOpenSlots";

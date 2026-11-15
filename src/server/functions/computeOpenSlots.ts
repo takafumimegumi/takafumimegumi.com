@@ -1,4 +1,5 @@
-import { DAY_MS, MINUTE_MS, VANCOUVER_UTC_OFFSET_MS } from "../constants";
+import { DAY_MS, MINUTE_MS } from "@/siteConstants";
+import { VANCOUVER_UTC_OFFSET_MS } from "../constants";
 import type { AvailabilityRules, BusyTime, Weekday } from "../types";
 
 // 1970-01-01 was a Thursday.

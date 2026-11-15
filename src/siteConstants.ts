@@ -16,3 +16,6 @@ export const GITHUB_REPO_URL =
 
 // Shown in the Contact section, and where the message form delivers.
 export const OWNER_EMAIL = "tmegumi1103@gmail.com";
+
+export const MINUTE_MS = 60 * 1000;
+export const DAY_MS = 24 * 60 * MINUTE_MS;
