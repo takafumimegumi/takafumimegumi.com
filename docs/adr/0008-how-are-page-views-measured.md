@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -62,6 +62,8 @@ Clients that do not run JavaScript, such as link-preview fetchers, never send a 
 
 - Decided: 2026-11-13.
 - Analytics Engine on the Workers Free plan: 100,000 data points written and 10,000 read queries a day. Data is kept for three months. Checked 2026-11-13: [pricing](https://developers.cloudflare.com/analytics/analytics-engine/pricing/), [limits](https://developers.cloudflare.com/analytics/analytics-engine/limits/).
+- Written from the Worker and read through the SQL API, 2026-11-15: the beacon for an opened page and the `sendBeacon` on leaving both arrived, from a desktop browser and from a phone. They could be read within three minutes.
+- Analytics Engine had to be turned on by creating one dataset in the dashboard. Until then, uploading a version with the binding failed with code 10089. Seen 2026-11-15.
 - Analytics Engine is queried through a SQL API. I found no built-in dashboard for it. Checked 2026-11-13: [SQL API](https://developers.cloudflare.com/analytics/analytics-engine/sql-api/).
 - Cloudflare Web Analytics does not support custom events ("Not yet"), does not log query strings, and uses no cookies or local storage. Its documented metrics are visits, page views, page load time, and Core Web Vitals. Checked 2026-11-13: [FAQ](https://developers.cloudflare.com/web-analytics/faq/), [metrics](https://developers.cloudflare.com/web-analytics/data-metrics/high-level-metrics/), [Core Web Vitals](https://developers.cloudflare.com/web-analytics/data-metrics/core-web-vitals/).
 - Revisit if the fixed queries stop being enough, or if automated clients make the numbers hard to read.
