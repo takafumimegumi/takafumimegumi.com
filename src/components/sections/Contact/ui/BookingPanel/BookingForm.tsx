@@ -1,4 +1,4 @@
-import { useRef } from "preact/hooks";
+import { useEffect, useRef } from "preact/hooks";
 import symbolStyles from "@/components/common/Symbol/Symbol.module.css";
 import type {
   BookingFailure,
@@ -37,6 +37,7 @@ interface Props {
   >;
   timeZone: string;
   fields: BookingFields;
+  rejectionCount: number;
   onChangeSlot: () => void;
   onUpdateField: (name: BookingFieldName, value: string) => void;
   onSubmit: (requestToken: RequestToken) => void;
@@ -47,11 +48,24 @@ export function BookingForm({
   state,
   timeZone,
   fields,
+  rejectionCount,
   onChangeSlot,
   onUpdateField,
   onSubmit,
 }: Props) {
   const turnstileBox = useRef<HTMLDivElement>(null);
+  const form = useRef<HTMLFormElement>(null);
+
+  // Each rejection moves the focus to the first field to fix.
+  useEffect(() => {
+    if (rejectionCount === 0) return;
+    form.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
+  }, [rejectionCount]);
+
+  // The time button that was pressed is gone, so the focus starts at the first field.
+  useEffect(() => {
+    form.current?.querySelector<HTMLElement>("input")?.focus();
+  }, []);
 
   const isSubmitting = state.status === "submitting";
   const invalidFields = state.status === "entering" ? state.invalidFields : [];
@@ -70,6 +84,7 @@ export function BookingForm({
         <ChosenTimeCard start={state.start} timeZone={timeZone} />
       </div>
       <form
+        ref={form}
         class={styles.form}
         noValidate
         onSubmit={(event) => {

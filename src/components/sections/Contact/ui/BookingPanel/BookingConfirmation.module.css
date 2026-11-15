@@ -88,3 +88,34 @@
     column-gap: 48px;
   }
 }
+
+.heading:focus {
+  outline: none;
+}
+
+/* The words come after the check mark is drawn. The card fades in beside them. */
+@media (prefers-reduced-motion: no-preference) {
+  .heading,
+  .text,
+  .meet {
+    animation: drop 0.35s ease-out 0.45s both;
+  }
+
+  .card,
+  .changeNote {
+    animation: appear 0.35s ease-out both;
+  }
+}
+
+@keyframes drop {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+}

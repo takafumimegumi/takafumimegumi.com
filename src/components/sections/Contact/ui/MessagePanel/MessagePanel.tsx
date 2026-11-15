@@ -10,6 +10,7 @@ import { MessageForm } from "./MessageForm";
 interface Props {
   state: MessageState;
   fields: MessageFields;
+  rejectionCount: number;
   onUpdateField: (name: MessageFieldName, value: string) => void;
   onSubmit: (requestToken: RequestToken) => void;
   onEditAgain: () => void;
@@ -19,6 +20,7 @@ interface Props {
 export function MessagePanel({
   state,
   fields,
+  rejectionCount,
   onUpdateField,
   onSubmit,
   onEditAgain,
@@ -32,6 +34,7 @@ export function MessagePanel({
     <MessageForm
       state={state}
       fields={fields}
+      rejectionCount={rejectionCount}
       onUpdateField={onUpdateField}
       onSubmit={onSubmit}
     />

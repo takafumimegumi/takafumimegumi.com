@@ -6,3 +6,28 @@
   background: var(--color-bg-error);
   border-radius: var(--radius-sm);
 }
+
+/* Focus is moved here by the script, not by the keyboard, so it draws no ring. */
+.root:focus {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .root {
+    animation: shake 0.36s ease-in-out;
+  }
+}
+
+@keyframes shake {
+  25% {
+    transform: translateX(-6px);
+  }
+
+  50% {
+    transform: translateX(6px);
+  }
+
+  75% {
+    transform: translateX(-3px);
+  }
+}

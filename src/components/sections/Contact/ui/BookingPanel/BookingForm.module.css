@@ -52,3 +52,17 @@
     gap: 48px;
   }
 }
+
+/* The form drops in after a time is chosen. */
+@media (prefers-reduced-motion: no-preference) {
+  .root {
+    animation: drop 0.3s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+}
+
+@keyframes drop {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}

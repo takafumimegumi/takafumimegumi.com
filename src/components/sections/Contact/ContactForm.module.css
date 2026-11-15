@@ -61,6 +61,25 @@
   border-radius: var(--radius-md);
 }
 
+/* The panel takes the focus when what was focused inside it goes away. It draws no ring for that. */
+.panel:focus {
+  outline: none;
+}
+
+/* A panel fades in each time it is shown again. */
+@media (prefers-reduced-motion: no-preference) {
+  .panel:not([hidden]),
+  .messageSide:not([hidden]) {
+    animation: appear 0.25s ease-out both;
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+}
+
 /* My address, as text to select or copy. An email link is awkward inside an in-app browser. */
 .direct {
   display: grid;

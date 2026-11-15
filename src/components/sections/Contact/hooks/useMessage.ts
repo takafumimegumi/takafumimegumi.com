@@ -16,6 +16,8 @@ import type { RequestToken } from "@/components/sections/Contact/ui/Turnstile";
 export interface Message {
   state: MessageState;
   fields: MessageFields;
+  /** Goes up each time fields are rejected, by the form or by the server. */
+  rejectionCount: number;
   updateField: (name: MessageFieldName, value: string) => void;
   /** Checks the fields, runs the bot check, and sends the message. */
   submit: (requestToken: RequestToken) => void;
@@ -35,12 +37,15 @@ export function useMessage(): Message {
     text: "",
   });
 
+  const [rejectionCount, setRejectionCount] = useState(0);
+
   async function submit(requestToken: RequestToken) {
     if (state.status !== "editing" && state.status !== "failed") return;
 
     const invalidFields = findInvalidMessageFields(fields);
     if (invalidFields.length > 0) {
       dispatch({ type: "fieldsRejected", fields: invalidFields });
+      setRejectionCount((count) => count + 1);
       return;
     }
 
@@ -57,11 +62,15 @@ export function useMessage(): Message {
             token,
           });
     dispatch({ type: "submitFinished", result, email });
+    if (!result.ok && result.reason === "invalid") {
+      setRejectionCount((count) => count + 1);
+    }
   }
 
   return {
     state,
     fields,
+    rejectionCount,
     updateField: (name, value) => {
       setFields({ ...fields, [name]: value });
       dispatch({ type: "fieldEdited", name });

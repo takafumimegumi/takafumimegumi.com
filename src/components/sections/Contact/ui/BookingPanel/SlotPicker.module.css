@@ -124,3 +124,25 @@
     gap: 12px;
   }
 }
+
+/* The days slide in from the side the arrow points to. The first time, they only fade in. */
+@media (prefers-reduced-motion: no-preference) {
+  .days {
+    animation: slide 0.3s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .days[data-entrance="previous"] {
+    --slide-from: -24px;
+  }
+
+  .days[data-entrance="appear"] {
+    --slide-from: 0;
+  }
+}
+
+@keyframes slide {
+  from {
+    opacity: 0;
+    transform: translateX(var(--slide-from, 24px));
+  }
+}

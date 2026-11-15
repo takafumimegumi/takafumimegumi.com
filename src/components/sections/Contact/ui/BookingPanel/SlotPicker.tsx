@@ -19,14 +19,25 @@ const DESKTOP_QUERY = "(min-width: 1024px)";
 interface Props {
   slots: string[];
   timeZone: string;
+  /** The place in the list of days of the first day shown. Kept by the panel, so it survives a visit to the form. */
+  firstDayIndex: number;
+  onShowDays: (firstDayIndex: number) => void;
   onChooseSlot: (start: string) => void;
 }
 
 /** The open times of a few days in a row, with arrows to the days before and after. */
-export function SlotPicker({ slots, timeZone, onChooseSlot }: Props) {
+export function SlotPicker({
+  slots,
+  timeZone,
+  firstDayIndex,
+  onShowDays,
+  onChooseSlot,
+}: Props) {
   const daysPerPage = useDaysPerPage();
-  // Counted in days, not pages, so the same days stay in view when the screen is turned.
-  const [firstDayIndex, setFirstDayIndex] = useState(0);
+  // Which way the days come in: from the right after "next", from the left after "previous".
+  const [entrance, setEntrance] = useState<"appear" | "next" | "previous">(
+    "appear",
+  );
 
   const pages = buildDayPages(slots, timeZone, daysPerPage);
   // The list can get shorter when it is loaded again.
@@ -51,7 +62,10 @@ export function SlotPicker({ slots, timeZone, onChooseSlot }: Props) {
             class={styles.arrow}
             aria-label="Previous days"
             disabled={pageIndex === 0}
-            onClick={() => setFirstDayIndex((pageIndex - 1) * daysPerPage)}
+            onClick={() => {
+              onShowDays((pageIndex - 1) * daysPerPage);
+              setEntrance("previous");
+            }}
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M15 5l-7 7 7 7" />
@@ -65,7 +79,10 @@ export function SlotPicker({ slots, timeZone, onChooseSlot }: Props) {
             class={styles.arrow}
             aria-label="Next days"
             disabled={pageIndex === pages.length - 1}
-            onClick={() => setFirstDayIndex((pageIndex + 1) * daysPerPage)}
+            onClick={() => {
+              onShowDays((pageIndex + 1) * daysPerPage);
+              setEntrance("next");
+            }}
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M9 5l7 7-7 7" />
@@ -73,8 +90,11 @@ export function SlotPicker({ slots, timeZone, onChooseSlot }: Props) {
           </button>
         </div>
       </div>
+      {/* A new key makes a new element, so the entrance plays again for every page. */}
       <div
+        key={page[0].date}
         class={styles.days}
+        data-entrance={entrance}
         style={{ "--columns": daysPerPage, "--rows": rows }}
         role="group"
         aria-label="Open times"

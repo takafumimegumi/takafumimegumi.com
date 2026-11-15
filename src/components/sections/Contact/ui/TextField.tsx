@@ -49,7 +49,10 @@ export function TextField({
   };
 
   return (
-    <div class={styles.root}>
+    <div
+      class={styles.root}
+      data-invalid={error === undefined ? undefined : ""}
+    >
       <label class={styles.label} for={id}>
         {label}
         {isOptional && <span class={styles.optional}> (optional)</span>}

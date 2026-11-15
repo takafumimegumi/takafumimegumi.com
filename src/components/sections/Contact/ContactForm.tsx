@@ -1,5 +1,5 @@
 import type { ComponentChildren } from "preact";
-import { useErrorBoundary, useState } from "preact/hooks";
+import { useErrorBoundary, useRef, useState } from "preact/hooks";
 import { OWNER_EMAIL } from "@/siteConstants";
 import { BookingPanel } from "@/components/sections/Contact/ui/BookingPanel/BookingPanel";
 import { useBooking } from "@/components/sections/Contact/hooks/useBooking";
@@ -23,6 +23,8 @@ function ContactPanels() {
   const [mode, setMode] = useState<Mode>("booking");
   const booking = useBooking();
   const message = useMessage();
+  const bookingPanel = useRef<HTMLDivElement>(null);
+  const messagePanel = useRef<HTMLDivElement>(null);
   // A short message reads better in the narrow panel than in the wide one that holds the times.
   const isBookingNote =
     booking.state.status === "unavailable" || booking.state.status === "empty";
@@ -59,8 +61,10 @@ function ContactPanels() {
       {/* Both panels stay in the page, so switching does not lose what was typed. */}
       <div data-reveal="">
         <div
+          ref={bookingPanel}
           class={styles.panel}
           id="contact-booking"
+          tabIndex={-1}
           aria-live="polite"
           data-width={isBookingNote ? "narrow" : undefined}
           hidden={mode !== "booking"}
@@ -71,20 +75,45 @@ function ContactPanels() {
             fields={booking.fields}
             onReloadSlots={booking.reloadSlots}
             onChooseSlot={booking.chooseSlot}
-            onChangeSlot={booking.changeSlot}
+            rejectionCount={booking.rejectionCount}
+            onChangeSlot={() => {
+              booking.changeSlot();
+              // The button that was pressed goes away with the form.
+              bookingPanel.current?.focus();
+            }}
             onUpdateField={booking.updateField}
             onSubmit={booking.submit}
-            onSendMessage={() => setMode("message")}
+            onSendMessage={() => {
+              setMode("message");
+              focusAfterRender(() => messagePanel.current);
+            }}
           />
         </div>
-        <div id="contact-message" hidden={mode !== "message"}>
-          <div class={styles.panel} aria-live="polite" data-width="narrow">
+        <div
+          class={styles.messageSide}
+          id="contact-message"
+          hidden={mode !== "message"}
+        >
+          <div
+            ref={messagePanel}
+            class={styles.panel}
+            aria-live="polite"
+            data-width="narrow"
+            tabIndex={-1}
+          >
             <MessagePanel
               state={message.state}
               fields={message.fields}
               onUpdateField={message.updateField}
               onSubmit={message.submit}
-              onEditAgain={message.editAgain}
+              rejectionCount={message.rejectionCount}
+              onEditAgain={() => {
+                message.editAgain();
+                // The visitor came back to fix the address, so the focus starts there.
+                focusAfterRender(() =>
+                  document.getElementById("message-email"),
+                );
+              }}
             />
           </div>
           {/* Stays below the form and the sent screen, as the way around a failed send (ADR-0005). */}
@@ -99,6 +128,11 @@ function ContactPanels() {
       </div>
     </>
   );
+}
+
+/** Moves the focus to an element that the next render shows or creates. */
+function focusAfterRender(findElement: () => HTMLElement | null) {
+  requestAnimationFrame(() => findElement()?.focus());
 }
 
 interface ChoiceCardProps {

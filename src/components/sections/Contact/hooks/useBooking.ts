@@ -19,6 +19,8 @@ export interface Booking {
   /** The visitor's time zone. Undefined until the page runs in the browser. */
   timeZone: string | undefined;
   fields: BookingFields;
+  /** Goes up each time fields are rejected, by the form or by the server. */
+  rejectionCount: number;
   /** Asks for the open times again, after they could not be loaded. */
   reloadSlots: () => void;
   chooseSlot: (start: string) => void;
@@ -52,12 +54,15 @@ export function useBooking(): Booking {
     );
   }
 
+  const [rejectionCount, setRejectionCount] = useState(0);
+
   async function submit(requestToken: RequestToken) {
     if (state.status !== "entering" && state.status !== "failed") return;
 
     const invalidFields = findInvalidBookingFields(fields);
     if (invalidFields.length > 0) {
       dispatch({ type: "fieldsRejected", fields: invalidFields });
+      setRejectionCount((count) => count + 1);
       return;
     }
 
@@ -75,6 +80,9 @@ export function useBooking(): Booking {
             token,
           });
     dispatch({ type: "submitFinished", result, email });
+    if (!result.ok && result.reason === "invalid") {
+      setRejectionCount((count) => count + 1);
+    }
 
     // Other times may be gone too, so the list is loaded again behind the notice.
     if (!result.ok && result.reason === "taken") void loadSlots();
@@ -92,6 +100,7 @@ export function useBooking(): Booking {
     state,
     timeZone,
     fields,
+    rejectionCount,
     reloadSlots: () => void loadSlots(),
     chooseSlot: (start) => dispatch({ type: "slotChosen", start }),
     changeSlot: () => dispatch({ type: "slotChangeRequested" }),

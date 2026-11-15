@@ -66,3 +66,24 @@ textarea.input {
   line-height: var(--leading-small);
   color: var(--color-text-error);
 }
+
+/* A field that was just rejected shakes once, to show where to look. */
+@media (prefers-reduced-motion: no-preference) {
+  .root[data-invalid] {
+    animation: shake 0.36s ease-in-out;
+  }
+}
+
+@keyframes shake {
+  25% {
+    transform: translateX(-6px);
+  }
+
+  50% {
+    transform: translateX(6px);
+  }
+
+  75% {
+    transform: translateX(-3px);
+  }
+}

@@ -1,4 +1,4 @@
-import { useRef } from "preact/hooks";
+import { useEffect, useRef } from "preact/hooks";
 import type {
   MessageFailure,
   MessageFieldName,
@@ -30,19 +30,34 @@ const FAILURE_TEXT: Record<MessageFailure, string> = {
 interface Props {
   state: Exclude<MessageState, { status: "sent" }>;
   fields: MessageFields;
+  rejectionCount: number;
   onUpdateField: (name: MessageFieldName, value: string) => void;
   onSubmit: (requestToken: RequestToken) => void;
 }
 
 /** The form for a message: who it is from, and what it says. */
-export function MessageForm({ state, fields, onUpdateField, onSubmit }: Props) {
+export function MessageForm({
+  state,
+  fields,
+  rejectionCount,
+  onUpdateField,
+  onSubmit,
+}: Props) {
   const turnstileBox = useRef<HTMLDivElement>(null);
+  const form = useRef<HTMLFormElement>(null);
+
+  // Each rejection moves the focus to the first field to fix.
+  useEffect(() => {
+    if (rejectionCount === 0) return;
+    form.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
+  }, [rejectionCount]);
 
   const isSubmitting = state.status === "submitting";
   const invalidFields = state.status === "editing" ? state.invalidFields : [];
 
   return (
     <form
+      ref={form}
       class={styles.root}
       noValidate
       onSubmit={(event) => {

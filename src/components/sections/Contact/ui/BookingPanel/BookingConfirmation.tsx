@@ -1,6 +1,7 @@
 import { CheckMark } from "@/components/sections/Contact/ui/CheckMark";
 import { CopyButton } from "@/components/sections/Contact/ui/CopyButton";
 import { TextButton } from "@/components/sections/Contact/ui/TextButton";
+import { useFocusOnMount } from "@/components/sections/Contact/ui/useFocusOnMount";
 import { ChosenTimeCard } from "./ChosenTimeCard";
 import styles from "./BookingConfirmation.module.css";
 
@@ -20,11 +21,15 @@ export function BookingConfirmation({
   timeZone,
   onSendMessage,
 }: Props) {
+  const heading = useFocusOnMount<HTMLHeadingElement>();
+
   return (
     <div class={styles.root}>
       <div class={styles.head}>
         <CheckMark />
-        <h3 class={styles.heading}>You're booked.</h3>
+        <h3 ref={heading} class={styles.heading} tabIndex={-1}>
+          You're booked.
+        </h3>
         <p class={styles.text}>
           I've sent a calendar invitation to <b>{email}</b>.
           <br />

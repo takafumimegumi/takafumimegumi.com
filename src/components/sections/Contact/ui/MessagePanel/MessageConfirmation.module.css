@@ -40,3 +40,23 @@
     padding-block: 28px;
   }
 }
+
+.heading:focus {
+  outline: none;
+}
+
+/* The words come after the check mark is drawn. */
+@media (prefers-reduced-motion: no-preference) {
+  .heading,
+  .text,
+  .fix {
+    animation: drop 0.35s ease-out 0.45s both;
+  }
+}
+
+@keyframes drop {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}

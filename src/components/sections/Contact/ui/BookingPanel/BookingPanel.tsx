@@ -1,3 +1,4 @@
+import { useState } from "preact/hooks";
 import buttonStyles from "@/components/common/Button/Button.module.css";
 import type {
   BookingFieldName,
@@ -17,6 +18,7 @@ interface Props {
   /** The visitor's time zone. Undefined until the page runs in the browser. */
   timeZone: string | undefined;
   fields: BookingFields;
+  rejectionCount: number;
   onReloadSlots: () => void;
   onSendMessage: () => void;
   onChooseSlot: (start: string) => void;
@@ -30,6 +32,7 @@ export function BookingPanel({
   state,
   timeZone,
   fields,
+  rejectionCount,
   onReloadSlots,
   onSendMessage,
   onChooseSlot,
@@ -37,6 +40,9 @@ export function BookingPanel({
   onUpdateField,
   onSubmit,
 }: Props) {
+  // Counted in days, not pages, so the same days stay in view when the screen is turned.
+  const [firstDayIndex, setFirstDayIndex] = useState(0);
+
   // Times cannot be drawn before the time zone is known.
   if (state.status === "loading" || timeZone === undefined) {
     return (
@@ -93,6 +99,8 @@ export function BookingPanel({
         <SlotPicker
           slots={state.slots}
           timeZone={timeZone}
+          firstDayIndex={firstDayIndex}
+          onShowDays={setFirstDayIndex}
           onChooseSlot={onChooseSlot}
         />
       );
@@ -105,6 +113,8 @@ export function BookingPanel({
           <SlotPicker
             slots={state.slots}
             timeZone={timeZone}
+            firstDayIndex={firstDayIndex}
+            onShowDays={setFirstDayIndex}
             onChooseSlot={onChooseSlot}
           />
         </div>
@@ -117,6 +127,7 @@ export function BookingPanel({
           state={state}
           timeZone={timeZone}
           fields={fields}
+          rejectionCount={rejectionCount}
           onChangeSlot={onChangeSlot}
           onUpdateField={onUpdateField}
           onSubmit={onSubmit}
