@@ -9,7 +9,6 @@ interface Props {
   onEditAgain: () => void;
 }
 
-/** Says the message was sent, and where the reply will go. */
 export function MessageConfirmation({ email, onEditAgain }: Props) {
   const heading = useFocusOnMount<HTMLHeadingElement>();
 

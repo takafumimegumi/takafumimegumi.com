@@ -19,13 +19,12 @@ const DESKTOP_QUERY = "(min-width: 1024px)";
 interface Props {
   slots: string[];
   timeZone: string;
-  /** A date on the page to show. Kept by the panel, so it survives a visit to the form. Undefined shows the first page. */
+  /** A date on the page to show. Undefined shows the first page. */
   shownDate: string | undefined;
   onShowDate: (date: string) => void;
   onChooseSlot: (start: string) => void;
 }
 
-/** The open times of a few days in a row, with arrows to the days before and after. */
 export function SlotPicker({
   slots,
   timeZone,
@@ -34,7 +33,6 @@ export function SlotPicker({
   onChooseSlot,
 }: Props) {
   const daysPerPage = useDaysPerPage();
-  // Which way the days come in: from the right after "next", from the left after "previous".
   const [entrance, setEntrance] = useState<"appear" | "next" | "previous">(
     "appear",
   );

@@ -4,17 +4,14 @@ import { isEmailLike } from "./isEmailLike";
 export type MessageFieldName = "name" | "email" | "text";
 export type MessageFields = Record<MessageFieldName, string>;
 
-/** Why a message was not sent, when no field is to blame. */
 export type MessageFailure = "unverified" | "rate_limited" | "failed";
 
-/** What the message panel shows. The status decides the screen. */
 export type MessageState =
   | { status: "editing"; invalidFields: MessageFieldName[] }
   | { status: "submitting" }
   | { status: "failed"; reason: MessageFailure }
   | { status: "sent"; email: string };
 
-/** Something that happened, which may move the message to another status. */
 export type MessageEvent =
   | { type: "fieldEdited"; name: MessageFieldName }
   | { type: "fieldsRejected"; fields: MessageFieldName[] }
@@ -62,7 +59,6 @@ export function reduceMessageState(
   }
 }
 
-/** The fields the form can reject before asking the server. */
 export function findInvalidMessageFields(
   fields: MessageFields,
 ): MessageFieldName[] {

@@ -1,4 +1,3 @@
-/* One centred column. The space before the last line is wider than the space inside the words. */
 .root {
   display: grid;
   gap: 24px;
@@ -13,7 +12,6 @@
   justify-items: center;
 }
 
-/* The mark sits a little further from the heading than the heading from the text. */
 .heading {
   margin-top: 8px;
   font-size: var(--text-title);

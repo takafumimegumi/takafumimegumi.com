@@ -28,7 +28,6 @@ declare global {
 let scriptLoad: Promise<void> | undefined;
 
 interface Props {
-  /** Where the check draws itself. It stays empty unless the visitor has to do something. */
   boxRef: RefObject<HTMLDivElement | null>;
 }
 
@@ -62,7 +61,6 @@ export async function requestToken(
     let widgetId: string | undefined;
     let isFinished = false;
 
-    // Called by whichever comes first. The widget is removed once its id is known.
     const finish = (token: string | undefined) => {
       if (isFinished) return;
       isFinished = true;

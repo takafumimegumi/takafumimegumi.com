@@ -1,6 +1,5 @@
 import styles from "./CheckMark.module.css";
 
-/** The round mark at the top of a screen that says something was done. */
 export function CheckMark() {
   return (
     <span class={styles.root} aria-hidden="true">

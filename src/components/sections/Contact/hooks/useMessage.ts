@@ -19,13 +19,10 @@ export interface Message {
   /** Goes up each time fields are rejected, by the form or by the server. */
   rejectionCount: number;
   updateField: (name: MessageFieldName, value: string) => void;
-  /** Checks the fields, runs the bot check, and sends the message. */
   submit: (requestToken: RequestToken) => void;
-  /** Goes back from the sent screen to the form, with what was typed still in it. */
   editAgain: () => void;
 }
 
-/** Holds the state of the message panel and sends the message. */
 export function useMessage(): Message {
   const [state, dispatch] = useReducer(
     reduceMessageState,

@@ -5,11 +5,9 @@ import styles from "./CopyButton.module.css";
 const COPIED_MS = 2000;
 
 interface Props {
-  /** What goes to the clipboard. */
   text: string;
 }
 
-/** Copies a text, and says so for two seconds. */
 export function CopyButton({ text }: Props) {
   const [isCopied, setIsCopied] = useState(false);
   const timer = useRef<number | undefined>(undefined);

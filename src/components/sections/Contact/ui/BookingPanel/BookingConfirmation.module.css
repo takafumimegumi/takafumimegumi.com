@@ -1,4 +1,3 @@
-/* The card keeps its place from the form and turns deep green. */
 .root {
   display: grid;
   gap: 20px;

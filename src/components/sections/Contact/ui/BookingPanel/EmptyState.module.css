@@ -21,7 +21,6 @@
   color: var(--color-text-muted);
 }
 
-/* On a phone the buttons stack and take the full width, like the button of a form. */
 .actions {
   display: grid;
   gap: 8px;

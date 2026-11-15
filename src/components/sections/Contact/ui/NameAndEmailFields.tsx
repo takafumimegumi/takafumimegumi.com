@@ -6,13 +6,11 @@ interface Props {
   idPrefix: "booking" | "message";
   name: string;
   email: string;
-  /** The names of the fields that are not accepted. */
   invalidFields: readonly string[];
   isDisabled: boolean;
   onInput: (field: "name" | "email", value: string) => void;
 }
 
-/** The two fields that both forms start with, side by side from a tablet up. */
 export function NameAndEmailFields({
   idPrefix,
   name,

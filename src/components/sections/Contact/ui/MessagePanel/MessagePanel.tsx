@@ -16,7 +16,6 @@ interface Props {
   onEditAgain: () => void;
 }
 
-/** The message side of the contact form. Draws the state it is given. */
 export function MessagePanel({
   state,
   fields,

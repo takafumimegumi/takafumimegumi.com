@@ -67,7 +67,6 @@ textarea.input {
   color: var(--color-text-error);
 }
 
-/* A field that was just rejected shakes once, to show where to look. */
 @media (prefers-reduced-motion: no-preference) {
   .root[data-invalid] {
     animation: shake 0.36s ease-in-out;

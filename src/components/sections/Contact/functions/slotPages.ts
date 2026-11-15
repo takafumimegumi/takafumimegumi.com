@@ -2,7 +2,6 @@
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-/** One day in the visitor's time zone, with the open times that start on it. */
 export interface OpenDay {
   /** The local date, as "2026-11-16". */
   date: string;

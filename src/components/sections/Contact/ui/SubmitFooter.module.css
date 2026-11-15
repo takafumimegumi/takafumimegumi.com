@@ -9,7 +9,6 @@
   color: var(--color-text);
 }
 
-/* Full width on a phone, where it is easier to reach. */
 .button {
   width: 100%;
 }

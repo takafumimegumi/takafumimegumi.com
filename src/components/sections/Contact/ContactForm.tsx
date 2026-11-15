@@ -13,7 +13,6 @@ type Mode = "booking" | "message";
 
 /** The island of the Contact section: book a call, or send a message (ADR-0002). */
 export function ContactForm() {
-  // If the form breaks while drawing, the visitor still gets a way to reach me.
   const [error] = useErrorBoundary();
   if (error) return <Fallback />;
 
@@ -64,7 +63,6 @@ function ContactPanels() {
           id="contact-booking"
           tabIndex={-1}
           aria-live="polite"
-          // A short message reads better in the narrow panel than in the wide one that holds the times.
           data-width={hasNoSlotsToShow(booking.state) ? "narrow" : undefined}
           hidden={mode !== "booking"}
         >
@@ -108,7 +106,6 @@ function ContactPanels() {
               rejectionCount={message.rejectionCount}
               onEditAgain={() => {
                 message.editAgain();
-                // The visitor came back to fix the address, so the focus starts there.
                 focusAfterRender(() =>
                   document.getElementById("message-email"),
                 );
@@ -137,7 +134,6 @@ function focusAfterRender(findElement: () => HTMLElement | null) {
 interface ChoiceCardProps {
   title: string;
   description: string;
-  /** The id of the panel this card shows. */
   controls: string;
   isPressed: boolean;
   onPress: () => void;

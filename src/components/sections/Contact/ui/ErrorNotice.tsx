@@ -6,10 +6,7 @@ interface Props {
   children: ComponentChildren;
 }
 
-/**
- * Tells the visitor that something did not work. It takes the focus when it appears:
- * the button that was pressed is gone, or cannot be pressed for a moment.
- */
+/** Takes the focus when it appears: the button that was pressed is gone, or cannot be pressed for a moment. */
 export function ErrorNotice({ children }: Props) {
   const notice = useFocusOnMount<HTMLParagraphElement>();
 

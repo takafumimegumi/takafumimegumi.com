@@ -1,11 +1,9 @@
 import styles from "./TextField.module.css";
 
 interface Props {
-  /** Used as the id and the name of the input. */
   id: string;
   label: string;
   value: string;
-  /** What is wrong with the value. The field is drawn as invalid when this is set. */
   error?: string;
   placeholder: string;
   /** The server's limit for this field. */
@@ -18,7 +16,6 @@ interface Props {
   onInput: (value: string) => void;
 }
 
-/** A labelled input, with one line below it when the value is not accepted. */
 export function TextField({
   id,
   label,

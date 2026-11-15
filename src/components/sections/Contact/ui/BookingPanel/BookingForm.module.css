@@ -1,4 +1,3 @@
-/* The chosen time and the form. Side by side from a tablet up. */
 .root {
   display: grid;
   gap: 20px;
@@ -53,7 +52,6 @@
   }
 }
 
-/* The form drops in after a time is chosen. */
 @media (prefers-reduced-motion: no-preference) {
   .root {
     animation: drop 0.3s cubic-bezier(0.2, 0.7, 0.2, 1) both;

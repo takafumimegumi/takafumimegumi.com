@@ -1,10 +1,7 @@
 import type { RefObject } from "preact";
 import { useEffect, useRef } from "preact/hooks";
 
-/**
- * Returns a ref for the element that takes the focus when a screen appears.
- * Only for a screen that appears after the visitor did something: on page load it would pull the page down.
- */
+/** Only for a screen that appears after the visitor did something. On page load, taking the focus would pull the page down. */
 export function useFocusOnMount<
   Element extends HTMLElement,
 >(): RefObject<Element | null> {

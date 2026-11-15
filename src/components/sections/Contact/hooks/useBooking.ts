@@ -21,17 +21,13 @@ export interface Booking {
   fields: BookingFields;
   /** Goes up each time fields are rejected, by the form or by the server. */
   rejectionCount: number;
-  /** Asks for the open times again, after they could not be loaded. */
   reloadSlots: () => void;
   chooseSlot: (start: string) => void;
-  /** Goes back from the details to the open times. */
   changeSlot: () => void;
   updateField: (name: BookingFieldName, value: string) => void;
-  /** Checks the fields, runs the bot check, and books the chosen time. */
   submit: (requestToken: RequestToken) => void;
 }
 
-/** Holds the state of the booking panel, loads the open times, and sends the booking. */
 export function useBooking(): Booking {
   const [state, dispatch] = useReducer(
     reduceBookingState,

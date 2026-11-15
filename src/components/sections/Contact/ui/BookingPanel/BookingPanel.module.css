@@ -10,7 +10,6 @@
   color: var(--color-text-muted);
 }
 
-/* The ring of the shared button, larger and in the accent color. */
 .loading .spinner {
   width: 28px;
   height: 28px;
@@ -36,7 +35,6 @@
   background: var(--color-bg-muted);
 }
 
-/* The notice, when there is one, sits above the open times. */
 .choosing {
   display: grid;
   gap: 16px;

@@ -6,14 +6,11 @@ import {
 import styles from "./ChosenTimeCard.module.css";
 
 interface Props {
-  /** The start of the call, as /api/slots returned it. */
   start: string;
   timeZone: string;
-  /** After the booking is made, the card turns deep green. The meeting link is shown beside it. */
   isBooked?: boolean;
 }
 
-/** The chosen time of the call, in the visitor's time zone. */
 export function ChosenTimeCard({ start, timeZone, isBooked = false }: Props) {
   return (
     <div class={styles.root} data-ground={isBooked ? "deep" : undefined}>
