@@ -40,11 +40,11 @@ export function BookingPanel({
   onUpdateField,
   onSubmit,
 }: Props) {
-  // Counted in days, not pages, so the same days stay in view when the screen is turned.
-  const [firstDayIndex, setFirstDayIndex] = useState(0);
+  const [shownDate, setShownDate] = useState<string>();
+  const { slots, step } = state;
 
   // Times cannot be drawn before the time zone is known.
-  if (state.status === "loading" || timeZone === undefined) {
+  if (timeZone === undefined || slots.status === "loading") {
     return (
       <div class={styles.loading} role="status">
         <span
@@ -56,31 +56,61 @@ export function BookingPanel({
     );
   }
 
-  switch (state.status) {
-    case "unavailable":
+  switch (step.status) {
+    case "booked":
       return (
-        <EmptyState
-          heading="Couldn't load open times."
-          text="Try again, or send me a message and I'll find a time that works."
-        >
-          <button
-            type="button"
-            class={buttonStyles.root}
-            onClick={onSendMessage}
-          >
-            Send a message
-          </button>
-          <button
-            type="button"
-            class={styles.quietButton}
-            onClick={onReloadSlots}
-          >
-            Try again
-          </button>
-        </EmptyState>
+        <BookingConfirmation
+          start={step.start}
+          email={step.email}
+          meetUrl={step.meetUrl}
+          timeZone={timeZone}
+          onSendMessage={onSendMessage}
+        />
       );
-    case "empty":
+    case "entering":
+    case "submitting":
+    case "failed":
       return (
+        <BookingForm
+          state={step}
+          timeZone={timeZone}
+          fields={fields}
+          rejectionCount={rejectionCount}
+          onChangeSlot={onChangeSlot}
+          onUpdateField={onUpdateField}
+          onSubmit={onSubmit}
+        />
+      );
+  }
+
+  if (slots.status === "unavailable") {
+    return (
+      <EmptyState
+        heading="Couldn't load open times."
+        text="Try again, or send me a message and I'll find a time that works."
+      >
+        <button type="button" class={buttonStyles.root} onClick={onSendMessage}>
+          Send a message
+        </button>
+        <button
+          type="button"
+          class={styles.quietButton}
+          onClick={onReloadSlots}
+        >
+          Try again
+        </button>
+      </EmptyState>
+    );
+  }
+
+  return (
+    <div class={styles.choosing}>
+      {step.status === "taken" && (
+        <ErrorNotice>
+          That time is no longer available. Please pick another.
+        </ErrorNotice>
+      )}
+      {slots.slots.length === 0 ? (
         <EmptyState
           heading="No open times in the next two weeks."
           text="Send me a message, and I'll find a time that works."
@@ -93,55 +123,15 @@ export function BookingPanel({
             Send a message
           </button>
         </EmptyState>
-      );
-    case "choosing":
-      return (
+      ) : (
         <SlotPicker
-          slots={state.slots}
+          slots={slots.slots}
           timeZone={timeZone}
-          firstDayIndex={firstDayIndex}
-          onShowDays={setFirstDayIndex}
+          shownDate={shownDate}
+          onShowDate={setShownDate}
           onChooseSlot={onChooseSlot}
         />
-      );
-    case "taken":
-      return (
-        <div class={styles.taken}>
-          <ErrorNotice>
-            That time is no longer available. Please pick another.
-          </ErrorNotice>
-          <SlotPicker
-            slots={state.slots}
-            timeZone={timeZone}
-            firstDayIndex={firstDayIndex}
-            onShowDays={setFirstDayIndex}
-            onChooseSlot={onChooseSlot}
-          />
-        </div>
-      );
-    case "entering":
-    case "submitting":
-    case "failed":
-      return (
-        <BookingForm
-          state={state}
-          timeZone={timeZone}
-          fields={fields}
-          rejectionCount={rejectionCount}
-          onChangeSlot={onChangeSlot}
-          onUpdateField={onUpdateField}
-          onSubmit={onSubmit}
-        />
-      );
-    case "booked":
-      return (
-        <BookingConfirmation
-          start={state.start}
-          email={state.email}
-          meetUrl={state.meetUrl}
-          timeZone={timeZone}
-          onSendMessage={onSendMessage}
-        />
-      );
-  }
+      )}
+    </div>
+  );
 }

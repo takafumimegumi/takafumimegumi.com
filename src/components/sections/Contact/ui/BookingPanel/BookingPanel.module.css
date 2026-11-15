@@ -36,8 +36,8 @@
   background: var(--color-bg-muted);
 }
 
-/* The notice sits above the open times. */
-.taken {
+/* The notice, when there is one, sits above the open times. */
+.choosing {
   display: grid;
   gap: 16px;
 }

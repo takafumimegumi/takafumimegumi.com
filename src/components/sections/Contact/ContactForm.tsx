@@ -2,6 +2,7 @@ import type { ComponentChildren } from "preact";
 import { useErrorBoundary, useRef, useState } from "preact/hooks";
 import { OWNER_EMAIL } from "@/siteConstants";
 import { BookingPanel } from "@/components/sections/Contact/ui/BookingPanel/BookingPanel";
+import { hasNoSlotsToShow } from "@/components/sections/Contact/functions/bookingState";
 import { useBooking } from "@/components/sections/Contact/hooks/useBooking";
 import { useMessage } from "@/components/sections/Contact/hooks/useMessage";
 import { CopyButton } from "@/components/sections/Contact/ui/CopyButton";
@@ -25,9 +26,6 @@ function ContactPanels() {
   const message = useMessage();
   const bookingPanel = useRef<HTMLDivElement>(null);
   const messagePanel = useRef<HTMLDivElement>(null);
-  // A short message reads better in the narrow panel than in the wide one that holds the times.
-  const isBookingNote =
-    booking.state.status === "unavailable" || booking.state.status === "empty";
 
   return (
     <>
@@ -66,7 +64,8 @@ function ContactPanels() {
           id="contact-booking"
           tabIndex={-1}
           aria-live="polite"
-          data-width={isBookingNote ? "narrow" : undefined}
+          // A short message reads better in the narrow panel than in the wide one that holds the times.
+          data-width={hasNoSlotsToShow(booking.state) ? "narrow" : undefined}
           hidden={mode !== "booking"}
         >
           <BookingPanel

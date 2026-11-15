@@ -7,30 +7,29 @@ export type BookingFields = Record<BookingFieldName, string>;
 /** Why a booking did not go through, when no field is to blame. */
 export type BookingFailure = "unverified" | "rate_limited" | "failed";
 
-/** What the booking panel shows. The status decides the screen. */
-export type BookingState =
+/** The open times. They are kept apart from the step, so they can be loaded again at any step. */
+export type SlotsState =
   | { status: "loading" }
   | { status: "unavailable" }
-  | { status: "empty" }
-  | { status: "choosing"; slots: string[] }
+  | { status: "loaded"; slots: string[] };
+
+/** Where the visitor is in booking a call. */
+export type BookingStep =
+  | { status: "choosing" }
   /** The chosen time could not be booked, so the visitor picks another. */
-  | { status: "taken"; slots: string[] }
-  | {
-      status: "entering";
-      slots: string[];
-      start: string;
-      invalidFields: BookingFieldName[];
-    }
-  | { status: "submitting"; slots: string[]; start: string }
-  | {
-      status: "failed";
-      slots: string[];
-      start: string;
-      reason: BookingFailure;
-    }
+  | { status: "taken" }
+  | { status: "entering"; start: string; invalidFields: BookingFieldName[] }
+  | { status: "submitting"; start: string }
+  | { status: "failed"; start: string; reason: BookingFailure }
   | { status: "booked"; start: string; email: string; meetUrl?: string };
 
-/** Something that happened, which may move the booking to another status. */
+/** What the booking panel shows: the step decides the screen, and the open times fill it. */
+export interface BookingState {
+  slots: SlotsState;
+  step: BookingStep;
+}
+
+/** Something that happened, which may change the open times or move to another step. */
 export type BookingEvent =
   | { type: "slotsRequested" }
   | { type: "slotsLoaded"; slots: string[] }
@@ -44,71 +43,85 @@ export type BookingEvent =
 
 const FIELD_NAMES: readonly string[] = ["name", "email", "topic"];
 
-// The page is built in this status, before any open time is known.
-export const INITIAL_BOOKING_STATE: BookingState = { status: "loading" };
+// The page is built in this state, before any open time is known.
+export const INITIAL_BOOKING_STATE: BookingState = {
+  slots: { status: "loading" },
+  step: { status: "choosing" },
+};
 
-/** Returns the next state. An event that does not fit the current status changes nothing. */
+/** Returns the next state. An event that does not fit the current state changes nothing. */
 export function reduceBookingState(
   state: BookingState,
   event: BookingEvent,
 ): BookingState {
+  const { slots, step } = state;
+
   switch (event.type) {
+    // A list that is on screen stays there while it is loaded again.
     case "slotsRequested":
-      return state.status === "unavailable" ? { status: "loading" } : state;
+      return slots.status === "unavailable"
+        ? { ...state, slots: { status: "loading" } }
+        : state;
 
     case "slotsLoaded":
-      // After a time was taken, the list is loaded again and replaces the old one.
-      if (state.status !== "loading" && state.status !== "taken") return state;
-      if (event.slots.length === 0) return { status: "empty" };
-      return state.status === "taken"
-        ? { status: "taken", slots: event.slots }
-        : { status: "choosing", slots: event.slots };
+      return { ...state, slots: { status: "loaded", slots: event.slots } };
 
     case "slotsFailed":
-      return state.status === "loading" ? { status: "unavailable" } : state;
+      return slots.status === "loading"
+        ? { ...state, slots: { status: "unavailable" } }
+        : state;
 
     case "slotChosen":
-      if (state.status !== "choosing" && state.status !== "taken") return state;
+      if (step.status !== "choosing" && step.status !== "taken") return state;
       return {
-        status: "entering",
-        slots: state.slots,
-        start: event.start,
-        invalidFields: [],
+        ...state,
+        step: { status: "entering", start: event.start, invalidFields: [] },
       };
 
     case "slotChangeRequested":
-      if (state.status !== "entering" && state.status !== "failed")
-        return state;
-      return { status: "choosing", slots: state.slots };
+      if (step.status !== "entering" && step.status !== "failed") return state;
+      return { ...state, step: { status: "choosing" } };
 
     case "fieldEdited":
-      if (state.status !== "entering") return state;
+      if (step.status !== "entering") return state;
       return {
         ...state,
-        invalidFields: state.invalidFields.filter(
-          (name) => name !== event.name,
-        ),
+        step: {
+          ...step,
+          invalidFields: step.invalidFields.filter(
+            (name) => name !== event.name,
+          ),
+        },
       };
 
     case "fieldsRejected":
-      if (state.status !== "entering" && state.status !== "failed")
-        return state;
+      if (step.status !== "entering" && step.status !== "failed") return state;
       return {
-        status: "entering",
-        slots: state.slots,
-        start: state.start,
-        invalidFields: event.fields,
+        ...state,
+        step: {
+          status: "entering",
+          start: step.start,
+          invalidFields: event.fields,
+        },
       };
 
     case "submitStarted":
-      if (state.status !== "entering" && state.status !== "failed")
-        return state;
-      return { status: "submitting", slots: state.slots, start: state.start };
+      if (step.status !== "entering" && step.status !== "failed") return state;
+      return { ...state, step: { status: "submitting", start: step.start } };
 
     case "submitFinished":
-      if (state.status !== "submitting") return state;
-      return reduceSubmitResult(state, event.result, event.email);
+      if (step.status !== "submitting") return state;
+      return reduceSubmitResult(slots, step.start, event.result, event.email);
   }
+}
+
+/** True when the panel has a short message to show in place of the open times. */
+export function hasNoSlotsToShow({ slots, step }: BookingState): boolean {
+  if (step.status !== "choosing" && step.status !== "taken") return false;
+  return (
+    slots.status === "unavailable" ||
+    (slots.status === "loaded" && slots.slots.length === 0)
+  );
 }
 
 /** The fields the form can reject before asking the server: an empty name, and an email that is not shaped like one. */
@@ -122,16 +135,20 @@ export function findInvalidBookingFields(
 }
 
 function reduceSubmitResult(
-  { slots, start }: { slots: string[]; start: string },
+  slots: SlotsState,
+  start: string,
   result: BookingResult,
   email: string,
 ): BookingState {
   if (result.ok) {
     return {
-      status: "booked",
-      start: result.start,
-      email,
-      meetUrl: result.meetUrl,
+      slots,
+      step: {
+        status: "booked",
+        start: result.start,
+        email,
+        meetUrl: result.meetUrl,
+      },
     };
   }
 
@@ -140,17 +157,26 @@ function reduceSubmitResult(
       // The server can also name a field the visitor does not fill in, such as the token.
       const invalidFields = result.fields.filter(isBookingFieldName);
       return invalidFields.length > 0
-        ? { status: "entering", slots, start, invalidFields }
-        : { status: "failed", slots, start, reason: "failed" };
+        ? { slots, step: { status: "entering", start, invalidFields } }
+        : { slots, step: { status: "failed", start, reason: "failed" } };
     }
-    case "taken": {
-      const openSlots = slots.filter((slot) => slot !== start);
-      return openSlots.length > 0
-        ? { status: "taken", slots: openSlots }
-        : { status: "empty" };
-    }
+    // The time goes away at once. The rest of the list follows when it is loaded again.
+    case "taken":
+      return {
+        slots:
+          slots.status === "loaded"
+            ? {
+                status: "loaded",
+                slots: slots.slots.filter((slot) => slot !== start),
+              }
+            : slots,
+        step: { status: "taken" },
+      };
     default:
-      return { status: "failed", slots, start, reason: result.reason };
+      return {
+        slots,
+        step: { status: "failed", start, reason: result.reason },
+      };
   }
 }
 

@@ -4,7 +4,7 @@ import type {
   BookingFailure,
   BookingFieldName,
   BookingFields,
-  BookingState,
+  BookingStep,
 } from "@/components/sections/Contact/functions/bookingState";
 import { ErrorNotice } from "@/components/sections/Contact/ui/ErrorNotice";
 import {
@@ -31,10 +31,7 @@ const FAILURE_TEXT: Record<BookingFailure, string> = {
 };
 
 interface Props {
-  state: Extract<
-    BookingState,
-    { status: "entering" | "submitting" | "failed" }
-  >;
+  state: Extract<BookingStep, { status: "entering" | "submitting" | "failed" }>;
   timeZone: string;
   fields: BookingFields;
   rejectionCount: number;

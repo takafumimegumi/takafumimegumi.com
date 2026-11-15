@@ -19,9 +19,9 @@ const DESKTOP_QUERY = "(min-width: 1024px)";
 interface Props {
   slots: string[];
   timeZone: string;
-  /** The place in the list of days of the first day shown. Kept by the panel, so it survives a visit to the form. */
-  firstDayIndex: number;
-  onShowDays: (firstDayIndex: number) => void;
+  /** A date on the page to show. Kept by the panel, so it survives a visit to the form. Undefined shows the first page. */
+  shownDate: string | undefined;
+  onShowDate: (date: string) => void;
   onChooseSlot: (start: string) => void;
 }
 
@@ -29,8 +29,8 @@ interface Props {
 export function SlotPicker({
   slots,
   timeZone,
-  firstDayIndex,
-  onShowDays,
+  shownDate,
+  onShowDate,
   onChooseSlot,
 }: Props) {
   const daysPerPage = useDaysPerPage();
@@ -40,10 +40,10 @@ export function SlotPicker({
   );
 
   const pages = buildDayPages(slots, timeZone, daysPerPage);
-  // The list can get shorter when it is loaded again.
-  const pageIndex = Math.min(
-    Math.floor(firstDayIndex / daysPerPage),
-    pages.length - 1,
+  // Found by date, so the same days stay in view when the list is loaded again or the screen is turned.
+  const pageIndex = Math.max(
+    pages.findIndex((days) => days.some((day) => day.date === shownDate)),
+    0,
   );
   const page = pages[pageIndex];
   // Every page gets the height of the fullest day, so paging does not make the panel jump.
@@ -63,7 +63,7 @@ export function SlotPicker({
             aria-label="Previous days"
             disabled={pageIndex === 0}
             onClick={() => {
-              onShowDays((pageIndex - 1) * daysPerPage);
+              onShowDate(pages[pageIndex - 1][0].date);
               setEntrance("previous");
             }}
           >
@@ -80,7 +80,7 @@ export function SlotPicker({
             aria-label="Next days"
             disabled={pageIndex === pages.length - 1}
             onClick={() => {
-              onShowDays((pageIndex + 1) * daysPerPage);
+              onShowDate(pages[pageIndex + 1][0].date);
               setEntrance("next");
             }}
           >

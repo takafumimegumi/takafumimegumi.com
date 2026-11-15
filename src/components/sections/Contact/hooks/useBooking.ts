@@ -57,7 +57,8 @@ export function useBooking(): Booking {
   const [rejectionCount, setRejectionCount] = useState(0);
 
   async function submit(requestToken: RequestToken) {
-    if (state.status !== "entering" && state.status !== "failed") return;
+    const { step } = state;
+    if (step.status !== "entering" && step.status !== "failed") return;
 
     const invalidFields = findInvalidBookingFields(fields);
     if (invalidFields.length > 0) {
@@ -76,7 +77,7 @@ export function useBooking(): Booking {
             name: fields.name.trim(),
             email,
             topic: fields.topic.trim() || undefined,
-            start: state.start,
+            start: step.start,
             token,
           });
     dispatch({ type: "submitFinished", result, email });
