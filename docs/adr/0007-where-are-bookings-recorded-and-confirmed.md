@@ -28,8 +28,7 @@ The booking screen is custom-designed, so the solution must work behind my own U
 Use my Google Calendar as the only record of bookings. The Worker calls the Google Calendar API.
 
 - **Open times.** Availability rules (days, hours, minimum notice, how far ahead, buffers) minus the busy times that the free/busy API reports. The rules are personal, so they live in Worker configuration, not in the repository.
-- **Booking.** The Worker inserts an event with the visitor as a guest and asks Google to create a Meet link. Google sends the invitation. That invitation is the confirmation email.
-- **Race check.** After inserting, the Worker checks the time again. If another booking got there first, it removes the new event and tells the visitor the time was just taken.
+- **Booking.** The Worker checks that the time is still open, then inserts an event with the visitor as a guest and asks Google to create a Meet link. Google sends the invitation. That invitation is the confirmation email.
 - **Access.** An OAuth refresh token for my account, stored as a Worker secret, limited to the free/busy scope and the scope for events on calendars I own.
 - **Calls.** Plain `fetch` to the REST API. No Google SDK.
 - **Local development** uses a separate test calendar.
@@ -45,6 +44,8 @@ The invitation arrives as a normal calendar invite from my own address. The visi
 | Option | Summary | Pros | Cons | Result |
 | ------ | ------- | ---- | ---- | ------ |
 | Google Calendar as the record | Free/busy query, then event insert | Real schedule. No database. Google creates the link and sends the invite. | Holds a token that can edit my calendar (2). Check and insert are two steps (1). | Chosen |
+| The same, checking again after the insert | Remove the new event if another booking got there first | Catches two bookings of one time. | Needs more calls and an undo step, for two people confirming the same time within a moment. Every booking emails me, so I would notice (1). | Rejected |
+| The same, with the event ID taken from the start time | Google rejects a second event with the same ID | No second booking of one time, with no extra check. | The ID of a deleted event stays taken, so a cancelled time could never be booked again (1). | Rejected |
 | Own store | Slots and bookings in Cloudflare storage | Full control. Atomic booking. | Does not see my other events (1). Stores visitor data and needs paid email sending (2). Cannot create a Meet link without the API. | Rejected |
 | Scheduling service API | A hosted scheduler behind my UI | Handles all four jobs. | One more company holds visitor data (2). Emails come under its name. | Rejected |
 | Google's booking page | Appointment schedules | No code. | The screen is Google's, not mine (3). | Rejected |
@@ -52,7 +53,7 @@ The invitation arrives as a normal calendar invite from my own address. The visi
 ## Consequences
 
 - The refresh token is a powerful secret. If it is revoked or expires, booking stops. The form must show the error and point to the message form.
-- Check and insert are not atomic. The race check narrows the window but does not close it.
+- Check and insert are not atomic. Two people who confirm the same time within a moment both get it.
 - The invitation looks like a standard Google invite. Its design is not mine.
 - Google delivers the invitation, so I cannot control whether it reaches the inbox.
 - The OAuth app must be set to "In production". In "Testing", the token expires after seven days. The app is unverified, so I see a warning once when I grant access.

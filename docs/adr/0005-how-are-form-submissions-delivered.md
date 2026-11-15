@@ -23,7 +23,7 @@ This record covers where a submission is received and where its content ends up.
 Receive both forms in server routes on the same Worker, and store nothing.
 
 - **Message.** The Worker emails it to my own verified address, with the sender set as the reply-to. I answer from my inbox.
-- **Booking.** The Worker creates a calendar event. The calendar is the record.
+- **Booking.** The Worker creates a calendar event. The calendar is the record. The Worker also emails me the visitor's name and what they want to talk about, which the invitation leaves out ([ADR-0006](0006-how-are-the-forms-protected-from-abuse.md)).
 
 ## Rationale
 
@@ -42,6 +42,7 @@ Sending email to my own verified address is free on Cloudflare and needs no outs
 ## Consequences
 
 - If the email to me fails, the message is lost. The form must show the error and offer my email address as a fallback.
+- If the email about a booking fails, the booking still stands. I see the event on my calendar, without the name or the topic.
 - My inbox and calendar are the only records. There is no list of submissions on the site.
 - A mistyped email address in a message goes unnoticed until I reply and it bounces.
 
