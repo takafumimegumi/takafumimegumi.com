@@ -61,4 +61,5 @@ The other rules limit the damage that gets through. A person acting by hand can 
 - Turnstile is free with unlimited verifications, and server-side validation is required. Checked 2026-11-13: [plans](https://developers.cloudflare.com/turnstile/plans/), [overview](https://developers.cloudflare.com/turnstile/).
 - Turnstile's use of cookies. Checked 2026-11-13: [Turnstile privacy addendum](https://www.cloudflare.com/turnstile-privacy-policy/).
 - The rate limiting binding is generally available, with a 10 or 60 second period. Checked 2026-11-13: [docs](https://developers.cloudflare.com/workers/runtime-apis/bindings/rate-limit/). I could not find its price on the pricing page.
+- Called from the Worker on the free plan, 2026-11-14: calls past the limit were refused. Eleven calls made within one request all passed, because the count is updated a moment later.
 - Revisit if spam gets through in volume, or if visitors report trouble passing the bot check. Add booking caps if abuse by hand creates bookings.
