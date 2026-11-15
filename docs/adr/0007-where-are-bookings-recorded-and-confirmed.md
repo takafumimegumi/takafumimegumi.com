@@ -54,6 +54,7 @@ The invitation arrives as a normal calendar invite from my own address. The visi
 
 - The refresh token is a powerful secret. If it is revoked or expires, booking stops. The form must show the error and point to the message form.
 - Check and insert are not atomic. Two people who confirm the same time within a moment both get it.
+- If Google is slow to answer, the visitor can see an error although the event was created. The email to me is then not sent. The form's error must say that an invitation in the inbox means the call is booked.
 - The invitation looks like a standard Google invite. Its design is not mine.
 - Google delivers the invitation, so I cannot control whether it reaches the inbox.
 - The OAuth app must be set to "In production". In "Testing", the token expires after seven days. The app is unverified, so I see a warning once when I grant access.
