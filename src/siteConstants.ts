@@ -17,5 +17,9 @@ export const GITHUB_REPO_URL =
 // Shown in the Contact section, and where the message form delivers.
 export const OWNER_EMAIL = "tmegumi1103@gmail.com";
 
+// The beacon script and the route that receives its beacons must agree on these (ADR-0008).
+export const MAX_BEACON_SECONDS = 24 * 60 * 60;
+export const BEACON_PATH_PATTERN = /^\/[a-z0-9/-]{0,99}$/;
+
 export const MINUTE_MS = 60 * 1000;
 export const DAY_MS = 24 * 60 * MINUTE_MS;

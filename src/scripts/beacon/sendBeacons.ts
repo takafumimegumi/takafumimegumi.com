@@ -2,7 +2,9 @@
 // A view is one page load. Its ID lives in memory only, and no referrer is read.
 
 import type { ContactEventName } from "@/components/sections/Contact/ContactForm";
+import { MAX_BEACON_SECONDS } from "@/siteConstants";
 import { computeScrollDepth } from "./functions/computeScrollDepth";
+import { readPagePath } from "./functions/readPagePath";
 import { readVisitOptions } from "./functions/readVisitOptions";
 
 const ENDPOINT = "/api/beacons";
@@ -47,7 +49,9 @@ function buildStopwatch(): Stopwatch {
     readSeconds() {
       const runningMs =
         startedAt === undefined ? 0 : performance.now() - startedAt;
-      return Math.round((totalMs + runningMs) / 1000);
+      // The route refuses a longer time, and would then refuse every later beacon of the view.
+      const seconds = Math.round((totalMs + runningMs) / 1000);
+      return Math.min(seconds, MAX_BEACON_SECONDS);
     },
   };
 }
@@ -73,7 +77,7 @@ function isMeasureOff(): boolean {
 function measureView(source: string) {
   const viewId = crypto.randomUUID();
   // The path of the page that was loaded. Opening a case study changes the URL, not the view.
-  const pagePath = location.pathname;
+  const pagePath = readPagePath(location.pathname);
   const pageStopwatch = buildStopwatch();
   let pageDepth = 0;
   let opened = false;
@@ -198,4 +202,5 @@ if (options.measure) storeMeasureChoice(options.measure);
 if (options.cleanedUrl !== undefined) {
   history.replaceState(history.state, "", options.cleanedUrl);
 }
-if (!isMeasureOff()) measureView(options.source);
+// Asked to stop, this view is not measured even when the choice could not be stored.
+if (options.measure !== "off" && !isMeasureOff()) measureView(options.source);
