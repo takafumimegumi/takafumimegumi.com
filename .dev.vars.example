@@ -1,0 +1,18 @@
+# Copy to .dev.vars for local development. That file is not committed.
+# Production values are entered into Cloudflare directly (ADR-0009).
+
+# An OAuth client and a refresh token for a Google account, and a test calendar's ID (ADR-0007).
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_REFRESH_TOKEN=
+GOOGLE_CALENDAR_ID=
+
+# Turnstile's test secret key, which always passes the token of a test site key.
+# https://developers.cloudflare.com/turnstile/troubleshooting/testing/
+TURNSTILE_SECRET_KEY=
+
+# Made-up rules. Weekdays are "0" (Sunday) to "6", and times are in Vancouver.
+AVAILABILITY_RULES='{"windows":{"1":[["10:00","12:00"]],"3":[["13:00","17:00"]]},"slotMinutes":30,"minNoticeMinutes":60,"daysOffered":14,"bufferMinutes":15}'
+
+# Leave empty to report nothing from a local run.
+SENTRY_DSN=
