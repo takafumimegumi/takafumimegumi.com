@@ -9,7 +9,7 @@ Accepted
 I want a small, specific set of numbers from the site:
 
 - For each page: whether it was opened, when, how long it stayed on screen, and how far it was scrolled.
-- Three events: a call was booked, a message was sent, and a case study was opened.
+- Three events: a call was booked, a message was sent, and a case study was read, with how long and how far.
 - Which link a visit came from, when the link carries a source tag.
 
 Requests from link-preview fetchers and other automated clients should not count as a page being opened.
@@ -32,9 +32,9 @@ Measure with my own small beacon, stored in Workers Analytics Engine.
 - **Time and scroll.** When the page is hidden or closed, the script sends the visible time and the deepest scroll position with `sendBeacon`.
 - **Events.** The same endpoint records the three events.
 - **Linking beacons.** Each page load creates a random ID that lives only in memory. It ties the beacons of one view together and is never stored in the browser.
-- **Not stored.** No cookies, no local storage for visitors, no IP addresses.
-- **My own visits.** A marker in my own browser turns the beacon off.
-- **Reading the results.** A report script runs a fixed set of queries against the SQL API.
+- **Not collected.** No cookies, no IP addresses, no referrer. Local storage holds only the marker of a browser that turned measurement off.
+- **Turning it off.** A marker in the browser turns the beacon off. I set it in my own, and any visitor can set it too.
+- **Reading the results.** A report script reads the beacons through the SQL API and prints a fixed set of tables.
 
 ## Rationale
 
@@ -56,14 +56,14 @@ Clients that do not run JavaScript, such as link-preview fetchers, never send a 
 - Automated clients that run JavaScript still send beacons. They are told apart by time and scroll, not blocked.
 - Visitors with JavaScript turned off are not counted.
 - Without a stored ID, the same person visiting twice counts as two views. There is no unique visitor count.
+- The endpoint accepts every beacon of the right shape, and nothing limits how many one client sends. Made-up beacons would show as a sudden rise in the daily count.
 - The privacy page must describe what the beacon sends.
 
 ## Notes
 
 - Decided: 2026-11-13.
 - Analytics Engine on the Workers Free plan: 100,000 data points written and 10,000 read queries a day. Data is kept for three months. Checked 2026-11-13: [pricing](https://developers.cloudflare.com/analytics/analytics-engine/pricing/), [limits](https://developers.cloudflare.com/analytics/analytics-engine/limits/).
-- Written from the Worker and read through the SQL API, 2026-11-15: the beacon for an opened page and the `sendBeacon` on leaving both arrived, from a desktop browser and from a phone. They could be read within three minutes.
-- Analytics Engine had to be turned on by creating one dataset in the dashboard. Until then, uploading a version with the binding failed with code 10089. Seen 2026-11-15.
+- Written from the Worker and read through the SQL API, 2026-11-15: the beacon for an opened page and the `sendBeacon` on leaving both arrived, from a desktop browser and from a phone.
 - Analytics Engine is queried through a SQL API. I found no built-in dashboard for it. Checked 2026-11-13: [SQL API](https://developers.cloudflare.com/analytics/analytics-engine/sql-api/).
 - Cloudflare Web Analytics does not support custom events ("Not yet"), does not log query strings, and uses no cookies or local storage. Its documented metrics are visits, page views, page load time, and Core Web Vitals. Checked 2026-11-13: [FAQ](https://developers.cloudflare.com/web-analytics/faq/), [metrics](https://developers.cloudflare.com/web-analytics/data-metrics/high-level-metrics/), [Core Web Vitals](https://developers.cloudflare.com/web-analytics/data-metrics/core-web-vitals/).
-- Revisit if the fixed queries stop being enough, or if automated clients make the numbers hard to read.
+- Revisit if the fixed tables stop being enough, or if automated clients make the numbers hard to read. Add a rate limit if made-up beacons arrive.

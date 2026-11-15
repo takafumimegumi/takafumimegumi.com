@@ -1,6 +1,7 @@
 // Prints what the page-view beacons recorded (ADR-0008).
 // Usage: npm run report -- [days] [hostname]. The defaults are 7 days and the live site.
 // Needs CLOUDFLARE_ACCOUNT_ID and ANALYTICS_READ_TOKEN, read from .env.analytics when it exists.
+// A beacon can be read a minute or more after it is written, not at once.
 
 // Must match SITE_HOSTNAME in src/siteConstants.ts.
 const SITE_HOSTNAME = "takafumimegumi.com";
