@@ -2,6 +2,8 @@
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
     "paths": { "@/*": ["./src/*"] },
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
     // Scripts without imports are still modules, so their top-level names do not collide.
     "moduleDetection": "force"
   },

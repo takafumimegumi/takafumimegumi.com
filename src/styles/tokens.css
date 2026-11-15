@@ -26,6 +26,7 @@
 
   /* Roles on the light ground: what a color is used for. Named element first. */
   --color-bg: var(--sage-2);
+  --color-bg-surface: var(--white);
   --color-bg-action: var(--forest-12);
   --color-bg-action-hover: var(--forest-9);
   --color-text: var(--sage-12);

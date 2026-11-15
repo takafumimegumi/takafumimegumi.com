@@ -1,0 +1,116 @@
+.choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 28px auto 0;
+}
+
+.choice {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  padding: 16px;
+  text-align: left;
+  cursor: pointer;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition:
+    border-color var(--ease),
+    box-shadow var(--ease);
+}
+
+.choice:hover {
+  border-color: var(--forest-9);
+}
+
+/* The inset shadow makes the line 2px without moving the content. */
+.choice[aria-pressed="true"] {
+  border-color: var(--forest-9);
+  box-shadow: inset 0 0 0 1px var(--forest-9);
+}
+
+.icon {
+  width: 28px;
+  height: 28px;
+  padding: 5px;
+  fill: none;
+  stroke: var(--white);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+  background: var(--forest-12);
+  border-radius: 8px;
+}
+
+.title {
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.description {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--color-text-muted);
+}
+
+.panel {
+  padding: 18px;
+  margin-top: 12px;
+  background: var(--color-bg-surface);
+  border-radius: var(--radius-md);
+}
+
+/* Holds the height of the list of times, so the panel does not jump when they arrive. */
+.loading {
+  display: grid;
+  place-items: center;
+  min-height: 240px;
+  color: var(--color-text-muted);
+}
+
+.address {
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 768px) {
+  .choices {
+    gap: 12px;
+    margin-top: 36px;
+  }
+
+  .choice {
+    padding: 24px;
+  }
+
+  .title {
+    font-size: 20px;
+    line-height: 28px;
+  }
+
+  .description {
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .panel {
+    padding: 28px;
+    margin-top: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .choices {
+    max-width: 720px;
+    margin-top: 40px;
+  }
+
+  .panel {
+    padding: 32px;
+  }
+
+  .panel[data-width="narrow"] {
+    max-width: 720px;
+    margin-inline: auto;
+  }
+}

@@ -1,9 +1,9 @@
 ---
 import Container from "@/components/common/Container/Container.astro";
+import { ContactForm } from "./ContactForm";
 import styles from "./Contact.module.css";
 ---
 
-<!-- Only the heading for now. The booking and message forms come next. -->
 <section class={styles.root} id="contact" aria-labelledby="contact-heading">
   <Container>
     <div class={styles.head} data-reveal>
@@ -15,5 +15,7 @@ import styles from "./Contact.module.css";
         or just send a message.
       </p>
     </div>
+    <!-- The form sits at the bottom of the page, so its code loads only when it is near. -->
+    <ContactForm client:visible />
   </Container>
 </section>

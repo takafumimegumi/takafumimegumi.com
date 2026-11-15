@@ -1,9 +1,13 @@
 // @ts-check
 import { defineConfig, fontProviders } from "astro/config";
 import cloudflare from "@astrojs/cloudflare";
+import preact from "@astrojs/preact";
 
 export default defineConfig({
   site: "https://takafumimegumi.com",
+
+  // Only the contact form is a Preact island (ADR-0002).
+  integrations: [preact()],
 
   // Downloaded at build time and served from this site, so no visitor data goes to a font host.
   fonts: [
