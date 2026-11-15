@@ -1,0 +1,83 @@
+/* The chosen time and the form. Side by side from a tablet up. */
+.root {
+  display: grid;
+  gap: 20px;
+}
+
+.chosen {
+  display: grid;
+  gap: 8px;
+}
+
+.back {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  justify-self: start;
+  padding: 4px 0;
+  font-size: var(--text-small);
+  font-weight: 700;
+  color: var(--color-text-accent);
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+
+.back:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.back:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form {
+  display: grid;
+  gap: 16px;
+}
+
+.pair {
+  display: grid;
+  gap: 16px;
+}
+
+.consent {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--color-text-muted);
+}
+
+.consent a {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.submit {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .root {
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 32px;
+    align-items: start;
+  }
+
+  .pair {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .submit {
+    justify-self: start;
+    width: auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .root {
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 48px;
+  }
+}

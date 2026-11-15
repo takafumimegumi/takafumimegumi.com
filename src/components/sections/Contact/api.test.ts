@@ -46,7 +46,9 @@ describe("listOpenSlots", () => {
     const fetchMock = answerWith(200, { slots: [BOOKING.start] });
 
     expect(await listOpenSlots()).toEqual({ ok: true, slots: [BOOKING.start] });
-    expect(fetchMock).toHaveBeenCalledWith("/api/slots", undefined);
+    expect(fetchMock).toHaveBeenCalledWith("/api/slots", {
+      signal: expect.any(AbortSignal),
+    });
   });
 
   it("returns no open times as a success", async () => {
@@ -94,6 +96,7 @@ describe("createBooking", () => {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(BOOKING),
+      signal: expect.any(AbortSignal),
     });
   });
 
@@ -179,6 +182,7 @@ describe("sendMessage", () => {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(MESSAGE),
+      signal: expect.any(AbortSignal),
     });
   });
 

@@ -1,9 +1,21 @@
-/* About the height of a week with 15 times a day, so the panel does not jump when the times arrive. */
+/* About the height of a week with 15 times a day, so the panel does not jump when the times arrive.
+   The ring and the words sit near the top, where the visitor is looking when the panel comes into view. */
 .loading {
   display: grid;
-  place-items: center;
+  gap: 12px;
+  place-content: start center;
+  justify-items: center;
   min-height: 880px;
+  padding-top: 96px;
   color: var(--color-text-muted);
+}
+
+/* The ring of the shared button, larger and in the accent color. */
+.loading .spinner {
+  width: 28px;
+  height: 28px;
+  color: var(--color-text-accent);
+  border-width: 3px;
 }
 
 /* The outline button of the light ground. The shared outline variant is drawn for the night ground. */
@@ -22,4 +34,10 @@
 
 .quietButton:hover {
   background: var(--color-bg-muted);
+}
+
+/* The notice sits above the open times. */
+.taken {
+  display: grid;
+  gap: 16px;
 }

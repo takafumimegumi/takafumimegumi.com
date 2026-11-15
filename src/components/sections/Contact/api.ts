@@ -31,6 +31,10 @@ export type MessageResult =
   | { ok: false; reason: "invalid"; fields: string[] }
   | { ok: false; reason: "unverified" | "rate_limited" | "failed" };
 
+// Longer than the server's worst case, about 40 seconds for a booking,
+// so the screen does not give up on a booking that is about to succeed.
+const TIMEOUT_MS = 45_000;
+
 const FAILED = { ok: false, reason: "failed" } as const;
 
 export async function listOpenSlots(): Promise<SlotsResult> {
@@ -97,20 +101,20 @@ export async function sendMessage(
   }
 }
 
-/** Sends a GET, or a POST when there is a body. Returns undefined when the server cannot be reached. */
+/** Sends a GET, or a POST when there is a body. Returns undefined when the server cannot be reached in time. */
 async function sendRequest(
   path: string,
   body?: object,
 ): Promise<Response | undefined> {
   try {
-    return await fetch(
-      path,
-      body && {
+    return await fetch(path, {
+      signal: AbortSignal.timeout(TIMEOUT_MS),
+      ...(body && {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(body),
-      },
-    );
+      }),
+    });
   } catch {
     return undefined;
   }

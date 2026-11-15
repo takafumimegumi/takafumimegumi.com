@@ -1,0 +1,119 @@
+/* The card keeps its place from the form and turns deep green. */
+.root {
+  display: grid;
+  gap: 20px;
+}
+
+.head {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+}
+
+.check {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 8px;
+  background: var(--color-bg-success);
+  border-radius: 50%;
+}
+
+.check svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: var(--forest-12);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.4;
+}
+
+.heading {
+  font-size: var(--text-title);
+  line-height: var(--leading-title);
+}
+
+.text {
+  color: var(--color-text-muted);
+}
+
+.text b {
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+}
+
+/* The link sits under the words the visitor reads first, not in the card beside them. */
+.meet {
+  display: grid;
+  gap: 6px;
+  justify-self: stretch;
+  padding: 14px 16px;
+  margin-top: 12px;
+  background: var(--color-bg-muted);
+  border-radius: var(--radius-sm);
+}
+
+.meetLabel {
+  font-size: var(--text-label);
+  font-weight: 700;
+  line-height: var(--leading-label);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.meetRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.meetLink {
+  font-weight: 700;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+
+.changeNote {
+  font-size: var(--text-small);
+  line-height: var(--leading-small);
+}
+
+.textButton {
+  padding: 0;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+
+@media (min-width: 768px) {
+  .root {
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 20px 32px;
+    align-items: start;
+  }
+
+  .card {
+    grid-row: 1 / span 2;
+    grid-column: 1;
+  }
+
+  .head,
+  .changeNote {
+    grid-column: 2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .root {
+    grid-template-columns: 280px minmax(0, 1fr);
+    column-gap: 48px;
+  }
+}

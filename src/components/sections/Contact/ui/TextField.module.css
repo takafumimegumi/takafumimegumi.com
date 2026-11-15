@@ -1,0 +1,68 @@
+/* Packed to the top: beside a taller field, one with an error line, the rows must not stretch. */
+.root {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+}
+
+.label {
+  font-size: var(--text-small);
+  font-weight: 700;
+  line-height: var(--leading-small);
+}
+
+.optional {
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
+/* 16px keeps iOS from zooming in when the input takes focus. */
+.input {
+  width: 100%;
+  min-height: 48px;
+  padding: 11px 14px;
+  font: inherit;
+  font-size: 16px;
+  color: var(--color-text);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  transition: border-color var(--ease);
+}
+
+textarea.input {
+  min-height: 112px;
+  resize: vertical;
+}
+
+.input::placeholder {
+  color: var(--color-border-strong);
+}
+
+.input:hover {
+  border-color: var(--color-text);
+}
+
+/* The inset shadow makes the line 2px without moving the text. */
+.input:focus {
+  outline: none;
+  border-color: var(--color-focus);
+  box-shadow: inset 0 0 0 1px var(--color-focus);
+}
+
+.input[aria-invalid="true"] {
+  border-color: var(--color-text-error);
+  box-shadow: inset 0 0 0 1px var(--color-text-error);
+}
+
+.input:disabled {
+  color: var(--color-text-muted);
+  background: var(--color-bg-muted);
+  border-color: var(--color-border);
+}
+
+.error {
+  font-size: var(--text-small);
+  line-height: var(--leading-small);
+  color: var(--color-text-error);
+}

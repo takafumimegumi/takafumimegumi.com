@@ -1,4 +1,5 @@
 import { useState } from "preact/hooks";
+import symbolStyles from "@/components/common/Symbol/Symbol.module.css";
 import {
   buildWeeks,
   type OpenDay,
@@ -15,14 +16,16 @@ import styles from "./SlotPicker.module.css";
 interface Props {
   slots: string[];
   timeZone: string;
+  onChooseSlot: (start: string) => void;
 }
 
 /** The open times of one week, by day, with arrows to the other weeks. */
-export function SlotPicker({ slots, timeZone }: Props) {
+export function SlotPicker({ slots, timeZone, onChooseSlot }: Props) {
   const [weekIndex, setWeekIndex] = useState(0);
 
   const weeks = buildWeeks(slots, timeZone);
-  const week = weeks[weekIndex];
+  // The list can get shorter when it is loaded again.
+  const week = weeks[Math.min(weekIndex, weeks.length - 1)];
   // Every week gets the height of the fullest day, so paging does not make the panel jump.
   const rows = Math.max(...weeks.flat().map((day) => day.slots.length));
   const longName = formatTimeZoneName(timeZone, "long");
@@ -73,11 +76,16 @@ export function SlotPicker({ slots, timeZone }: Props) {
           aria-label="Open times"
         >
           {week.map((day) => (
-            <DayColumn key={day.date} day={day} timeZone={timeZone} />
+            <DayColumn
+              key={day.date}
+              day={day}
+              timeZone={timeZone}
+              onChooseSlot={onChooseSlot}
+            />
           ))}
         </div>
         <p class={styles.swipe} aria-hidden="true">
-          Swipe for more days →
+          Swipe for more days <span class={symbolStyles.root}>→</span>
         </p>
       </div>
     </div>
@@ -87,9 +95,10 @@ export function SlotPicker({ slots, timeZone }: Props) {
 interface DayColumnProps {
   day: OpenDay;
   timeZone: string;
+  onChooseSlot: (start: string) => void;
 }
 
-function DayColumn({ day, timeZone }: DayColumnProps) {
+function DayColumn({ day, timeZone, onChooseSlot }: DayColumnProps) {
   const { weekday, dayOfMonth } = formatDateParts(day.date);
 
   return (
@@ -107,6 +116,7 @@ function DayColumn({ day, timeZone }: DayColumnProps) {
             type="button"
             class={styles.slot}
             aria-label={`${formatLongDay(slot, timeZone)}, ${time}`}
+            onClick={() => onChooseSlot(slot)}
           >
             {time}
           </button>

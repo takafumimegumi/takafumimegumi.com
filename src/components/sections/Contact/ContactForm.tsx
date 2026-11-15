@@ -64,7 +64,12 @@ function ContactPanels() {
           <BookingPanel
             state={booking.state}
             timeZone={booking.timeZone}
+            fields={booking.fields}
             onReloadSlots={booking.reloadSlots}
+            onChooseSlot={booking.chooseSlot}
+            onChangeSlot={booking.changeSlot}
+            onUpdateField={booking.updateField}
+            onSubmit={booking.submit}
             onSendMessage={() => setMode("message")}
           />
         </div>

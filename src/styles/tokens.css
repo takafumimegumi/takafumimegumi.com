@@ -28,11 +28,14 @@
   --color-bg: var(--sage-2);
   --color-bg-surface: var(--white);
   --color-bg-muted: var(--sage-3);
+  --color-bg-error: var(--red-3);
+  --color-bg-success: var(--jade-3);
   --color-bg-action: var(--forest-12);
   --color-bg-action-hover: var(--forest-9);
   --color-text: var(--sage-12);
   --color-text-muted: var(--sage-11);
   --color-text-accent: var(--forest-9);
+  --color-text-error: var(--red-11);
   --color-text-on-action: var(--white);
   --color-border: var(--sage-6);
   --color-border-strong: var(--sage-9);

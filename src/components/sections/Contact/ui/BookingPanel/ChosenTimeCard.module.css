@@ -1,0 +1,80 @@
+.root {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  background: var(--color-bg-muted);
+  border-radius: var(--radius-sm);
+}
+
+/* The ground sets the text and accent colors. The card paints the ground itself. */
+.root[data-ground="deep"] {
+  background: var(--color-bg);
+}
+
+.when {
+  display: grid;
+}
+
+.label {
+  margin-bottom: 8px;
+  font-size: var(--text-label);
+  font-weight: 700;
+  line-height: var(--leading-label);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.day {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 28px;
+}
+
+.time {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.zone {
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
+.root[data-ground="deep"] .label,
+.root[data-ground="deep"] .zone {
+  color: var(--night-muted);
+}
+
+.details {
+  display: grid;
+  gap: 8px;
+  padding: 12px 0 0;
+  margin: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-border);
+}
+
+.root[data-ground="deep"] .details {
+  border-top-color: rgb(255 255 255 / 22%);
+}
+
+.detail {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: var(--text-small);
+  line-height: var(--leading-small);
+}
+
+.icon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  fill: none;
+  stroke: var(--color-text-accent);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}

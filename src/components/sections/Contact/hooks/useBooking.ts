@@ -1,26 +1,46 @@
 import { useEffect, useReducer, useState } from "preact/hooks";
-import { listOpenSlots } from "@/components/sections/Contact/api";
 import {
+  createBooking,
+  listOpenSlots,
+  type BookingResult,
+} from "@/components/sections/Contact/api";
+import {
+  findInvalidBookingFields,
   INITIAL_BOOKING_STATE,
   reduceBookingState,
+  type BookingFieldName,
+  type BookingFields,
   type BookingState,
 } from "@/components/sections/Contact/functions/bookingState";
+import type { RequestToken } from "@/components/sections/Contact/ui/Turnstile";
 
 export interface Booking {
   state: BookingState;
   /** The visitor's time zone. Undefined until the page runs in the browser. */
   timeZone: string | undefined;
+  fields: BookingFields;
   /** Asks for the open times again, after they could not be loaded. */
   reloadSlots: () => void;
+  chooseSlot: (start: string) => void;
+  /** Goes back from the details to the open times. */
+  changeSlot: () => void;
+  updateField: (name: BookingFieldName, value: string) => void;
+  /** Checks the fields, runs the bot check, and books the chosen time. */
+  submit: (requestToken: RequestToken) => void;
 }
 
-/** Holds the state of the booking panel and loads the open times. */
+/** Holds the state of the booking panel, loads the open times, and sends the booking. */
 export function useBooking(): Booking {
   const [state, dispatch] = useReducer(
     reduceBookingState,
     INITIAL_BOOKING_STATE,
   );
   const [timeZone, setTimeZone] = useState<string>();
+  const [fields, setFields] = useState<BookingFields>({
+    name: "",
+    email: "",
+    topic: "",
+  });
 
   async function loadSlots() {
     dispatch({ type: "slotsRequested" });
@@ -32,6 +52,34 @@ export function useBooking(): Booking {
     );
   }
 
+  async function submit(requestToken: RequestToken) {
+    if (state.status !== "entering" && state.status !== "failed") return;
+
+    const invalidFields = findInvalidBookingFields(fields);
+    if (invalidFields.length > 0) {
+      dispatch({ type: "fieldsRejected", fields: invalidFields });
+      return;
+    }
+
+    dispatch({ type: "submitStarted" });
+    const email = fields.email.trim();
+    const token = await requestToken();
+    const result: BookingResult =
+      token === undefined
+        ? { ok: false, reason: "unverified" }
+        : await createBooking({
+            name: fields.name.trim(),
+            email,
+            topic: fields.topic.trim() || undefined,
+            start: state.start,
+            token,
+          });
+    dispatch({ type: "submitFinished", result, email });
+
+    // Other times may be gone too, so the list is loaded again behind the notice.
+    if (!result.ok && result.reason === "taken") void loadSlots();
+  }
+
   // Both run after mounting: the build has no visitor, so it draws neither a time zone nor times.
   useEffect(() => {
     setTimeZone(Intl.DateTimeFormat().resolvedOptions().timeZone);
@@ -40,5 +88,17 @@ export function useBooking(): Booking {
     void loadSlots();
   }, []);
 
-  return { state, timeZone, reloadSlots: () => void loadSlots() };
+  return {
+    state,
+    timeZone,
+    fields,
+    reloadSlots: () => void loadSlots(),
+    chooseSlot: (start) => dispatch({ type: "slotChosen", start }),
+    changeSlot: () => dispatch({ type: "slotChangeRequested" }),
+    updateField: (name, value) => {
+      setFields({ ...fields, [name]: value });
+      dispatch({ type: "fieldEdited", name });
+    },
+    submit: (requestToken) => void submit(requestToken),
+  };
 }
