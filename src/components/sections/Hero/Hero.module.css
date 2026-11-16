@@ -3,7 +3,9 @@
   isolation: isolate;
   display: flex;
   flex-direction: column;
-  min-height: clamp(600px, calc(100svh - var(--header-height)), 760px);
+
+  /* Not svh: it grows when an in-app browser hides its bars. */
+  min-height: 600px;
   overflow: hidden;
   color: var(--color-text);
   background: linear-gradient(180deg, #11704e 0%, #18765a 65%, #84b6a5 100%);
@@ -90,7 +92,7 @@
 
 @media (min-width: 768px) {
   .root {
-    min-height: clamp(820px, calc(100svh - var(--header-height)), 900px);
+    min-height: 820px;
   }
 
   .text {

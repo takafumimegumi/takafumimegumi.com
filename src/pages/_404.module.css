@@ -1,8 +1,13 @@
-/* The page is short, so it fills the screen and the footer sits at the bottom. */
 .page {
   display: flex;
   flex-direction: column;
-  min-height: 100svh;
+}
+
+/* Desktop only: on phones, svh grows when an in-app browser hides its bars. */
+@media (min-width: 1024px) {
+  .page {
+    min-height: 100svh;
+  }
 }
 
 .root {
