@@ -48,7 +48,7 @@ Astro sends no JavaScript unless a page asks for it, which fits a site that is m
 ## Notes
 
 - Decided: 2026-11-13.
-- The overlay was built and checked on 2026-11-14, in Chrome on a desktop and in a browser on a phone: open, back, forward, close, a direct visit, and a reload. In Chrome it was also checked with Escape and without JavaScript. It has not been checked in an in-app browser yet.
+- The overlay was built and checked on 2026-11-14, in Chrome on a desktop and in a browser on a phone: open, back, forward, close, a direct visit, and a reload. In Chrome it was also checked with Escape and without JavaScript. On 2026-11-15 it was checked in the LinkedIn in-app browser on an iPhone: open, back, close, a direct visit, and a reload.
 - Astro 7.4 is the current release. Its Cloudflare adapter supports Workers and has deprecated Pages. Checked 2026-11-13: [Astro 7.4](https://astro.build/blog/astro-740/), [adapter docs](https://docs.astro.build/en/guides/integrations-guide/cloudflare/).
 - Next.js runs on Workers through OpenNext. The rewritten adapter is expected by the end of 2026. Checked 2026-11-13: [OpenNext](https://opennext.js.org/news/2026-03-25-3-years-of-opennext).
 - SvelteKit shallow routing requires JavaScript. Checked 2026-11-13: [SvelteKit docs](https://svelte.dev/docs/kit/shallow-routing).
